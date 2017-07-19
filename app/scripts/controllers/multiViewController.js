@@ -7,17 +7,18 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $location, $timeout) {
+    .controller('MultiViewCtrl', function ($scope, $resource, config, $uibModal, $rootScope, $location, $timeout, $compile) {
 
         /**** Init ****/
+        $scope.infoPanelParent = "infoPanelParent";
         // wait rootScope to be ready
         $rootScope.$watch('ready', function(newVal) {
             if(newVal) {
-                $scope.layoutChoice = $rootScope.layout[17];
-                $scope.layoutChoiceComments = $rootScope.layout[17];
+                $scope.layoutChoice = $rootScope.layout[12];
+                $scope.layoutChoiceComments = $rootScope.layout[12];
                 $scope.userGraphRessource = $resource(config.apiUrl + 'draw/usersToUsers/' + $scope.layoutChoice);
                 $scope.drawUserGraph(true);
-                $scope.darwPostGraph();
+                $scope.drawPostGraph();
             }
         });
 
@@ -44,7 +45,7 @@ angular.module('sbAdminApp')
         /*** post view ***/
         // todo generate this view from the other ( via edges values )
         $scope.commentsGraphSigma = [];
-        $scope.darwPostGraph = function () {
+        $scope.drawPostGraph = function () {
             var url = config.apiUrl + 'draw/commentAndPost/'+ $scope.layoutChoiceComments;
             $resource(url).get().$promise.then(function (result) {
                 $scope.commentsGraphSigma = result;
@@ -59,9 +60,9 @@ angular.module('sbAdminApp')
         $scope.eventCatcherUsers = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    $scope.elementType = "uid";
-                    $scope.elementId = e.data.node.uid;
-                    $scope.openModal($scope.elementType, $scope.elementId);
+                    $scope.elementType = "user";
+                    $scope.elementId = e.data.node.user_id;
+                    $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     break;
                 case 'clickEdges':
                     if(e.data.edge != undefined && e.data.edge.length > 0) {
@@ -69,23 +70,23 @@ angular.module('sbAdminApp')
                         $scope.locate = [];
                         angular.forEach(e.data.edge, function(value) {
                             var comment = {from_id : "", from_subject: "", to_id: "", to_subject: ""};
-                            if (value.pid != undefined) {
-                                comment.from_id = value.cid;
-                                $scope.locate.push(parseInt(value.cid));
-                                comment.from_subject = value.comment_subject;
-                                comment.to_type = "pid";
-                                comment.to_id = value.pid;
-                                $scope.locate.push(parseInt(value.pid));
+                            if (value.post_id != undefined) {
+                                comment.from_id = value.comment_id;
+                                $scope.locate.push(parseInt(value.comment_id));
+                                comment.from_subject = value.comment_title;
+                                comment.to_type = "post";
+                                comment.to_id = value.post_id;
+                                $scope.locate.push(parseInt(value.post_id));
                                 comment.to_subject = value.post_title;
                             }
                             else {
-                                comment.from_id = value.cid1;
-                                $scope.locate.push(parseInt(value.cid1));
-                                comment.from_subject = value.comment1_subject;
-                                comment.to_type = "cid";
-                                comment.to_id = value.cid2;
-                                $scope.locate.push(parseInt(value.cid2));
-                                comment.to_subject = value.comment2_subject;
+                                comment.from_id = value.comment_id1;
+                                $scope.locate.push(parseInt(value.comment_id1));
+                                comment.from_subject = value.comment1_title;
+                                comment.to_type = "comment";
+                                comment.to_id = value.comment_id2;
+                                $scope.locate.push(parseInt(value.comment_id2));
+                                comment.to_subject = value.comment2_title;
                             }
                             $scope.comments.push(comment);
                         });
@@ -93,6 +94,16 @@ angular.module('sbAdminApp')
                     }
                     break;
             }
+        };
+
+        /********* Info Panel ***************/
+        $scope.openInfoPanel = function(elementType, elementId) {
+            var mod = document.createElement("panel-info");
+            mod.setAttribute("type", elementType);
+            mod.setAttribute("id", elementId);
+            mod.setAttribute("parent", $scope.infoPanelParent);
+            jQuery("#"+ $scope.infoPanelParent).append(mod);
+            $compile(mod)($scope);
         };
 
         /********* Modal  ***************/
@@ -129,19 +140,19 @@ angular.module('sbAdminApp')
         $scope.eventCatcherComment = function (e) {
             switch(e.type) {
                 case 'clickNode':
-                    if(e.data.node.uid != undefined) {
-                        $scope.elementType = "uid";
-                        $scope.elementId = e.data.node.uid;
+                    if(e.data.node.user_id != undefined) {
+                        $scope.elementType = "user";
+                        $scope.elementId = e.data.node.user_id;
                     }
-                    else if(e.data.node.pid != undefined) {
-                        $scope.elementType = "pid";
-                        $scope.elementId = e.data.node.pid;
+                    else if(e.data.node.post_id != undefined) {
+                        $scope.elementType = "post";
+                        $scope.elementId = e.data.node.post_id;
                     }
-                    else if(e.data.node.cid != undefined) {
-                        $scope.elementType = "cid";
-                        $scope.elementId = e.data.node.cid;
+                    else if(e.data.node.comment_id != undefined) {
+                        $scope.elementType = "comment";
+                        $scope.elementId = e.data.node.comment_id;
                     }
-                    $scope.openModal($scope.elementType, $scope.elementId);
+                    $scope.openInfoPanel($scope.elementType, $scope.elementId);
                     break;
             }
         };

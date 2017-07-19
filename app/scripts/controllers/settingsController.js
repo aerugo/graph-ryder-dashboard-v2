@@ -10,15 +10,17 @@
  * Controller of the sbAdminApp
  */
 angular.module('sbAdminApp')
-    .controller('SettingsCtrl', function ($scope, $resource, config, $q) {
+    .controller('SettingsCtrl', function ($scope, $rootScope, $resource, config, $q, $compile) {
 
         $scope.warning = {color: 'orange'};
         $scope.danger = {color: 'red'};
         $scope.success = {color: '#39b500'};
+        $scope.infoPanelParent = "infoPanelParent";
+        $rootScope.resetSuggestions(false, false, false, false);
 
         /***** Load api infos *****/
         $scope.refresh = function () {
-            
+
             $scope.api = {"url": config.apiUrl, "status": "unknown", "version": "unknown"};
             $scope.style = {"status": $scope.warning, "version": $scope.warning, "ram": $scope.warning, "disk": $scope.warning};
             $scope.regen = {"complete": false, "users": false, "commentsAndPosts": false, "generated": false, "ramLoad": "unknown", "diskLoad": "unknown"};
@@ -31,11 +33,15 @@ angular.module('sbAdminApp')
                 if ($scope.api.status) // color
                     $scope.style.status = $scope.success;
                 // version
-                $scope.api.version = result.version;
-                if (new Date().getTime() - $scope.api.version > 2628000)
+                var d = new Date();
+                d.setTime(result.version);
+                $scope.api.version = d.toString();
+                if (new Date().getTime() - d.getTime() > 2628000000) {
                     $scope.style.version = $scope.danger;
-                if (new Date().getTime() - $scope.api.version < 604800)
+                }
+                if (new Date().getTime() - d.getTime() < 604800000) {
                     $scope.style.version = $scope.success;
+                }
                 // ram usage
                 $scope.api.ramLoad = result.percentRamUsage;
                 if ($scope.api.ramLoad < 50.00) // color
@@ -69,6 +75,9 @@ angular.module('sbAdminApp')
             if($scope.regen.commentsAndPosts)
                 collectPromises.push($resource(config.apiUrl + 'generateCommentAndPostGraph').query().$promise);
 
+            if($scope.regen.TagToTag)
+                collectPromises.push($resource(config.apiUrl + 'generateTagFullGraph/1/0/' + new Date(Date.now()).getTime()+"/1").query().$promise);
+
             $q.all(collectPromises).then(function(results) {
                 var value = true;
                 angular.forEach(results, function(result) {
@@ -82,6 +91,24 @@ angular.module('sbAdminApp')
             }, function (reject) {
                 console.log(reject);
             });
+        };
+
+        $scope.UpdateFromEdgeryders = function () {
+            var createGraph = $resource(config.apiUrl + 'UpdateFromEdgeRyders');
+            var createGraphPromise = createGraph.get();
+            createGraphPromise.$promise.then(function (result) {
+            });
+            console.log("hello");
+        };
+
+        /********* Info Panel ***************/
+        $scope.openInfoPanel = function(elementType, elementId) {
+            var mod = document.createElement("panel-info");
+            mod.setAttribute("type", elementType);
+            mod.setAttribute("id", elementId);
+            mod.setAttribute("parent", $scope.infoPanelParent);
+            jQuery("#"+ $scope.infoPanelParent).append(mod);
+            $compile(mod)($scope);
         };
 
         /***** Upload and Update *****/

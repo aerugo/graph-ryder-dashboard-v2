@@ -16,10 +16,10 @@ angular
     'ngSanitize'
   ])
   .constant('config', {
-        apiUrl: 'http://nferon.ovh:5000/'
+        apiUrl: 'http://localhost:5000/'
     })
   .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
-    
+
     $ocLazyLoadProvider.config({
       debug:false,
       events:true
@@ -42,7 +42,8 @@ angular
                       'scripts/directives/sidebar/sidebar.js',
                       'scripts/directives/sidebar/sidebar-search/sidebar-search.js',
                       'scripts/directives/sigma/sigma.js',
-                      'scripts/directives/timeLine/timeLine.js'
+                      'scripts/directives/timeLine/timeLine.js',
+                      'scripts/directives/panelInfo/panelInfo.js'
                   ]
               });
               var prom2 = $ocLazyLoad.load({
@@ -133,22 +134,87 @@ angular
             }
         }
     })
-        .state('dashboard.settings',{
-            url:'/settings',
-            controller: 'SettingsCtrl',
-            templateUrl:'views/dashboard/settings.html',
-            resolve: {
-                loadMyFiles:function($ocLazyLoad) {
-                    return $ocLazyLoad.load({
-                        name:'sbAdminApp',
-                        files:[
-                            'scripts/controllers/main.js',
-                            'scripts/controllers/settingsController.js'
-                        ]
-                    })
-                }
+    .state('dashboard.tagView',{
+        url:'/tagView',
+        controller: 'TagViewCtrl',
+        templateUrl:'views/dashboard/tag-view.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/tagViewController.js',
+                        'scripts/controllers/modalInstanceController.js'
+                    ]
+                })
             }
-        })
+        }
+    })
+    .state('dashboard.tagViewFull',{
+        url:'/tagViewFull',
+        controller: 'TagViewFullCtrl',
+        templateUrl:'views/dashboard/tag-view-full.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/tagViewFullController.js',
+                        'scripts/controllers/modalInstanceController.js'
+                    ]
+                })
+            }
+        }
+    })
+    .state('dashboard.settings',{
+        url:'/settings',
+        controller: 'SettingsCtrl',
+        templateUrl:'views/dashboard/settings.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/settingsController.js'
+                    ]
+                })
+            }
+        }
+    })
+    .state('dashboard.about',{
+        url:'/about',
+        controller: 'AboutCtrl',
+        templateUrl:'views/dashboard/about.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/aboutController.js'
+                    ]
+                })
+            }
+        }
+    })
+    .state('dashboard.detanglerView',{
+        url:'/detanglerView',
+        controller: 'DetanglerViewCtrl',
+        templateUrl:'views/dashboard/detangler-view.html',
+        resolve: {
+            loadMyFiles:function($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name:'sbAdminApp',
+                    files:[
+                        'scripts/controllers/main.js',
+                        'scripts/controllers/detanglerViewController.js',
+                        'scripts/controllers/modalInstanceController.js'
+                    ]
+                })
+            }
+        }
+    })
   }]);
-
-    
