@@ -16,7 +16,7 @@ angular
     'ngSanitize'
   ])
   .constant('config', {
-        apiUrl: 'http://localhost:5000/'
+        apiUrl: 'http://0.0.0.0:5000/'
     })
   .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider) {
 
@@ -81,24 +81,6 @@ angular
           }
         }
     })
-    .state('dashboard.doi',{
-        url:'/doi',
-        controller: 'DoiCtrl',
-        templateUrl:'views/dashboard/doi.html',
-        resolve: {
-          loadMyFiles:function($ocLazyLoad) {
-            return $ocLazyLoad.load({
-              name:'sbAdminApp',
-              files:[
-              'scripts/controllers/main.js',
-              'scripts/controllers/doiController.js',
-                  'scripts/controllers/modalInstanceController.js'
-
-              ]
-            })
-          }
-        }
-    })
     .state('dashboard.globalView',{
         url:'/globalView',
         controller: 'GlobalCtrl',
@@ -117,57 +99,7 @@ angular
             }
         }
     })
-    .state('dashboard.multiView',{
-        url:'/multiView',
-        controller: 'MultiViewCtrl',
-        templateUrl:'views/dashboard/multi-view.html',
-        resolve: {
-            loadMyFiles:function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name:'sbAdminApp',
-                    files:[
-                        'scripts/controllers/main.js',
-                        'scripts/controllers/multiViewController.js',
-                        'scripts/controllers/modalInstanceController.js'
-                    ]
-                })
-            }
-        }
-    })
-    .state('dashboard.tagView',{
-        url:'/tagView',
-        controller: 'TagViewCtrl',
-        templateUrl:'views/dashboard/tag-view.html',
-        resolve: {
-            loadMyFiles:function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name:'sbAdminApp',
-                    files:[
-                        'scripts/controllers/main.js',
-                        'scripts/controllers/tagViewController.js',
-                        'scripts/controllers/modalInstanceController.js'
-                    ]
-                })
-            }
-        }
-    })
-    .state('dashboard.tagViewFull',{
-        url:'/tagViewFull',
-        controller: 'TagViewFullCtrl',
-        templateUrl:'views/dashboard/tag-view-full.html',
-        resolve: {
-            loadMyFiles:function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name:'sbAdminApp',
-                    files:[
-                        'scripts/controllers/main.js',
-                        'scripts/controllers/tagViewFullController.js',
-                        'scripts/controllers/modalInstanceController.js'
-                    ]
-                })
-            }
-        }
-    })
+
     .state('dashboard.settings',{
         url:'/settings',
         controller: 'SettingsCtrl',
@@ -195,23 +127,6 @@ angular
                     files:[
                         'scripts/controllers/main.js',
                         'scripts/controllers/aboutController.js'
-                    ]
-                })
-            }
-        }
-    })
-    .state('dashboard.detanglerView',{
-        url:'/detanglerView',
-        controller: 'DetanglerViewCtrl',
-        templateUrl:'views/dashboard/detangler-view.html',
-        resolve: {
-            loadMyFiles:function($ocLazyLoad) {
-                return $ocLazyLoad.load({
-                    name:'sbAdminApp',
-                    files:[
-                        'scripts/controllers/main.js',
-                        'scripts/controllers/detanglerViewController.js',
-                        'scripts/controllers/modalInstanceController.js'
                     ]
                 })
             }

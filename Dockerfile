@@ -15,7 +15,11 @@ RUN mkdir -p /opt/app && cp -a /tmp/linkurious /opt/app/
 RUN cd /opt/app/linkurious && bower link --allow-root && cd /opt/app &&  bower link linkurious --allow-root
 
 WORKDIR /opt/app
-ADD . /opt/app
+ADD ./Gruntfile.js /opt/app
+ADD ./package.json /opt/app
+ADD ./bower.json /opt/app
+ADD ./app /opt/app/app/
+
 
 EXPOSE 9000
 CMD [ "npm", "start" ]
