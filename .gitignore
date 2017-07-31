@@ -1,7 +1,11 @@
 node_modules
-npm-debug.log
-dist
+public
 .tmp
 .sass-cache
-bower_components
 .idea
+client/bower_components
+client/index.html
+dist
+/server/config/local.env.js
+npm-debug.log
+coverage

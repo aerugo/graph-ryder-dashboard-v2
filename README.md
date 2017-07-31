@@ -1,70 +1,28 @@
-# Graph ryder dashboard
-This project is based on Free Admin Bootstrap Theme [SB Admin v2.0](http://startbootstrap.com/template-overviews/sb-admin-2/).
+# graph-ryder-dashboard
 
-####1. Change api url in app/scripts/app.js
-```
-  .constant('config', {
-        apiUrl: 'http://localhost:5000/'
-    })
-```
+This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 4.2.2.
 
-## Local Installation
-####2. Tools
-- Install needed tools
-```sh
-$ sudo apt-get install npm
-$ sudo npm install -g bower grunt-cli
-```
-####3. Install
+## Getting Started
 
-- npm and bower install
-```sh
-$ npm install
-```
+### Prerequisites
 
-```sh
-$ bower install
-```
+- [Git](https://git-scm.com/)
+- [Node.js and npm](nodejs.org) Node >= 4.x.x, npm >= 2.x.x
+- [Gulp](http://gulpjs.com/) (`npm install --global gulp`)
+- [MongoDB](https://www.mongodb.org/) - Keep a running daemon with `mongod`
 
-####4. Linkurious.js
+### Developing
 
-- Linkurious lib do not provide bower repository yet
-- Clone linkurious where you want
-```sh
-$ git clone https://github.com/norbertFeron/linkurious.js linkurious
-```
-- Link and build lib
-```sh
-$ cd linkurious
-$ bower link
-$ npm install
-$ npm run build
-```
-- Link to the project
-```sh
-$ cd /your/app/path
-$ bower link linkurious
-```
+1. Run `npm install` to install server dependencies.
 
-####5. On the command prompt run the following commands
+2. Run `mongod` in a separate shell to keep an instance of the MongoDB Daemon running
 
-- a shortcut for `grunt serve`
-```sh
-$ npm start
-```
+3. Run `gulp serve` to start the development server. It should automatically open the client in your browser when ready.
 
-## Docker Installation
-####2. build
-```
-docker build -t graph-ryder-dashboard .
-```
-####3. run
-```
-docker run -d -p 9000:9000 --name my-graph-ryder-dashboard graph-ryder-dashboard
-```
+## Build & development
 
-## Post install
-- via web browser 
-```
-http://localhost:9000/
-```
+Run `gulp build` for building and `gulp serve` for preview.
+
+## Testing
+
+Running `npm test` will run the unit tests with karma.
