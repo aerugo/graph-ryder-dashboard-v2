@@ -9,7 +9,6 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <button class="btn" ng-click="UpdateFromEdgeryders()" >Update from Edgeryders</button>(use with moderation as it can takes several minutes)<br>
                     <form ng-submit="changeApiUrl()">
                         <fieldset>
                             <legend>Api <i class="fa fa-refresh fa-fw" ng-click="refresh()"></i></legend>
@@ -18,43 +17,8 @@
                             </div>
                             <label>Url :&nbsp;</label>{{api.url}}<br/>
                             <label>Status :&nbsp;</label><span ng-style="style.status">{{api.status}}</span><br/>
-                            <label>Version :&nbsp;</label><span ng-style="style.version">{{api.version}}</span> (base on latest timestamp)<br/>
                             <label>Ram load :&nbsp;</label><span ng-style="style.ram">{{api.ramLoad}}</span> %<br/>
                             <label>Disk load :&nbsp;</label><span ng-style="style.disk">{{api.diskLoad}}</span> %<br/><br/>
-                        </fieldset>
-                    </form>
-                    <form ng-submit="regenerate()">
-                        <fieldset>
-                            <legend>Generate Graphs</legend>
-                            <div class="alert alert-info" ng-show="regen.generated == 'load'" >
-                                Loading...
-                            </div>
-                            <div class="alert alert-success" ng-show="regen.generated == 'done'" >
-                                <button type="button" class="close" ng-click="regen.generated = false" aria-hidden="true">&times;</button>
-                                Graph have been generated.
-                            </div>
-                            <div class="alert alert-danger" ng-show="regen.generated == 'error'" >
-                                <button type="button" class="close" ng-click="regen.generated = false" aria-hidden="true">&times;</button>
-                                Fail to generate graph.
-                            </div>
-                            <input type="checkbox" ng-model="regen.complete" id="cGraph"> <label for="cGraph">Complete Graph</label>
-                            <input type="checkbox" ng-model="regen.users" id="uGraph"> <label for="uGraph">UsersToUsers Graph</label>
-                            <input type="checkbox" ng-model="regen.commentsAndPosts" id="cpGraph"> <label for="cpGraph">CommentsAndPosts Graph</label>
-                             <input type="checkbox" ng-model="regen.TagToTag" id="tagGraph"> <label for="tagGraph">TagToTag Graph</label><br/><br/>
-                            <input type="submit" value="RegenerateGraphs" /><br/><br/>
-                        </fieldset>
-                    </form>
-                    <div>
-                      <legend><i class="fa fa-user-md"></i> Ethnographer tools</legend>
-                          <button class="btn btn-info" ng-click="openInfoPanel('nottagged', 0);" >List elements not tagged</button><br><br>
-                    </div>
-                    <form ng-submit="upload()">
-                        <fieldset>
-                            <legend>Update data</legend>
-                            <label for="uFile">Users : </label><input type="file" file-model="usersFile" id="uFile" ng-disabled="true"/><br/>
-                            <label for="pFile">Posts : </label><input type="file" file-model="postsFile" id="pFile" ng-disabled="true"/><br/>
-                            <label for="cFile">Comments : </label><input type="file" file-model="commentsFile" id="cFile" ng-disabled="true"/><br/>
-                            <input type="submit" value="Upload" ng-disabled="true" /><br/><br/>
                         </fieldset>
                     </form>
                 </div>
