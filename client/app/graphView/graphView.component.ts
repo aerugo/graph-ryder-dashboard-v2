@@ -8,13 +8,16 @@ import routes from './graphView.routes';
 export class GraphViewComponent {
   $http;
   graph;
+  eventCatcher;
+  info;
 
   /*@ngInject*/
   constructor($http, $scope) {
-     this.$http = $http;
-     $scope.$on('$destroy', function() {
-       // todo: destroy sigma instances
-     });
+    this.info = 'Graph-Ryder v2.0';
+    this.$http = $http;
+    $scope.$on('$destroy', function() {
+     // todo: destroy sigma instances
+    });
   }
 
   $onInit() {

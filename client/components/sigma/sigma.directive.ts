@@ -12,30 +12,40 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
       scope: {
         //@ reads the attribute value, = provides two-way binding, & works with functions
         graph: '=',
-        width: '@',
-        height: '@',
-        releativeSizeNode: '='
+        info: '='
       },
       link: function (scope, element, attrs) {
         // Let's first initialize sigma:
         var s = new sigma({
-          container: divId,
+          renderer: {
+            container: divId,
+            type: 'canvas'
+          },
           settings: {
             defaultNodeColor: '#ec5148',
-            labelThreshold: 4,
-            render: 'webgl'
+            labelThreshold: 10,
+            dragNodeStickiness: 0.01,
+            nodeBorderSize: 2,
+            defaultNodeBorderColor: '#000',
+            enableEdgeHovering: true,
+            edgeHoverHighlightNodes: 'circle',
           }
         });
 
-        scope.$watch('graph', function(newVal,oldVal) {
-          s.graph.clear();
-          s.graph.read(scope.graph);
-          s.refresh();
-          if(scope.releativeSizeNode) {
-            //this feature needs the plugin to be added
-            sigma.plugins.relativeSize(s, 2);
+        scope.$watch('graph', function() {
+          if(scope.graph) {
+            s.graph.clear();
+            s.graph.read(scope.graph);
+            s.refresh();
           }
         });
+
+         /**** Events ****/
+        s.bind('clickNode clickEdge hovers', function(e){
+          scope.info = "x: " + e.data.captor.x + " y: " + e.data.captor.y;
+          scope.$apply();
+        });
+
 
         element.on('$destroy', function() {
           s.graph.clear();
