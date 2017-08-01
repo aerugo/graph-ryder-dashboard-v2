@@ -37,19 +37,6 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           }
         });
 
-        scope.$watch('width', function(newVal,oldVal) {
-          console.log("graph width: "+scope.width);
-          element.children().css("width",scope.width);
-          s.refresh();
-          window.dispatchEvent(new Event('resize')); //hack so that it will be shown instantly
-        });
-        scope.$watch('height', function(newVal,oldVal) {
-          console.log("graph height: "+scope.height);
-          element.children().css("height",scope.height);
-          s.refresh();
-          window.dispatchEvent(new Event('resize'));//hack so that it will be shown instantly
-        });
-
         element.on('$destroy', function() {
           s.graph.clear();
         });
