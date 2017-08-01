@@ -20,6 +20,7 @@ import account from './account';
 import admin from './admin';
 import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
+import sigma from '../components/sigma/sigma.directive';
 import main from './main/main.component';
 import graphView from './graphView/graphView.component';
 import constants from './app.constants';
@@ -45,6 +46,7 @@ angular.module('graphRyderDashboardApp', [
   'validation.match',
     navbar,
   footer,
+  sigma,
   main,
   graphView,
   constants,
