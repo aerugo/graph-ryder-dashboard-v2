@@ -1,4 +1,4 @@
-# graph-ryder-dashboard
+# graph-ryder-dashboard 2.0
 
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 4.2.2.
 
