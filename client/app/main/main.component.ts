@@ -7,33 +7,28 @@ export class MainController {
   socket;
   awesomeThings = [];
   newThing = '';
+  graph;
+  settings;
 
   /*@ngInject*/
   constructor($http, $scope, socket) {
     this.$http = $http;
     this.socket = socket;
+    this.settings = {demo: true};
 
     $scope.$on('$destroy', function() {
-      socket.unsyncUpdates('thing');
     });
   }
 
   $onInit() {
-    this.$http.get('/api/things').then(response => {
-      this.awesomeThings = response.data;
-      this.socket.syncUpdates('thing', this.awesomeThings);
+    this.$http.get('/api/tulip/getGraph/random').then(response => {
+      this.graph = response.data;
     });
   }
-
-  addThing() {
-    if (this.newThing) {
-      this.$http.post('/api/things', { name: this.newThing });
-      this.newThing = '';
-    }
-  }
-
-  deleteThing(thing) {
-    this.$http.delete('/api/things/' + thing._id);
+  replay() {
+    this.$http.get('/api/tulip/getGraph/random').then(response => {
+      this.graph = response.data;
+    });
   }
 }
 
@@ -42,6 +37,7 @@ export default angular.module('graphRyderDashboardApp.main', [
     .config(routing)
     .component('main', {
       template: require('./main.html'),
-      controller: MainController
+      controller: MainController,
+      controllerAs: 'ctrl'
     })
     .name;

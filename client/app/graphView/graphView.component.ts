@@ -10,18 +10,20 @@ export class GraphViewComponent {
   graph;
   eventCatcher;
   info;
+  settings;
 
   /*@ngInject*/
   constructor($http, $scope) {
-    this.info = 'Graph-Ryder v2.0';
+    this.info = 'Graph-Ryder 2.0';
     this.$http = $http;
+    this.settings = { demo: true};
     $scope.$on('$destroy', function() {
      // todo: destroy sigma instances
     });
   }
 
   $onInit() {
-    this.$http.get('http://localhost:5000/getGraph/random').then(response => {
+    this.$http.get('/api/tulip/getGraph/random').then(response => {
       this.graph = response.data;
     });
   }
