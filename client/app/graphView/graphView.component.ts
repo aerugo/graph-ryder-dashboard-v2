@@ -8,22 +8,37 @@ import routes from './graphView.routes';
 export class GraphViewComponent {
   $http;
   graph;
-  eventCatcher;
   info;
   settings;
+  psettings;
 
   /*@ngInject*/
   constructor($http, $scope) {
     this.info = 'Graph-Ryder 2.0';
     this.$http = $http;
     this.settings = { demo: true};
+    this.psettings = {
+      style: {
+        title: "Settings",
+        display: true,
+        reduce: false,
+        icon: "cog",
+        width: "450px",
+        height: "150px"
+      },
+      url: "Person/Link/Person"
+    };
     $scope.$on('$destroy', function() {
      // todo: destroy sigma instances
     });
   }
 
   $onInit() {
-    this.$http.get('/api/tulip/getGraph/random').then(response => {
+    this.replay();
+  }
+
+  replay() {
+    this.$http.get('/api/tulip/getGraph/', {params:{"url": this.psettings.url}}).then(response => {
       this.graph = response.data;
     });
   }
