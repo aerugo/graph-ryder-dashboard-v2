@@ -1,6 +1,7 @@
-<panel title="Settings" url="ctrl.url" action="ctrl.replay()" settings="ctrl.psettings"></panel>
-<sigma graph="ctrl.graph" settings="ctrl.settings" info="ctrl.info" instance-id="graph-view-sigma" instance-class="sigma-large-instance" ></sigma>
+<div id="panel_container">
+</div>
+<sigma graph="ctrl.graph" settings="ctrl.settings" instance-id="graph-view-sigma" instance-class="sigma-large-instance" event-handler="ctrl.eventHandler(e)"></sigma>
 <div class="footer" style="z-index: 10">
-  <p>{{ctrl.info}}
+  <p>{{ctrl.settings.info}}
   </p>
 </div>

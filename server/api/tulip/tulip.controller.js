@@ -16,7 +16,6 @@ export function getRandomGraph(req, res) {
 }
 
 export function getGraph(req, res) {
-  // todo replace this ( hard code for tetrum test )
   request('http://localhost:5000/getGraph/' + req.param('url'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);

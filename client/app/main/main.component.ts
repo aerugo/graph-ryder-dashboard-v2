@@ -5,8 +5,6 @@ import routing from './main.routes';
 export class MainController {
   $http;
   socket;
-  awesomeThings = [];
-  newThing = '';
   graph;
   settings;
 
@@ -15,17 +13,15 @@ export class MainController {
     this.$http = $http;
     this.socket = socket;
     this.settings = {demo: true};
-
-    $scope.$on('$destroy', function() {
-    });
   }
 
+  /**** Init the view *****/
   $onInit() {
-    this.$http.get('/api/tulip/getGraph/random').then(response => {
-      this.graph = response.data;
-    });
+    this.refresh();
   }
-  replay() {
+
+  /**** Refresh the sigma view ****/
+  refresh() {
     this.$http.get('/api/tulip/getGraph/random').then(response => {
       this.graph = response.data;
     });

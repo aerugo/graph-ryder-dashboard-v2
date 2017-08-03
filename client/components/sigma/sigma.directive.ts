@@ -11,10 +11,10 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
       scope: {
         //@ reads the attribute value, = provides two-way binding, & works with functions
         graph: '=',
-        info: '=',
         instanceId: '@',
         instanceClass: '@',
-        settings: '='
+        settings: '=',
+        eventHandler: '&'
       },
       link: function (scope, element, attrs) {
         /****** Inject the template *****/
@@ -78,14 +78,19 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
 
 
         /**** Events ****/
-        s.bind('clickNode clickEdge hovers', function(e){
-          if(scope.info) {
-            scope.info = "x: " + e.data.captor.x + " y: " + e.data.captor.y; //todo: get rapid info on element
+        s.bind('hovers', function(e){
+          if(scope.settings.info) {
+            scope.settings.info = "x: " + e.data.captor.x + " y: " + e.data.captor.y; //todo: get rapid info on element
             scope.$apply();
           }
         });
 
-        lasso.bind('selectedNodes', function(e){;
+        s.bind('clickNode clickEdge', function(e){
+          scope.eventHandler({e: e});
+          scope.$apply();
+        });
+
+        lasso.bind('selectedNodes', function(e){
           console.log(e);
         });
 

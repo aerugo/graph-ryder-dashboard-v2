@@ -1,14 +1,40 @@
-<div class="panel panel-primary my-panel" style="width: {{settings.style.width}}; height: {{settings.style.height}};" ng-show="settings.style.display">
+<div class="panel panel-primary my-panel" style="{{settings.style.css}}" ng-show="settings.style.display" ng-mouseenter="load()">
   <div class="panel-heading">
     <span><i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
     <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
-  <div class="panel-body">
-    <label for="basic-url">Api url</label>
+  <!-- Settings template-->
+  <div class="panel-body" ng-show="settings.type == 'settings'">
+    <label for="basic-url1">Api url</label>
     <div class="input-group">
-      <span class="input-group-addon" id="basic-addon3">https://tulip-api/getGraph/</span>
-      <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" ng-model="settings.url">
+      <span class="input-group-addon" id="basic-addon1">https://tulip-api/getGraph/</span>
+      <input type="text" class="form-control" id="basic-url1" aria-describedby="basic-addon1" ng-model="settings.url">
       <span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="action()">Go!</button></span>
     </div>
+  </div>
+
+  <!-- Detail template-->
+  <div class="panel-body" ng-show="settings.type == 'details'">
+    <uib-tabset active="activeJustified" justified="true">
+      <uib-tab index="0" heading="Property">
+        <br>
+        <form class="form-horizontal">
+          <div class="form-group" ng-repeat="(key, value) in node">
+            <label for="{{key}}" class="control-label col-xs-4">{{key}}</label>
+            <div class="col-xs-8">
+              <input type="text" class="form-control" id="{{key}}" placeholder="{{key}}" ng-value="value">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-offset-2 col-xs-8">
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </div>
+        </form>
+      </uib-tab>
+      <uib-tab index="1" heading="Links">
+
+      </uib-tab>
+    </uib-tabset>
   </div>
 </div>

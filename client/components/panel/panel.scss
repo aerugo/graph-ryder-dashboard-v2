@@ -1,10 +1,16 @@
 .my-panel {
   position: absolute;
+  overflow: hidden;
   margin-top: 10px;
   margin-left: 10px;
   z-index: 10;
   width: 300px;
   height: 250px;
+}
+.panel-body {
+  height: 100%;
+  overflow: auto;
+  padding-bottom: 50px;
 }
 .ui-resizable {
 }
