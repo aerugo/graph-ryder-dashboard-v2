@@ -4,8 +4,13 @@
   margin-top: 10px;
   margin-left: 10px;
   z-index: 10;
-  width: 300px;
-  height: 250px;
+}
+.sigma-panel>.panel-heading{
+  background-color: #31a354;
+  border-color: #31a354;
+}
+.sigma-panel {
+  border-color: #31a354;
 }
 .panel-body {
   height: 100%;

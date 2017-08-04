@@ -21,6 +21,10 @@ $fa-font-path: '/assets/fonts/font-awesome/';
   height: 91vh;
   margin-top: -20px;
 }
+.sigma-panel-instance {
+  width: 100%;
+  height: 100%;
+}
 // Component styles are injected through gulp
 /* inject:scss */
 @import 'admin/admin';
@@ -29,5 +33,5 @@ $fa-font-path: '/assets/fonts/font-awesome/';
 @import '../components/footer/footer';
 @import '../components/modal/modal';
 @import '../components/navbar/navbar';
-@import '../components/panel/panel';
+@import '../components/panels/panel';
 /* endinject */

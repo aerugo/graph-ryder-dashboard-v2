@@ -1,0 +1,15 @@
+<div class="panel panel-primary my-panel sigma-panel" style="{{settings.style.css}}" ng-show="settings.style.display" ng-mouseenter="load()">
+  <!-- Detail template-->
+  <div class="panel-heading">
+    <span>
+    <i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
+    <span>
+      <button class="btn btn-success" type="button">Nodes <span class="badge">{{graph.nodes.length}}</span></button>
+      <button class="btn btn-success" type="button">Edges <span class="badge">{{graph.edges.length}}</span></button>
+    </span>
+    <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="panel-body" >
+    <sigma graph="graph" settings="settings.sigmaSettings" instance-id="settings.id" instance-class="sigma-panel-instance" event-handler="eventHandler(e)"></sigma>
+  </div>
+</div>

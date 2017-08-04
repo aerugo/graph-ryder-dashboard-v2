@@ -94,9 +94,9 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           console.log(e);
         });
 
-          // element.on('$destroy', function() {
-          //   s.graph.clear();
-          // });
+        // element.on('$destroy', function() {
+        //   s.graph.clear();
+        // });
       }
     };
   })

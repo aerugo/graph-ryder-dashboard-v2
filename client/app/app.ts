@@ -21,7 +21,8 @@ import admin from './admin';
 import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
 import sigma from '../components/sigma/sigma.directive';
-import panel from '../components/panel/panel.directive';
+import detailPanel from '../components/panels/detail-panel/detail-panel.directive';
+import sigmaPanel from '../components/panels/sigma-panel/sigma-panel.directive';
 import main from './main/main.component';
 import graphView from './graphView/graphView.component';
 import constants from './app.constants';
@@ -48,7 +49,8 @@ angular.module('graphRyderDashboardApp', [
     navbar,
   footer,
   sigma,
-  panel,
+  detailPanel,
+  sigmaPanel,
   main,
   graphView,
   constants,
