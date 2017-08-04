@@ -12,8 +12,32 @@
 
 let request = require('request');
 
-export function show(req, res) {
+export function get(req, res) {
   request({url: 'http://localhost:5000/get/' + req.param('id'), qs: {keys: "*"}}, function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
+export function getLabels(req, res) {
+  request('http://localhost:5000/getLabels/' + req.param('id'), function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
+export function getProperties(req, res) {
+  request('http://localhost:5000/getProperties/' + req.param('label'), function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
+export function getPropertyValue(req, res) {
+  request('http://localhost:5000/getPropertyValue/' + req.param('label') + '/' + req.param('key'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }

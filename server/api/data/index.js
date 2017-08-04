@@ -4,7 +4,10 @@ let express = require('express');
 let router = express.Router();
 let controller = require('./data.controller');
 
-router.get('/get/:id', controller.show);
+router.get('/get/:id', controller.get);
+router.get('/getLabels/:id', controller.getLabels);
+router.get('/getProperties/:label', controller.getProperties);
+router.get('/getPropertyValue/:label/:key', controller.getPropertyValue);
 // router.post('/', controller.create);
 // router.put('/:id', controller.upsert);
 // router.patch('/:id', controller.patch);

@@ -25,7 +25,7 @@ export class GraphViewComponent {
         title: "Settings",
         display: true,
         icon: "cog",
-        css: 'width: 450px; height: 250px;'
+        css: 'width: 550px; height: 150px;'
       },
       type: 'settings',
       url: "Person/Link/Person"
@@ -66,7 +66,7 @@ export class GraphViewComponent {
             title: "Details " + e.data.node.label,
             display: true,
             icon: "info",
-            css: 'width: 350px; height: 450px; top: '+ (e.data.captor.clientY - 25) +'px; left : '+ (e.data.captor.clientX -25) +'px;'
+            css: 'width: 350px; height: 550px; top: '+ (e.data.captor.clientY - 25) +'px; left : '+ (e.data.captor.clientX -25) +'px;'
           },
           type: 'details',
           id: e.data.node.neo4j_id

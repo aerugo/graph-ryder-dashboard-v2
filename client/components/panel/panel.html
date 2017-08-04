@@ -1,9 +1,9 @@
 <div class="panel panel-primary my-panel" style="{{settings.style.css}}" ng-show="settings.style.display" ng-mouseenter="load()">
-  <div class="panel-heading">
+  <!-- Settings template-->
+  <div class="panel-heading" ng-show="settings.type == 'settings'">
     <span><i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
     <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
-  <!-- Settings template-->
   <div class="panel-body" ng-show="settings.type == 'settings'">
     <label for="basic-url1">Api url</label>
     <div class="input-group">
@@ -14,6 +14,11 @@
   </div>
 
   <!-- Detail template-->
+  <div class="panel-heading" ng-show="settings.type == 'details'">
+    <span><i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
+    <span ng-repeat="label in labels" ><span class="label label-default" >{{label}}</span>&nbsp;</span>
+    <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  </div>
   <div class="panel-body" ng-show="settings.type == 'details'">
     <uib-tabset active="activeJustified" justified="true">
       <uib-tab index="0" heading="Property">
@@ -22,7 +27,31 @@
           <div class="form-group" ng-repeat="(key, value) in node">
             <label for="{{key}}" class="control-label col-xs-4">{{key}}</label>
             <div class="col-xs-8">
-              <input type="text" class="form-control" id="{{key}}" placeholder="{{key}}" ng-value="value">
+              <input type="text" class="form-control" id="{{key}}" ng-value="value">
+            </div>
+          </div>
+          <!--<div class="form-group">-->
+            <!--<label for="newProperty" class="control-label col-xs-4">Empty</label>-->
+            <!--<div class="col-xs-8">-->
+              <!--<div class="input-group">-->
+                <!--<div class="input-group-btn">-->
+                  <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">test<span class="caret"></span></button>-->
+                  <!--<ul class="dropdown-menu">-->
+                    <!--<li ng-repeat="property in properties"><a href="#">{{property}}</a></li>-->
+                  <!--</ul>-->
+                <!--</div>&lt;!&ndash; /btn-group &ndash;&gt;-->
+                <!--<input type="text" class="form-control" id="newProperty">-->
+              <!--</div>&lt;!&ndash; /input-group &ndash;&gt;-->
+            <!--</div>-->
+          <!--</div>-->
+          <div class="form-group">
+            <div class="form-group">
+              <div class="col-xs-4" style="padding-left: 40px;">
+                <input type="text" class="form-control" id="newKey" placeholder="newKey" ng-model="newKey" uib-typeahead="property for property in properties | filter:$viewValue" typeahead-min-length="0" typeahead-on-select="suggestValue(newKey)">
+              </div>
+              <div class="col-xs-8" style="padding-right: 30px;">
+                <input type="text" class="form-control" id="newValue" ng-model="newValue" uib-typeahead="value for value in values | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
+              </div>
             </div>
           </div>
           <div class="form-group">
