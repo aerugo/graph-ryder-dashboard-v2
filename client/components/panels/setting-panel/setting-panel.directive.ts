@@ -22,8 +22,13 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
         let loaded = false;
 
         scope.action = function() {
-          $http.get('/api/tulip/getGraph/', {params: {"url": scope.settings.sigma.url}}).then(response => {
+          $http.get('/api/tulip/', {params: {"url": scope.settings.sigma.url}}).then(response => {
             scope.settings.sigma.graph = response.data;
+          });
+
+          /***** Get labels *****/
+          $http.get('/api/data/getLabels/').then(response => {
+            scope.labels = response.data;
           });
         };
         scope.action();

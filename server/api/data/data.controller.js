@@ -21,6 +21,14 @@ export function get(req, res) {
 }
 
 export function getLabels(req, res) {
+  request('http://localhost:5000/getLabels/', function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
+export function getLabelsById(req, res) {
   request('http://localhost:5000/getLabels/' + req.param('id'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);

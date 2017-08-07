@@ -28,10 +28,10 @@ export class GraphViewComponent {
   /**** Init the view ****/
   $onInit() {
     this.mainGraph = {
-      url: "Person/Relation/Person",
+      url: "getGraph/Person/Relation/Person",
       graph: [],
       settings: {
-        demo: true,
+        demo: false,
         info: 'Graph-Ryder 2.0'
       }
     };
@@ -47,7 +47,7 @@ export class GraphViewComponent {
     this.sigmaPanels.push({
       type: 'sigma',
       id: 'test',
-      url: "Person/Financial/Person",
+      url: "getGraph/Person/Financial/Person",
       mode: "panel",
       style: {
         title: "Sigma",

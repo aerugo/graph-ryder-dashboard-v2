@@ -7,6 +7,6 @@ let controller = require('./tulip.controller');
 let router = express.Router();
 
 router.get('/getGraph/random', controller.getRandomGraph);
-router.get('/getGraph/', auth.isAuthenticated(), controller.getGraph);
+router.get('/', auth.isAuthenticated(), controller.getGraph);
 
 module.exports = router;

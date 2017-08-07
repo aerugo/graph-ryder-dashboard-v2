@@ -16,7 +16,7 @@ export function getRandomGraph(req, res) {
 }
 
 export function getGraph(req, res) {
-  request('http://localhost:5000/getGraph/' + req.param('url'), function(error, response, body) {
+  request('http://localhost:5000/' + req.param('url'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }

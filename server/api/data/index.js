@@ -5,7 +5,8 @@ let router = express.Router();
 let controller = require('./data.controller');
 
 router.get('/get/:id', controller.get);
-router.get('/getLabels/:id', controller.getLabels);
+router.get('/getLabels/', controller.getLabels);
+router.get('/getLabels/:id', controller.getLabelsById);
 router.get('/getProperties/:label', controller.getProperties);
 router.get('/getPropertyValue/:label/:key', controller.getPropertyValue);
 // router.post('/', controller.create);

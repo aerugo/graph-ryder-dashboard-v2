@@ -23,7 +23,7 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
         /***** Load properties *******/
         scope.draw = function() {
           if(scope.settings.id) {
-            $http.get('/api/tulip/getGraph/', {params: {"url": scope.settings.url}}).then(response => {
+            $http.get('/api/tulip/', {params: {"url": scope.settings.url}}).then(response => {
               scope.graph = response.data;
             });
           }
