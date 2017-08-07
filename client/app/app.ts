@@ -23,6 +23,7 @@ import footer from '../components/footer/footer.component';
 import sigma from '../components/sigma/sigma.directive';
 import detailPanel from '../components/panels/detail-panel/detail-panel.directive';
 import sigmaPanel from '../components/panels/sigma-panel/sigma-panel.directive';
+import settingPanel from '../components/panels/setting-panel/setting-panel.directive';
 import main from './main/main.component';
 import graphView from './graphView/graphView.component';
 import constants from './app.constants';
@@ -51,6 +52,7 @@ angular.module('graphRyderDashboardApp', [
   sigma,
   detailPanel,
   sigmaPanel,
+  settingPanel,
   main,
   graphView,
   constants,

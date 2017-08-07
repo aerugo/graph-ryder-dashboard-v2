@@ -1,0 +1,41 @@
+'use strict';
+const angular = require('angular');
+
+import 'bootstrap';
+import 'jquery';
+import 'jquery-ui-bundle';
+
+
+export default angular.module('graphRyderDashboardApp.settingPanel', [])
+  .directive('settingPanel', function($http) {
+    return {
+      template: require('./setting-panel.html'),
+      restrict: 'E',
+      replace: true,
+      scope: {
+        settings: '=',
+        action: '&'
+      },
+      link: function(scope, element) {
+        element.draggable({handle: ".panel-heading", containment: "body", scroll: false });
+        element.resizable({minHeight: 150, minWidth:150}); // todo refresh on resize
+        let loaded = false;
+
+        scope.action = function() {
+          $http.get('/api/tulip/getGraph/', {params: {"url": scope.settings.sigma.url}}).then(response => {
+            scope.settings.sigma.graph = response.data;
+          });
+        };
+        scope.action();
+
+        /***** Load properties *******/
+        scope.load = function(){
+          if(!loaded) {
+
+          }
+          loaded = true;
+        };
+      }
+    };
+  })
+  .name;

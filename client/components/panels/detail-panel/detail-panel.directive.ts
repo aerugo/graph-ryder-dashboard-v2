@@ -1,7 +1,9 @@
 'use strict';
 const angular = require('angular');
-require('jquery');
-require('jquery-ui-bundle');
+
+import 'bootstrap';
+import 'jquery';
+import 'jquery-ui-bundle';
 
 
 export default angular.module('graphRyderDashboardApp.detailPanel', [])

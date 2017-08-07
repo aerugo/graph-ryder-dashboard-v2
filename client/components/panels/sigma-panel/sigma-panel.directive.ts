@@ -1,10 +1,12 @@
 'use strict';
 const angular = require('angular');
-require('jquery');
-require('jquery-ui-bundle');
+
+import 'bootstrap';
+import 'jquery';
+import 'jquery-ui-bundle';
 
 
-export default angular.module('graphRyderDashboardApp.panel', [])
+export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
   .directive('sigmaPanel', function($http) {
     return {
       template: require('./sigma-panel.html'),
@@ -17,21 +19,20 @@ export default angular.module('graphRyderDashboardApp.panel', [])
       link: function(scope, element) {
         element.draggable({handle: ".panel-heading", containment: "body", scroll: false });
         element.resizable({minHeight: 150, minWidth:150}); // todo refresh on resize
-        let loaded = false;
 
         /***** Load properties *******/
-        scope.load = function(){
-          if(!loaded && scope.settings.id) {
+        scope.draw = function() {
+          if(scope.settings.id) {
             $http.get('/api/tulip/getGraph/', {params: {"url": scope.settings.url}}).then(response => {
               scope.graph = response.data;
             });
           }
-          loaded = true;
         };
+        scope.draw();
 
-        /***** EventHandler *****/
-        // todo remove this dirty double func pass
         scope.eventHandler = function(e) {
+          /***** EventHandler *****/
+        // todo remove this dirty double func pass
           scope.listener({e: e});
         };
       }

@@ -12,6 +12,7 @@ export class GraphViewComponent {
   mainGraph;
   detailPanels = [];
   sigmaPanels = [];
+  settingPanels = [];
 
   /*@ngInject*/
   constructor($http, $scope, $compile) {
@@ -21,6 +22,7 @@ export class GraphViewComponent {
     this.mainGraph = {};
     this.detailPanels = [];
     this.sigmaPanels = [];
+    this.settingPanels = [];
   }
 
   /**** Init the view ****/
@@ -29,9 +31,19 @@ export class GraphViewComponent {
       url: "Person/Relation/Person",
       graph: [],
       settings: {
-        demo: true
+        demo: true,
+        info: 'Graph-Ryder 2.0'
       }
     };
+    this.settingPanels.push({
+      sigma: this.mainGraph,
+      style: {
+        title: "Main graph",
+        display: true,
+        icon: "cog",
+        css: 'width: 600px; height: 150px; right: 10px;'
+      }
+    });
     this.sigmaPanels.push({
       type: 'sigma',
       id: 'test',
@@ -48,14 +60,13 @@ export class GraphViewComponent {
       }
     });
     this.addSigmaPanel('sigmaPanels[0]');
+    this.addSettingPanel('settingPanels[0]');
     this.refresh();
   }
 
   /**** Refresh the view *****/
   refresh() {
-    this.$http.get('/api/tulip/getGraph/', {params:{"url": this.mainGraph.url}}).then(response => {
-      this.mainGraph.graph = response.data;
-    });
+
   }
 
   /***** Add panels *****/
@@ -70,6 +81,13 @@ export class GraphViewComponent {
     let panel = document.createElement("sigma-panel");
     panel.setAttribute("settings", "ctrl." + settings);
     panel.setAttribute("listener", "ctrl.eventHandler(e)");
+    angular.element('#panel_container').append(panel);
+    this.$compile(panel)(this.$scope);
+  }
+
+  addSettingPanel(settings) {
+    let panel = document.createElement("setting-panel");
+    panel.setAttribute("settings", "ctrl." + settings);
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }

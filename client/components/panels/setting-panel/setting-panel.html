@@ -1,0 +1,20 @@
+<div class="panel panel-primary my-panel setting-panel" style="{{settings.style.css}}" ng-show="settings.style.display" ng-mouseenter="load()">
+  <!-- Detail template-->
+  <div class="panel-heading">
+    <span>
+    <i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
+    <span>
+      <button class="btn btn-primary" type="button">Nodes <span class="badge">{{settings.sigma.graph.nodes.length}}</span></button>
+      <button class="btn btn-primary" type="button">Edges <span class="badge">{{settings.sigma.graph.edges.length}}</span></button>
+    </span>
+    <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="panel-body">
+    <label for="basic-url1">Api url</label>
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">https://tulip-api/getGraph/</span>
+      <input type="text" class="form-control" id="basic-url1" aria-describedby="basic-addon1" ng-model="settings.sigma.url">
+      <span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="action()">Go!</button></span>
+    </div>
+  </div>
+</div>
