@@ -26,6 +26,7 @@ import sigmaPanel from '../components/panels/sigma-panel/sigma-panel.directive';
 import settingPanel from '../components/panels/setting-panel/setting-panel.directive';
 import main from './main/main.component';
 import graphView from './graphView/graphView.component';
+import ModelComponent from './model/model.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
@@ -55,6 +56,7 @@ angular.module('graphRyderDashboardApp', [
   settingPanel,
   main,
   graphView,
+  ModelComponent,
   constants,
   socket,
   util

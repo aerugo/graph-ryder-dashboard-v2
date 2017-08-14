@@ -9,6 +9,9 @@ export class NavbarComponent {
   }, {
     'title': 'Graph View',
     'state': 'graphView'
+  }, {
+    'title': 'Model View',
+    'state': 'model'
   }];
   isLoggedIn: Function;
   isAdmin: Function;
