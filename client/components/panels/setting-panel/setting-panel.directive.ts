@@ -19,7 +19,6 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
         element.draggable({handle: ".panel-heading", containment: "body", scroll: false });
         element.resizable({minHeight: 150, minWidth:150}); // todo refresh on resize
         let loaded = false;
-        scope.test= "hello";
 
         scope.action = function() {
           $http.get('/api/tulip/', {params: {"url": scope.settings.sigma.url}}).then(response => {

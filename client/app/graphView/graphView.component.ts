@@ -10,9 +10,10 @@ export class GraphViewComponent {
   $compile;
   $scope;
   mainGraph;
-  detailPanels = [];
-  sigmaPanels = [];
-  settingPanels = [];
+  detailPanels;
+  sigmaPanels;
+  settingPanels;
+  contextMenu;
 
   /*@ngInject*/
   constructor($http, $scope, $compile) {
@@ -23,6 +24,7 @@ export class GraphViewComponent {
     this.detailPanels = [];
     this.sigmaPanels = [];
     this.settingPanels = [];
+    this.contextMenu = {};
   }
 
   /**** Init the view ****/
@@ -44,22 +46,7 @@ export class GraphViewComponent {
         css: 'width: 600px; height: 150px; right: 10px;'
       }
     });
-    this.sigmaPanels.push({
-      type: 'sigma',
-      id: 'test',
-      url: "getGraph/Person/Financial/Person",
-      mode: "panel",
-      style: {
-        title: "Sigma",
-        display: true,
-        icon: "link",
-        css: 'width: 600px; height: 500px;'
-      },
-      sigmaSettings: {
-        demo: true
-      }
-    });
-    this.addSigmaPanel('sigmaPanels[0]');
+
     this.addSettingPanel('settingPanels[0]');
     this.refresh();
   }
@@ -92,6 +79,14 @@ export class GraphViewComponent {
     this.$compile(panel)(this.$scope);
   }
 
+  addContextPanel(settings) {
+    let menu = document.createElement("context-menu");
+    menu.setAttribute("settings", "ctrl." + settings);
+    menu.setAttribute("handler", "ctrl.actionHandler(e)");
+    angular.element('#contextMenu_container').append(menu);
+    this.$compile(menu)(this.$scope);
+  }
+
   /**** Event handler *****/
   eventHandler(e) {
     switch(e.type){
@@ -107,8 +102,67 @@ export class GraphViewComponent {
             type: 'detail',
             id: e.data.node.neo4j_id
           });
+          id--;
           this.addDetailPanel("detailPanels["+ id +"]");
         }
+        break;
+      case 'rightClickNode':
+        this.contextMenu = {
+          style: {
+            title: "Menu " + e.data.node.label,
+            display: true,
+            //icon: "info",
+            css: 'top: '+ (e.data.captor.clientY - 25) +'px; left : '+ (e.data.captor.clientX -25) +'px;'
+        },
+          options: [
+            { label: "Modify / Details", action: "detail"},
+            { label: "View Neighbours", action: "neighbour"}
+          ],
+          position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
+          element: {neo4j_id: e.data.node.neo4j_id, label: e.data.node.label}
+        };
+        this.addContextPanel("contextMenu");
+        break;
+      case 'clickStage' || 'rightClickStage':
+        this.contextMenu.style.display = false;
+        break;
+    }
+  }
+
+  actionHandler(e) {
+    switch(e.type){
+      case 'detail':
+        let id = this.detailPanels.push({
+          style: {
+            title: "Details " + e.element.label,
+            display: true,
+            icon: "info",
+            css: 'width: 350px; height: 550px; top: '+ (e.position.clientY - 25) +'px; left : '+ (e.position.clientX -25) +'px;'
+          },
+          type: 'detail',
+          id: e.element.neo4j_id,
+        });
+        id--;
+        this.addDetailPanel("detailPanels["+ id +"]");
+      break;
+      case 'neighbour':
+        let id = this.sigmaPanels.push({
+          type: 'sigma',
+          id: "test",
+          url: "getGraphNeighboursById/"+ e.element.neo4j_id +"/Link/Person", //todo check the type of the node
+          mode: "panel",
+          style: {
+            title: "Sigma",
+            display: true,
+            icon: "link",
+            css: 'width: 600px; height: 500px;'
+          },
+          sigmaSettings: {
+            demo: true
+          }
+        });
+        id--;
+        this.addSigmaPanel('sigmaPanels['+ id +']');
         break;
     }
   }

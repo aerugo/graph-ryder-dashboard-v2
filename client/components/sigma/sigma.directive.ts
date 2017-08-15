@@ -5,7 +5,7 @@ require('script!linkurious/dist/plugins.min.js');
 
 // todo : https://github.com/Linkurious/linkurious.js/wiki/How-to-integrate-with-Angular.js
 export default angular.module('graphRyderDashboardApp.sigma', [])
-  .directive('sigma', function($compile) {
+  .directive('sigma', function($compile, $parse) {
     return {
       restrict: 'E',
       scope: {
@@ -32,7 +32,8 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           drawEdgeLabels: false,
           animationsTime: 1500,
           zoomDef: 1.1,
-          centerOnLoad: true
+          centerOnLoad: true,
+          demo: false
         };
         if(scope.settings)
           Object.keys(scope.settings).forEach(function(key) { settings[key] = scope.settings[key]; });
@@ -78,6 +79,13 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
 
 
         /**** Events ****/
+        // prevent right click menu
+        element.bind('contextmenu', function(event) {
+          scope.$apply(function() {
+            event.preventDefault();
+          });
+        });
+
         s.bind('hovers', function(e){
           if(scope.settings.info) {
             scope.settings.info = "x: " + e.data.captor.x + " y: " + e.data.captor.y; //todo: get rapid info on element
@@ -85,7 +93,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           }
         });
 
-        s.bind('clickNode clickEdge', function(e){
+        s.bind('clickNode clickEdge rightClickNode clickStage rightClickStage', function(e){
           scope.eventHandler({e: e});
           scope.$apply();
         });
