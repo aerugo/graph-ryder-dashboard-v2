@@ -24,7 +24,7 @@ export class GraphViewComponent {
     this.detailPanels = [];
     this.sigmaPanels = [];
     this.settingPanels = [];
-    this.contextMenu = {};
+    this.contextMenu = { style: { display: false }};
   }
 
   /**** Init the view ****/
@@ -123,12 +123,30 @@ export class GraphViewComponent {
         };
         this.addContextPanel("contextMenu");
         break;
-      case 'clickStage' || 'rightClickStage':
+      case 'clickStage':
         this.contextMenu.style.display = false;
+        break;
+      case 'rightClickStage':
+        this.contextMenu.style.display = false;
+        this.contextMenu = {
+          style: {
+            title: "Menu main graph",
+            display: true,
+            //icon: "info",
+            css: 'top: '+ (e.data.captor.clientY - 25) +'px; left : '+ (e.data.captor.clientX -25) +'px;'
+          },
+          options: [
+            { label: "Add node", action: "add"},
+            { label: "Settings", action: "settings"}
+            ],
+          position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX}
+        };
+        this.addContextPanel("contextMenu");
         break;
     }
   }
 
+  /***** ContextMenu action handler *******/
   actionHandler(e) {
     switch(e.type){
       case 'detail':
@@ -163,6 +181,11 @@ export class GraphViewComponent {
         });
         id--;
         this.addSigmaPanel('sigmaPanels['+ id +']');
+        break;
+      case 'settings':
+        if(!this.settingPanels[0].style.display)
+          this.settingPanels[0].style.display = true;
+        this.settingPanels[0].style.css = 'width: 600px; height: 150px; top: '+ (e.position.clientY - 25) +'px; left : '+ (e.position.clientX -25) +'px;'
         break;
     }
   }
