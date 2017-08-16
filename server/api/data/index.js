@@ -3,14 +3,15 @@
 let express = require('express');
 let router = express.Router();
 let controller = require('./data.controller');
+import * as auth from '../../auth/auth.service';
 
-router.get('/get/:id', controller.get);
-router.get('/getLabels/', controller.getLabels);
-router.get('/countLabel/:label', controller.countLabel);
-router.get('/getLabelsHierarchy/', controller.getLabelsHierarchy);
-router.get('/getLabels/:id', controller.getLabelsById);
-router.get('/getProperties/:label', controller.getProperties);
-router.get('/getPropertyValue/:label/:key', controller.getPropertyValue);
+router.get('/get/:id', auth.isAuthenticated(), controller.get);
+router.get('/getLabels/', auth.isAuthenticated(), controller.getLabels);
+router.get('/countLabel/:label', auth.isAuthenticated(), controller.countLabel);
+router.get('/getLabelsHierarchy/', auth.isAuthenticated(), controller.getLabelsHierarchy);
+router.get('/getLabels/:id',  auth.isAuthenticated(), controller.getLabelsById);
+router.get('/getProperties/:label', auth.isAuthenticated(), controller.getProperties);
+router.get('/getPropertyValue/:label/:key', auth.isAuthenticated(), controller.getPropertyValue);
 // router.post('/', controller.create);
 // router.put('/:id', controller.upsert);
 // router.patch('/:id', controller.patch);

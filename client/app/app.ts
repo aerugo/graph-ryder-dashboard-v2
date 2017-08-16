@@ -11,7 +11,8 @@ const uiRouter = require('angular-ui-router');
 const uiBootstrap = require('angular-ui-bootstrap');
 import 'angular-validation-match';
 
-
+import 'angular-bootstrap-colorpicker';
+import 'angular-bootstrap-colorpicker/css/colorpicker.css';
 
 import {routeConfig} from './app.config';
 
@@ -61,7 +62,8 @@ angular.module('graphRyderDashboardApp', [
   ModelComponent,
   constants,
   socket,
-  util
+  util,
+  'colorpicker.module'
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
