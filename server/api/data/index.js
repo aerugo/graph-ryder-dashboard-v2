@@ -6,6 +6,7 @@ let controller = require('./data.controller');
 
 router.get('/get/:id', controller.get);
 router.get('/getLabels/', controller.getLabels);
+router.get('/countLabel/:label', controller.countLabel);
 router.get('/getLabelsHierarchy/', controller.getLabelsHierarchy);
 router.get('/getLabels/:id', controller.getLabelsById);
 router.get('/getProperties/:label', controller.getProperties);

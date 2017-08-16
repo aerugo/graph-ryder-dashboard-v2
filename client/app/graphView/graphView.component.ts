@@ -173,7 +173,7 @@ export class GraphViewComponent {
             title: "Sigma",
             display: true,
             icon: "link",
-            css: 'width: 600px; height: 500px;'
+            css: 'width: 600px; height: 500px; top: '+ (e.position.clientY - 25) +'px; left : '+ (e.position.clientX -25) +'px;'
           },
           sigmaSettings: {
             demo: true

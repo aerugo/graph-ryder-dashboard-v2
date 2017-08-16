@@ -13,9 +13,38 @@ export class ModelComponent {
   constructor($http, $scope) {
     this.$http = $http;
     this.$scope = $scope;
-    // $http.get('/api/data/getLabelsHierarchy/').then(response => {
-    $http.get('/api/data/getLabels/').then(response => {
-      this.$scope.labels = response.data;
+
+    // todo redo in a cleaner way
+    let labelsCount = {};
+    let countLabel =  function(label){
+      $http.get('/api/data/countLabel/'+label).then(response => {
+        labelsCount[label] = response.data;
+      });
+    };
+    $http.get('/api/data/getLabelsHierarchy/').then(response => {
+      $scope.keys = Object.keys(response.data);
+      let keys2 = {};
+      let keys3 = {};
+      angular.forEach(response.data, function(label, key){
+         countLabel(key);
+        keys2[key] = [];
+        angular.forEach(label, function(l){
+          angular.forEach(Object.keys(l), function(k){
+            countLabel(k);
+            keys3[k] = [];
+            angular.forEach(l[k], function(l3){
+              angular.forEach(Object.keys(l3), function(k3){
+                countLabel(k3);
+                keys3[k].push(k3);
+              });
+            });
+            keys2[key].push(k);
+          });
+        });
+      });
+      $scope.keys2 = keys2;
+      $scope.keys3 = keys3;
+      $scope.labelsCount = labelsCount;
     });
   }
 }

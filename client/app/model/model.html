@@ -1,7 +1,16 @@
-<div class="span4">
-  <ol class="serialization vertical">
-    <li ng-repeat="label in labels" data-name="label">
-      {{label}}
+
+<div class="container">
+  <ul class="list-group">
+    <li ng-repeat="label in keys" class="list-group-item">{{label}}
+      <span class="badge">{{labelsCount[label]}}</span>
+      <ul class="list-group">
+        <li ng-repeat="l in keys2[label]" class="list-group-item">{{l}}
+          <span class="badge">{{labelsCount[l]}}</span>
+          <ul class="list-group">
+            <li ng-repeat="l3 in keys3[l]" class="list-group-item">{{l3}} <span class="badge">{{labelsCount[l3]}}</span></li>
+          </ul>
+        </li>
+      </ul>
     </li>
-  </ol>
+  </ul>
 </div>

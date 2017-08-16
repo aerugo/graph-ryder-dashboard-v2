@@ -20,6 +20,14 @@ export function get(req, res) {
   });
 }
 
+export function countLabel(req, res) {
+  request('http://localhost:5000/countLabel/' + req.param('label'), function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
 export function getLabels(req, res) {
   request('http://localhost:5000/getLabels/', function(error, response, body) {
     if(!error && response.statusCode == 200) {
