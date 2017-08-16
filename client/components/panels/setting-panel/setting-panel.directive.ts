@@ -16,7 +16,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
         settings: '='
       },
       link: function(scope, element) {
-        element.draggable({handle: ".panel-heading", containment: "body", scroll: false });
+        element.draggable({handle: ".panel-heading", containment: "body", scroll: false, stack: ".panel" });
         element.resizable({minHeight: 150, minWidth:150}); // todo refresh on resize
         let loaded = false;
 
