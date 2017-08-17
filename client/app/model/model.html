@@ -1,18 +1,25 @@
 <div class="container">
+  <!--Level 1-->
   <ul class="list-group">
-    <li ng-repeat="label in keys" class="list-group-item" ng-class="{'list-group-item-danger': label.substring(0,5) == 'group'}">
-      {{label.label}}
-      <button ng-if="label.color" colorpicker type="button" class="btn btn-default dropdown-toggle" ng-model="label.color" style="background-color: {{label.color}};">Color</button>
-      <span ng-if="label.substring(0,5) == 'group'" class="badge">Hierarchy can't be automatically find</span>
-      <span ng-if="label.substring(0,5) != 'group'" class="badge">{{labelsCount[label.label]}}</span>
+    <li ng-repeat="label in keys" class="list-group-item" ng-class="{'list-group-item-danger': label.label.substring(0,5) == 'group'}">
+      <span ng-if="!label.color">{{label.label}}</span>
+      <span class="label label-default" ng-if="label.color" colorpicker ng-model="label.color" style="background-color: {{label.color}};">{{label.label}}</span>
+      <select ng-if="label.labeling" name="labeling" ng-options="option in property[label.label]" ng-model="label.labeling"></select>
+      <span ng-if="label.label.substring(0,5) == 'group'" class="badge">Hierarchy can't be automatically find</span>
+      <span ng-if="label.label.substring(0,5) != 'group'" class="badge">{{labelsCount[label.label]}}</span>
+
+      <!-- Level 2-->
       <ul ng-if="keys2[label.label].length" class="list-group">
-        <li ng-repeat="l in keys2[label.label]" class="list-group-item">{{l.label}}
-          <span class="label label-default" ng-if="l.color" colorpicker ng-model="l.color" style="background-color: {{l.color}};">Color</span  >
-          <span class="badge">{{labelsCount[l.label]}}</span>
+        <li ng-repeat="l in keys2[label.label]" class="list-group-item">
+          <span ng-if="!l.color">{{l.label}}</span>
+          <span class="label label-default" ng-if="l.color" colorpicker ng-model="l.color" style="background-color: {{l.color}};">{{l.label}}</span>
+          <select ng-if="l.labeling" name="labeling" ng-options="option for option in property[l.label]" ng-model="l.labeling"></select><span class="badge">{{labelsCount[l.label]}}</span>
+          <!--Level 3-->
           <ul ng-if="keys3[l.label].length" class="list-group">
             <li ng-repeat="l3 in keys3[l.label]" class="list-group-item">
-              {{l3.label}}
-              <span class="label label-default" ng-if="l3.color" colorpicker ng-model="l3.color" style="background-color: {{l3.color}};">Color</span  >
+              <span ng-if="!l3.color">{{l3.label}}</span>
+              <span class="label label-default" ng-if="l3.color" colorpicker ng-model="l3.color" style="background-color: {{l3.color}};">{{l3.label}}</span>
+              <select ng-if="l3.labeling"  name="labeling" ng-options="option for option in property[l3.label]" ng-model="l3.labeling"></select>
               <span class="badge">{{labelsCount[l3.label]}}</span>
             </li>
           </ul>
@@ -20,4 +27,7 @@
       </ul>
     </li>
   </ul>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary center-block" ng-click="update()">Update</button>
+  </div>
 </div>

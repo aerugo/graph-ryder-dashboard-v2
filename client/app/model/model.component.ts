@@ -16,9 +16,15 @@ export class ModelComponent {
 
     // todo redo in a cleaner way
     let labelsCount = {};
+    let property = {};
     let countLabel =  function(label){
       $http.get('/api/data/countLabel/'+label).then(response => {
         labelsCount[label] = response.data;
+      });
+    };
+    let getProperty =  function(label){
+      $http.get('/api/data/getProperties/'+label).then(response => {
+        property[label] = response.data;
       });
     };
     $http.get('/api/data/getLabelsHierarchy/').then(response => {
@@ -35,12 +41,15 @@ export class ModelComponent {
             keys3[k] = [];
             if(l[k].length)
               keys2[key].push({label: k});
-            else
-              keys2[key].push({label: k, color: '#337ab7'});
+            else {
+              getProperty(k);
+              keys2[key].push({label: k, color: '#337ab7', labeling: "name"});
+            }
             angular.forEach(l[k], function(l3){
               angular.forEach(Object.keys(l3), function(k3){
                 countLabel(k3);
-                keys3[k].push({label: k3, color: '#337ab7'});
+                keys3[k].push({label: k3, color: '#337ab7', labeling: 'name'});
+                getProperty(k3);
               });
             });
           });
@@ -49,7 +58,11 @@ export class ModelComponent {
       $scope.keys2 = keys2;
       $scope.keys3 = keys3;
       $scope.labelsCount = labelsCount;
+      $scope.property = property;
       // todo save and update the model color ...
+      this.$scope.update = function() {
+
+      };
     });
   }
 }
