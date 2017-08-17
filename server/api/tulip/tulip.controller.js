@@ -16,7 +16,12 @@ export function getRandomGraph(req, res) {
 }
 
 export function getGraph(req, res) {
-  request('http://localhost:5000/' + req.param('url'), function(error, response, body) {
+  let queryString = {};
+  Object.keys(req.query).forEach(function(param) {
+   if(param != 'url')
+     queryString[param] = req.query[param];
+  });
+  request({url: 'http://localhost:5000/' + req.param('url'), qs: queryString}, function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }

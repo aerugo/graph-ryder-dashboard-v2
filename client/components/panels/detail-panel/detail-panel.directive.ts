@@ -25,6 +25,12 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           if(!loaded && scope.settings.id) {
             $http.get('/api/data/getLabels/' + scope.settings.id).then(response => {
               scope.labels = response.data;
+              angular.forEach(scope.labels, function(label) {
+                $http.get('/api/model/label/' + label).then(model => {
+                  if(model.data.color)
+                    scope.color = model.data.color;
+                });
+              });
             });
             $http.get('/api/data/get/' + scope.settings.id).then(response => {
               scope.node = response.data;

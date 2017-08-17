@@ -10,10 +10,17 @@
     <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
   <div class="panel-body">
-    <label for="basic-url1">Api url</label>
+    <span>Api request:</span>
     <div class="input-group">
-      <span class="input-group-addon" id="basic-addon1">https://tulip-api/</span>
-      <input type="text" class="form-control" id="basic-url1" aria-describedby="basic-addon1" ng-model="settings.sigma.url">
+      Node 1: <select ng-model="settings.sigma.url.leftLabel">
+      <option ng-repeat="label in labels" value="{{label.label}}">{{label.label}}</option>
+    </select>
+      Edge: <select ng-model="settings.sigma.url.edgeLabel">
+      <option ng-repeat="label in labels" value="{{label.label}}">{{label.label}}</option>
+    </select>
+      Node 2: <select ng-model="settings.sigma.url.rightLabel">
+      <option ng-repeat="label in labels" value="{{label.label}}">{{label.label}}</option>
+    </select>
       <span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="action()">Go!</button></span>
     </div>
   </div>

@@ -9,7 +9,7 @@ router.get('/get/:id', auth.isAuthenticated(), controller.get);
 router.get('/getLabels/', auth.isAuthenticated(), controller.getLabels);
 router.get('/countLabel/:label', auth.isAuthenticated(), controller.countLabel);
 router.get('/getLabelsHierarchy/', auth.isAuthenticated(), controller.getLabelsHierarchy);
-router.get('/getLabels/:id',  auth.isAuthenticated(), controller.getLabelsById);
+router.get('/getLabels/:id', auth.isAuthenticated(), controller.getLabelsById);
 router.get('/getProperties/:label', auth.isAuthenticated(), controller.getProperties);
 router.get('/getPropertyValue/:label/:key', auth.isAuthenticated(), controller.getPropertyValue);
 // router.post('/', controller.create);

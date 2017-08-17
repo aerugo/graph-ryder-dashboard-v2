@@ -21,13 +21,27 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
         let loaded = false;
 
         scope.action = function() {
-          $http.get('/api/tulip/', {params: {"url": scope.settings.sigma.url}}).then(response => {
-            scope.settings.sigma.graph = response.data;
+          let u = scope.settings.sigma.url;
+          let params = {"url": u.type + '/' +  u.leftLabel + '/' + u.edgeLabel + '/' + u.rightLabel};
+          // todo pack promise
+          $http.get('/api/model/label/' + u.leftLabel).then(model => {
+            params['label_key_left'] = model.data.labeling;
+            params['color_left'] = model.data.color;
+            $http.get('/api/model/label/' + u.rightLabel).then(model => {
+              params['label_key_right'] = model.data.labeling;
+              params['color_right'] = model.data.color;
+              $http.get('/api/model/label/' + u.edgeLabel).then(model => {
+                params['color_edge'] = model.data.color;
+                $http.get('/api/tulip/', {params: params}).then(response => {
+                  scope.settings.sigma.graph = response.data;
+                });
+              });
+            });
           });
 
           /***** Get labels *****/
-          $http.get('/api/data/getLabels/').then(response => {
-            scope.labels = response.data;
+          $http.get('/api/model/').then(model => {
+            scope.labels = model.data;
           });
         };
         scope.action();

@@ -30,7 +30,12 @@ export class GraphViewComponent {
   /**** Init the view ****/
   $onInit() {
     this.mainGraph = {
-      url: "getGraph/Person/Relation/Person",
+      url: {
+        type: 'getGraph',
+        leftLabel: 'Person',
+        rightLabel: 'Person',
+        edgeLabel: 'Financial'
+      },
       graph: [],
       settings: {
         demo: false,

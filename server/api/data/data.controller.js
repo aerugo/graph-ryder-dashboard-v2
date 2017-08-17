@@ -13,7 +13,7 @@
 let request = require('request');
 
 export function get(req, res) {
-  request({url: 'http://localhost:5000/get/' + req.param('id'), qs: {keys: "*"}}, function(error, response, body) {
+  request({url: 'http://localhost:5000/get/' + req.param('id'), qs: {keys: '*'}}, function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
