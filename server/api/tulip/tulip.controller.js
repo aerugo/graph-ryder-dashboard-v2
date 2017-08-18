@@ -7,6 +7,14 @@
 
 let request = require('request');
 
+export function getLayouts(req, res) {
+  request('http://localhost:5000/layoutAlgorithm', function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
 export function getRandomGraph(req, res) {
   request('http://localhost:5000/getGraph/random', function(error, response, body) {
     if(!error && response.statusCode == 200) {

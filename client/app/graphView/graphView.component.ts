@@ -4,6 +4,7 @@ const uiRouter = require('angular-ui-router');
 const ngResource = require('angular-resource');
 
 import routes from './graphView.routes';
+import {isUndefined} from "util";
 
 export class GraphViewComponent {
   $http;
@@ -34,7 +35,8 @@ export class GraphViewComponent {
         type: 'getGraph',
         leftLabel: 'Person',
         rightLabel: 'Person',
-        edgeLabel: 'Financial'
+        edgeLabel: 'Financial',
+        layout: 'Circular (OGDF)'
       },
       graph: [],
       settings: {
@@ -88,14 +90,21 @@ export class GraphViewComponent {
     let menu = document.createElement("context-menu");
     menu.setAttribute("settings", "ctrl." + settings);
     menu.setAttribute("handler", "ctrl.actionHandler(e)");
+    menu.setAttribute("id", "contextMenu");
     angular.element('#contextMenu_container').append(menu);
     this.$compile(menu)(this.$scope);
+  }
+  removeContextMenu() {
+    if(isUndefined(angular.element('#contextMenu')) == false){
+      angular.element('#contextMenu').remove();
+    }
   }
 
   /**** Event handler *****/
   eventHandler(e) {
     switch(e.type){
       case 'clickNode':
+        this.removeContextMenu();
         if(e.data.captor.ctrlKey) {
           let id = this.detailPanels.push({
             style: {
@@ -112,6 +121,7 @@ export class GraphViewComponent {
         }
         break;
       case 'rightClickNode':
+        this.removeContextMenu();
         this.contextMenu = {
           style: {
             title: "Menu " + e.data.node.label,
@@ -129,10 +139,10 @@ export class GraphViewComponent {
         this.addContextPanel("contextMenu");
         break;
       case 'clickStage':
-        this.contextMenu.style.display = false;
+        this.removeContextMenu();
         break;
       case 'rightClickStage':
-        this.contextMenu.style.display = false;
+        this.removeContextMenu();
         this.contextMenu = {
           style: {
             title: "Menu main graph",
@@ -142,6 +152,7 @@ export class GraphViewComponent {
           },
           options: [
             { label: "Add node", action: "add"},
+            { label: "Apply layout", action: "layout"},
             { label: "Settings", action: "settings"}
             ],
           position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX}
@@ -192,6 +203,28 @@ export class GraphViewComponent {
           this.settingPanels[0].style.display = true;
         this.settingPanels[0].style.css = 'width: 600px; height: 150px; top: '+ (e.position.clientY - 25) +'px; left : '+ (e.position.clientX -25) +'px;'
         break;
+      case 'layout':
+        this.$http.get('/api/tulip/getLayouts').then(model => {
+          let options = [];
+          angular.forEach(model.data, function(layout) {
+            options.push({label: layout, action: 'layoutGo'});
+          });
+          this.contextMenu = {
+            style: {
+              title: "Layouts ",
+              display: true,
+              //icon: "info",
+              css: 'top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
+            },
+            options: options,
+            position: {clientY: e.position.clientY, clientX: e.position.clientX}
+          };
+          this.addContextPanel("contextMenu");
+        });
+        break;
+      case 'layoutGo':
+        this.mainGraph.url.layout = e.optionLabel;
+      break;
     }
   }
 }

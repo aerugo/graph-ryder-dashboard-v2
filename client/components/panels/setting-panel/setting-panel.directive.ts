@@ -23,6 +23,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
         scope.action = function() {
           let u = scope.settings.sigma.url;
           let params = {"url": u.type + '/' +  u.leftLabel + '/' + u.edgeLabel + '/' + u.rightLabel};
+          params['layout'] = u.layout;
           // todo pack promise
           $http.get('/api/model/label/' + u.leftLabel).then(model => {
             params['label_key_left'] = model.data.labeling;
@@ -39,20 +40,16 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
             });
           });
 
+          scope.$watch('settings.sigma.url.layout', function(newVal, oldVal) {
+            if(newVal !== oldVal)
+              scope.action();
+          });
           /***** Get labels *****/
           $http.get('/api/model/').then(model => {
             scope.labels = model.data;
           });
         };
         scope.action();
-
-        /***** Load properties *******/
-        scope.load = function(){
-          if(!loaded) {
-
-          }
-          loaded = true;
-        };
       }
     };
   })

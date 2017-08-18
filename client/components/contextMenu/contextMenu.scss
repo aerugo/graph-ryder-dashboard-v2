@@ -1,5 +1,7 @@
 .vertical-menu {
   width: 200px; /* Set a width if you like */
+  max-height: 500px;
+  overflow: auto;
   position: absolute;
   z-index: 1000;
 }
@@ -12,6 +14,12 @@
   text-decoration: none; /* Remove underline from links */
 }
 
+.vertical-menu a.menu-title {
+  position: fixed;
+  margin-top: -44px;
+  width: 200px;
+}
+
 .vertical-menu a:hover {
   background-color: #ccc; /* Dark grey background on mouse-over */
 }
@@ -20,3 +28,4 @@
   background-color: #337ab7; /* Add a green color to the "active/current" link */
   color: white;
 }
+

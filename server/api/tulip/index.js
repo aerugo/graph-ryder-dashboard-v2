@@ -6,6 +6,7 @@ let controller = require('./tulip.controller');
 
 let router = express.Router();
 
+router.get('/getLayouts', controller.getLayouts);
 router.get('/getGraph/random', controller.getRandomGraph);
 router.get('/', auth.isAuthenticated(), controller.getGraph);
 

@@ -25,9 +25,6 @@ $fa-font-path: '/assets/fonts/font-awesome/';
   width: 100%;
   height: 100%;
 }
-.container {
-  padding-bottom: 7vh;
-}
 // Component styles are injected through gulp
 /* inject:scss */
 @import 'admin/admin';
