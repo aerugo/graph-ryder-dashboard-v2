@@ -4,7 +4,7 @@ const uiRouter = require('angular-ui-router');
 const ngResource = require('angular-resource');
 
 import routes from './graphView.routes';
-import {isUndefined} from "util";
+import {isUndefined} from 'util';
 
 export class GraphViewComponent {
   $http;
@@ -35,8 +35,7 @@ export class GraphViewComponent {
         type: 'getGraph',
         leftLabel: 'Person',
         rightLabel: 'Person',
-        edgeLabel: 'Financial',
-        layout: 'Circular (OGDF)'
+        edgeLabel: 'Financial'
       },
       graph: [],
       settings: {
@@ -47,9 +46,9 @@ export class GraphViewComponent {
     this.settingPanels.push({
       sigma: this.mainGraph,
       style: {
-        title: "Main graph",
+        title: 'Main graph',
         display: true,
-        icon: "cog",
+        icon: 'cog',
         css: 'width: 600px; height: 150px; right: 10px;'
       }
     });
@@ -65,78 +64,78 @@ export class GraphViewComponent {
 
   /***** Add panels *****/
   addDetailPanel(settings) {
-    let panel = document.createElement("detail-panel");
-    panel.setAttribute("settings", "ctrl." + settings);
+    let panel = document.createElement('detail-panel');
+    panel.setAttribute('settings', 'ctrl.' + settings);
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }
 
   addSigmaPanel(settings) {
-    let panel = document.createElement("sigma-panel");
-    panel.setAttribute("settings", "ctrl." + settings);
-    panel.setAttribute("listener", "ctrl.eventHandler(e)");
+    let panel = document.createElement('sigma-panel');
+    panel.setAttribute('settings', 'ctrl.' + settings);
+    panel.setAttribute('listener', 'ctrl.eventHandler(e)');
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }
 
   addSettingPanel(settings) {
-    let panel = document.createElement("setting-panel");
-    panel.setAttribute("settings", "ctrl." + settings);
+    let panel = document.createElement('setting-panel');
+    panel.setAttribute('settings', 'ctrl.' + settings);
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }
 
   addContextPanel(settings) {
-    let menu = document.createElement("context-menu");
-    menu.setAttribute("settings", "ctrl." + settings);
-    menu.setAttribute("handler", "ctrl.actionHandler(e)");
-    menu.setAttribute("id", "contextMenu");
+    let menu = document.createElement('context-menu');
+    menu.setAttribute('settings', 'ctrl.' + settings);
+    menu.setAttribute('handler', 'ctrl.actionHandler(e)');
+    menu.setAttribute('id', 'contextMenu');
     angular.element('#contextMenu_container').append(menu);
     this.$compile(menu)(this.$scope);
   }
   removeContextMenu() {
-    if(isUndefined(angular.element('#contextMenu')) == false){
+    if (isUndefined(angular.element('#contextMenu')) === false) {
       angular.element('#contextMenu').remove();
     }
   }
 
   /**** Event handler *****/
   eventHandler(e) {
-    switch(e.type){
+    switch (e.type) {
       case 'clickNode':
         this.removeContextMenu();
-        if(e.data.captor.ctrlKey) {
+        if (e.data.captor.ctrlKey) {
           let id = this.detailPanels.push({
             style: {
-              title: "Details " + e.data.node.label,
+              title: 'Details ' + e.data.node.label,
               display: true,
-              icon: "info",
-              css: 'width: 350px; height: 550px; top: '+ (e.data.captor.clientY - 25) +'px; left : '+ (e.data.captor.clientX -25) +'px;'
+              icon: 'info',
+              css: 'width: 350px; height: 550px; top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
             type: 'detail',
             id: e.data.node.neo4j_id
           });
           id--;
-          this.addDetailPanel("detailPanels["+ id +"]");
+          this.addDetailPanel('detailPanels[' + id + ']');
         }
         break;
       case 'rightClickNode':
         this.removeContextMenu();
         this.contextMenu = {
           style: {
-            title: "Menu " + e.data.node.label,
+            title: 'Menu ' + e.data.node.label,
             display: true,
-            //icon: "info",
-            css: 'top: '+ (e.data.captor.clientY - 25) +'px; left : '+ (e.data.captor.clientX -25) +'px;'
+            //icon: 'info',
+            css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
         },
           options: [
-            { label: "Modify / Details", action: "detail"},
-            { label: "View Neighbours", action: "neighbour"}
+            { label: 'Modify / Details', action: 'detail'},
+            { label: 'View Neighbours', action: 'neighbour'}
           ],
           position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
           element: {neo4j_id: e.data.node.neo4j_id, label: e.data.node.label}
         };
-        this.addContextPanel("contextMenu");
+        this.addContextPanel('contextMenu');
         break;
       case 'clickStage':
         this.removeContextMenu();
@@ -145,63 +144,68 @@ export class GraphViewComponent {
         this.removeContextMenu();
         this.contextMenu = {
           style: {
-            title: "Menu main graph",
+            title: 'Menu main graph',
             display: true,
-            //icon: "info",
-            css: 'top: '+ (e.data.captor.clientY - 25) +'px; left : '+ (e.data.captor.clientX -25) +'px;'
+            //icon: 'info',
+            css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
           },
           options: [
-            { label: "Add node", action: "add"},
-            { label: "Apply layout", action: "layout"},
-            { label: "Settings", action: "settings"}
+            { label: 'Add node', action: 'add'},
+            { label: 'Apply layout', action: 'layout'},
+            { label: 'Settings', action: 'settings'}
             ],
           position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX}
         };
-        this.addContextPanel("contextMenu");
+        this.addContextPanel('contextMenu');
         break;
     }
   }
 
   /***** ContextMenu action handler *******/
   actionHandler(e) {
-    switch(e.type){
+    switch (e.type) {
       case 'detail':
         let id = this.detailPanels.push({
           style: {
-            title: "Details " + e.element.label,
+            title: 'Details ' + e.element.label,
             display: true,
-            icon: "info",
-            css: 'width: 350px; height: 550px; top: '+ (e.position.clientY - 25) +'px; left : '+ (e.position.clientX -25) +'px;'
+            icon: 'info',
+            css: 'width: 350px; height: 550px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
           },
           type: 'detail',
           id: e.element.neo4j_id,
         });
         id--;
-        this.addDetailPanel("detailPanels["+ id +"]");
+        this.addDetailPanel('detailPanels[' + id + ']');
       break;
       case 'neighbour':
         let id = this.sigmaPanels.push({
           type: 'sigma',
-          id: "test",
-          url: "getGraphNeighboursById/"+ e.element.neo4j_id +"/Link/Person", //todo check the type of the node
-          mode: "panel",
+          id: 'test',
+          url: {
+            type: 'getGraphNeighboursById', //todo check the type of the node
+            nodeId: e.element.neo4j_id,
+            leftLabel: 'Person',
+            rightLabel: 'Person',
+            edgeLabel: 'Link'
+          },
+          mode: 'panel',
           style: {
-            title: "Sigma",
+            title: 'Sigma',
             display: true,
-            icon: "link",
-            css: 'width: 600px; height: 500px; top: '+ (e.position.clientY - 25) +'px; left : '+ (e.position.clientX -25) +'px;'
+            icon: 'link',
+            css: 'width: 600px; height: 500px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
           },
           sigmaSettings: {
             demo: true
           }
         });
         id--;
-        this.addSigmaPanel('sigmaPanels['+ id +']');
+        this.addSigmaPanel('sigmaPanels[' + id + ']');
         break;
       case 'settings':
-        if(!this.settingPanels[0].style.display)
-          this.settingPanels[0].style.display = true;
-        this.settingPanels[0].style.css = 'width: 600px; height: 150px; top: '+ (e.position.clientY - 25) +'px; left : '+ (e.position.clientX -25) +'px;'
+        this.settingPanels[0].style.display = !this.settingPanels[0].style.display;
+        this.settingPanels[0].style.css = 'width: 600px; height: 150px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;';
         break;
       case 'layout':
         this.$http.get('/api/tulip/getLayouts').then(model => {
@@ -211,15 +215,15 @@ export class GraphViewComponent {
           });
           this.contextMenu = {
             style: {
-              title: "Layouts ",
+              title: 'Layouts ',
               display: true,
-              //icon: "info",
+              //icon: 'info',
               css: 'top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
             },
             options: options,
             position: {clientY: e.position.clientY, clientX: e.position.clientX}
           };
-          this.addContextPanel("contextMenu");
+          this.addContextPanel('contextMenu');
         });
         break;
       case 'layoutGo':

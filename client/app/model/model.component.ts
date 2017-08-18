@@ -34,17 +34,19 @@ export class ModelComponent {
     };
     let getObject = function (label, model, coloration) {
       let find = {};
-      if(!coloration)
+      if (!coloration) {
         return {label: label};
-      else {
+      } else {
         angular.forEach(model, function (object) {
-          if(object.label == label)
+          if (object.label == label) {
             find = {label: object.label, color: object.color, labeling: object.labeling};
+          }
         });
-        if(Object.keys(find).length)
+        if (Object.keys(find).length) {
           return find;
-        else
+        } else {
           return {label: label, color: 'rgb(51,122,183)', labeling: "name"};
+        }
       }
     };
     http.get('/api/data/getLabelsHierarchy/').then(response => {
@@ -60,9 +62,9 @@ export class ModelComponent {
             angular.forEach(Object.keys(l), function (k) {
               countLabel(k);
               keys3[k] = [];
-              if (l[k].length)
+              if (l[k].length) {
                 keys2[key].push(getObject(k, model.data, false));
-              else {
+              } else {
                 getProperty(k);
                 keys2[key].push(getObject(k, model.data, true));
               }
@@ -83,7 +85,7 @@ export class ModelComponent {
       });
     });
   }
-  update(){
+  update() {
     let http = this.$http;
     http.delete('/api/model/all/').then(response => {
       angular.forEach(this.$scope.keys, function(key){
@@ -102,7 +104,7 @@ export class ModelComponent {
     });
   }
 
-  reset(){
+  reset() {
     let http = this.$http;
     http.delete('/api/model/all/').then(response => {
       this.init();

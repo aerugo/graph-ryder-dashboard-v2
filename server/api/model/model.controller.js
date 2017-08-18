@@ -82,7 +82,7 @@ export function show(req, res) {
 
 // Gets a single Model from the DB
 export function showByLabel(req, res) {
-  return Model.findOne({ 'label': req.params.label}, 'label color labeling').exec()
+  return Model.findOne({label: req.params.label}, 'label color labeling').exec()
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -129,9 +129,10 @@ export function destroy(req, res) {
 
 // Deletes all from the DB
 export function destroyAll(req, res) {
-  return Model.remove({}, function(err,removed) {
-    if(err)
+  return Model.remove({}, function(err, removed) {
+    if(err) {
       console.log(err);
+    }
     res.send(removed);
   });
 }

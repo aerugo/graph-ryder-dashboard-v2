@@ -20,7 +20,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         /****** Inject the template *****/
 
         $compile(element.contents())(scope);
-        element.html('<div id="'+ scope.instanceId +'" class="'+ scope.instanceClass +'" ></div>');
+        element.html('<div id="' + scope.instanceId + '" class="' + scope.instanceClass + '" ></div>');
 
         /****** Settings *********/
         let settings = { // default settings
@@ -35,8 +35,9 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           centerOnLoad: true,
           demo: false
         };
-        if(scope.settings)
+        if (scope.settings) {
           Object.keys(scope.settings).forEach(function(key) { settings[key] = scope.settings[key]; });
+        }
 
         /****** Initialize *******/
         let s = new sigma({
@@ -47,7 +48,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           settings: settings
         });
         // demo mode
-        if(settings.demo) {
+        if (settings.demo) {
           sigma.layouts.fruchtermanReingold.configure(s, {
             iterations: 500,
             easing: 'quadraticInOut',
@@ -56,17 +57,18 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         }
         // console.log(plugins_locate);
         scope.$watch('graph', function() {
-          if(scope.graph) {
+          if (scope.graph) {
             s.graph.clear();
             s.graph.read(scope.graph);
             s.refresh();
-            if(settings.demo)
+            if (settings.demo) {
               sigma.layouts.fruchtermanReingold.start(s);
+            }
           }
         });
 
         /**** Tools *****/
-        let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+        // let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
         let lasso = new sigma.plugins.lasso(s, s.renderers[0], {
           'strokeStyle': 'black',
           'lineWidth': 2,
@@ -87,8 +89,8 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         });
 
         s.bind('hovers', function(e){
-          if(scope.settings.info) {
-            scope.settings.info = "x: " + e.data.captor.x + " y: " + e.data.captor.y; //todo: get rapid info on element
+          if (scope.settings.info) {
+            scope.settings.info = 'x: ' + e.data.captor.x + ' y: ' + e.data.captor.y; //todo: get rapid info on element
             scope.$apply();
           }
         });

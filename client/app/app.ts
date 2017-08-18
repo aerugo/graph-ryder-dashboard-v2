@@ -71,7 +71,7 @@ angular.module('graphRyderDashboardApp', [
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function(event, next) {
       Auth.isLoggedIn(function(loggedIn) {
-        if(next.authenticate && !loggedIn) {
+        if (next.authenticate && !loggedIn) {
           $location.path('/login');
         }
       });

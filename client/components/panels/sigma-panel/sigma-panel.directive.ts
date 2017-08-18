@@ -17,18 +17,32 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
         listener: '&'
       },
       link: function(scope, element) {
-        element.draggable({handle: ".panel-heading", containment: "body", scroll: false, stack: ".panel" });
-        element.resizable({minHeight: 150, minWidth:150}); // todo refresh on resize
+        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel' });
+        element.resizable({minHeight: 150, minWidth: 150}); // todo refresh on resize
 
         /***** Load properties *******/
-        scope.draw = function() {
-          if(scope.settings.id) {
-            $http.get('/api/tulip/', {params: {"url": scope.settings.url}}).then(response => {
-              scope.graph = response.data;
+        scope.action = function() {
+          console.log(scope.settings);
+          let u = scope.settings.url;
+          let params = {'url': u.type + '/' + u.nodeId + '/' + u.edgeLabel + '/' + u.rightLabel};
+          params['layout'] = u.layout;
+          // todo pack promise
+          $http.get('/api/model/label/' + u.leftLabel).then(left_label => {
+            params['label_key_left'] = left_label.data.labeling;
+            params['color_left'] = left_label.data.color;
+            $http.get('/api/model/label/' + u.rightLabel).then(right_label => {
+              params['label_key_right'] = right_label.data.labeling;
+              params['color_right'] = right_label.data.color;
+              $http.get('/api/model/label/' + u.edgeLabel).then(edge_label => {
+                params['color_edge'] = edge_label.data.color;
+                $http.get('/api/tulip/', {params: params}).then(response => {
+                  scope.settings.graph = response.data;
+                });
+              });
             });
-          }
+          });
         };
-        scope.draw();
+        scope.action();
 
         scope.eventHandler = function(e) {
           /***** EventHandler *****/
