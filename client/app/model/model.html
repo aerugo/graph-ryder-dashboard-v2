@@ -4,7 +4,7 @@
     <li ng-repeat="label in keys" class="list-group-item" ng-class="{'list-group-item-danger': label.label.substring(0,5) == 'group'}">
       <span ng-if="!label.color">{{label.label}}</span>
       <span class="label label-default" ng-if="label.color" colorpicker="rgb" ng-model="label.color" style="background-color: {{label.color}};">{{label.label}}</span>
-      <select ng-if="label.labeling" name="labeling" ng-options="option in property[label.label] | orderBy" ng-model="label.labeling"></select>
+      <select ng-if="label.labeling" name="labeling" ng-options="option for option in property[label.label] | orderBy" ng-model="label.labeling"></select>
       <span ng-if="label.label.substring(0,5) == 'group'" class="badge">Hierarchy cannot be automatically found</span>
       <span ng-if="label.label.substring(0,5) != 'group'" class="badge">{{labelsCount[label.label]}}</span>
 

@@ -45,7 +45,7 @@ export class ModelComponent {
         if (Object.keys(find).length) {
           return find;
         } else {
-          return {label: label, color: 'rgb(51,122,183)', labeling: "name"};
+          return {label: label, color: 'rgb(51,122,183)', labeling: 'name'};
         }
       }
     };
@@ -55,7 +55,8 @@ export class ModelComponent {
         let keys2 = {};
         let keys3 = {};
         angular.forEach(response.data, function (label, key) {
-          scope.keys.push(getObject(key, model.data, false));
+          getProperty(key);
+          scope.keys.push(getObject(key, model.data, !label.length));
           countLabel(key);
           keys2[key] = [];
           angular.forEach(label, function (l) {
