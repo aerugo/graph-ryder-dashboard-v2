@@ -17,7 +17,7 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
         listener: '&'
       },
       link: function(scope, element) {
-        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel' });
+        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel'});
         element.resizable({minHeight: 150, minWidth: 150}); // todo refresh on resize
 
         /***** Load properties *******/

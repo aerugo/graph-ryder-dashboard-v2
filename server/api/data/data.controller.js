@@ -11,9 +11,10 @@
 'use strict';
 
 let request = require('request');
+import config from '../../config/environment';
 
 export function get(req, res) {
-  request({url: 'http://localhost:5000/get/' + req.param('id'), qs: {keys: '*'}}, function(error, response, body) {
+  request({url: config.tulipApi + '/get/' + req.param('id'), qs: {keys: '*'}}, function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
@@ -21,7 +22,7 @@ export function get(req, res) {
 }
 
 export function countLabel(req, res) {
-  request('http://localhost:5000/countLabel/' + req.param('label'), function(error, response, body) {
+  request(config.tulipApi + '/countLabel/' + req.param('label'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
@@ -29,7 +30,7 @@ export function countLabel(req, res) {
 }
 
 export function getLabels(req, res) {
-  request('http://localhost:5000/getLabels/', function(error, response, body) {
+  request(config.tulipApi + '/getLabels/', function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
@@ -37,7 +38,7 @@ export function getLabels(req, res) {
 }
 
 export function getLabelsHierarchy(req, res) {
-  request('http://localhost:5000/getLabelsHierarchy/', function(error, response, body) {
+  request(config.tulipApi + '/getLabelsHierarchy/', function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
@@ -45,7 +46,7 @@ export function getLabelsHierarchy(req, res) {
 }
 
 export function getLabelsById(req, res) {
-  request('http://localhost:5000/getLabels/' + req.param('id'), function(error, response, body) {
+  request(config.tulipApi + '/getLabels/' + req.param('id'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
@@ -53,7 +54,7 @@ export function getLabelsById(req, res) {
 }
 
 export function getProperties(req, res) {
-  request('http://localhost:5000/getProperties/' + req.param('label'), function(error, response, body) {
+  request(config.tulipApi + '/getProperties/' + req.param('label'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
@@ -61,7 +62,7 @@ export function getProperties(req, res) {
 }
 
 export function getPropertyValue(req, res) {
-  request('http://localhost:5000/getPropertyValue/' + req.param('label') + '/' + req.param('key'), function(error, response, body) {
+  request(config.tulipApi + '/getPropertyValue/' + req.param('label') + '/' + req.param('key'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }

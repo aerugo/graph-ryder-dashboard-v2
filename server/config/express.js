@@ -107,7 +107,8 @@ export default function(app) {
         })
       ],
       port: config.browserSyncPort,
-      plugins: ['bs-fullscreen-message']
+      plugins: ['bs-fullscreen-message'],
+      ghostMode: false
     });
 
     /**

@@ -6,9 +6,10 @@
 'use strict';
 
 let request = require('request');
+import config from '../..//config/environment';
 
 export function getLayouts(req, res) {
-  request('http://localhost:5000/layoutAlgorithm', function(error, response, body) {
+  request(config.tulipApi + '/layoutAlgorithm', function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
@@ -16,7 +17,7 @@ export function getLayouts(req, res) {
 }
 
 export function getRandomGraph(req, res) {
-  request('http://localhost:5000/getGraph/random', function(error, response, body) {
+  request(config.tulipApi + '/getGraph/random', function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
@@ -30,7 +31,7 @@ export function getGraph(req, res) {
       queryString[param] = req.query[param];
     }
   });
-  request({url: 'http://localhost:5000/' + req.param('url'), qs: queryString}, function(error, response, body) {
+  request({url: config.tulipApi + '/' + req.param('url'), qs: queryString}, function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
