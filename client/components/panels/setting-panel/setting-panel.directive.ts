@@ -38,17 +38,16 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
               });
             });
           });
-
-          scope.$watch('settings.sigma.url.layout', function(newVal, oldVal) {
-            if (newVal !== oldVal) {
-              scope.action();
-            }
-          });
           /***** Get labels *****/
           $http.get('/api/model/').then(model => {
             scope.labels = model.data;
           });
         };
+        scope.$watch('settings.sigma.url.layout', function(newVal, oldVal) {
+          if (newVal !== oldVal) {
+            scope.action();
+          }
+        });
         scope.action();
       }
     };

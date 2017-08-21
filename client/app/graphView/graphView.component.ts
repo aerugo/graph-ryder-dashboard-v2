@@ -49,7 +49,7 @@ export class GraphViewComponent {
         title: 'Main graph',
         display: true,
         icon: 'cog',
-        css: 'width: 600px; height: 150px; right: 10px;'
+        css: 'width: 650px; height: 150px; right: 10px;'
       }
     });
 

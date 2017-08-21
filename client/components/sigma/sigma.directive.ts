@@ -68,7 +68,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         });
 
         /**** Tools *****/
-        // let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+        let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
         let lasso = new sigma.plugins.lasso(s, s.renderers[0], {
           'strokeStyle': 'black',
           'lineWidth': 2,
