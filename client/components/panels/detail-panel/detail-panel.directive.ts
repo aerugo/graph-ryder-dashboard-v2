@@ -35,8 +35,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             });
             $http.get('/api/data/get/' + scope.settings.id).then(response => {
               scope.node = response.data;
-              let label = 'Person'; // todo need to know generic label vs indatabase
-              $http.get('/api/data/getProperties/' + label).then(response => {
+              // todo labels[0] could be the generic label
+              $http.get('/api/data/getProperties/' + scope.labels[0]).then(response => {
                 scope.properties = $(response.data).not(Object.keys(scope.node)).get();
               });
             });
@@ -47,8 +47,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         /****** Search for available values ******/
         scope.suggestValue = function (key) {
           if (key) {
-            let label = 'Person'; // todo need to know generic label vs indatabase
-            $http.get('/api/data/getPropertyValue/' + label + '/' + key).then(propertyValue => {
+            // todo labels[0] could be the generic label
+            $http.get('/api/data/getPropertyValue/' + scope.labels[0] + '/' + key).then(propertyValue => {
               scope.values = propertyValue.data;
             });
           }
@@ -56,7 +56,10 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
 
         /****** Update the element *****/
         scope.update = function() {
-
+          // todo manage the additional field
+          $http.put('/api/data/set/' + scope.settings.id, scope.node).then(response => {
+            scope.settings.style.display = false; //todo close the panel instead
+          });
         };
       }
     };

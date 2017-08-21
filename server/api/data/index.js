@@ -13,7 +13,7 @@ router.get('/getLabels/:id', auth.isAuthenticated(), controller.getLabelsById);
 router.get('/getProperties/:label', auth.isAuthenticated(), controller.getProperties);
 router.get('/getPropertyValue/:label/:key', auth.isAuthenticated(), controller.getPropertyValue);
 // router.post('/', controller.create);
-// router.put('/:id', controller.upsert);
+router.put('/set/:id', auth.isAuthenticated(), controller.set);
 // router.patch('/:id', controller.patch);
 // router.delete('/:id', controller.destroy);
 

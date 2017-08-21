@@ -21,6 +21,15 @@ export function get(req, res) {
   });
 }
 
+export function set(req, res) {
+  request({url: config.tulipApi + '/set/' + req.param('id'), method: 'PUT', json: req.body}, function(error, response, body) {
+    console.log(response.statusCode);
+    if(!error && response.statusCode == 200) {
+      return res.send(response.statusCode);
+    }
+  });
+}
+
 export function countLabel(req, res) {
   request(config.tulipApi + '/countLabel/' + req.param('label'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
