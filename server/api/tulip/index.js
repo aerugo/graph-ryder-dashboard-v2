@@ -8,6 +8,7 @@ let router = express.Router();
 
 router.get('/getLayouts', controller.getLayouts);
 router.get('/getGraph/random', controller.getRandomGraph);
-router.get('/', auth.isAuthenticated(), controller.getGraph);
+router.get('/getGraph/', auth.isAuthenticated(), controller.getGraph);
+router.get('/getGraphNeighboursById/', auth.isAuthenticated(), controller.getNeighboursGraph);
 
 module.exports = router;

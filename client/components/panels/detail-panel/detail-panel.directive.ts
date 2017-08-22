@@ -7,7 +7,7 @@ import 'jquery-ui-bundle';
 
 
 export default angular.module('graphRyderDashboardApp.detailPanel', [])
-  .directive('detailPanel', function($http) {
+  .directive('detailPanel', function($http, $timeout) {
     return {
       template: require('./detail-panel.html'),
       restrict: 'E',
@@ -16,7 +16,12 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         settings: '='
       },
       link: function(scope, element) {
-        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel'});
+        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
+        start: function() {
+          if (element.css('z-index') > 100) {
+            element.css('z-index', 10);
+          }
+        }});
         element.resizable({minHeight: 150, minWidth: 150});
         let loaded = false;
 
@@ -61,6 +66,9 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             scope.settings.style.display = false; //todo close the panel instead
           });
         };
+        $timeout(function () {
+          scope.load();
+        });
       }
     };
   })

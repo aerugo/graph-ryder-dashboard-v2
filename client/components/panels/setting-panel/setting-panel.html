@@ -1,15 +1,16 @@
-<div class="panel panel-primary my-panel setting-panel" style="{{settings.style.css}}" ng-show="settings.style.display" ng-mouseenter="load()">
+<div class="panel panel-primary my-panel setting-panel" style="{{settings.style.css}}" ng-show="settings.style.display">
   <!-- Detail template-->
   <div class="panel-heading">
     <span>
     <i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
-    <span>
+    <span ng-if="settings.sigma.url.type == 'getGraph'">
       <button class="btn btn-primary" type="button">Nodes <span class="badge">{{settings.sigma.graph.nodes.length}}</span></button>
       <button class="btn btn-primary" type="button">Edges <span class="badge">{{settings.sigma.graph.edges.length}}</span></button>
     </span>
     <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
-  <div class="panel-body">
+  <!-- Get Graph Node label Node-->
+  <div class="panel-body" ng-if="settings.sigma.url.type == 'getGraph'">
     <span>Api request:</span>
     <div class="input-group">
       Node 1: <select ng-model="settings.sigma.url.leftLabel">
@@ -19,6 +20,20 @@
       <option ng-repeat="label in labels | orderBy: 'label'" value="{{label.label}}">{{label.label}}</option>
     </select>
       Node 2: <select ng-model="settings.sigma.url.rightLabel">
+      <option ng-repeat="label in labels | orderBy: 'label'" value="{{label.label}}">{{label.label}}</option>
+    </select>
+      <span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="action()">Go!</button></span>
+    </div>
+  </div>
+  <!-- Neighbours -->
+  <div class="panel-body" ng-if="settings.sigma.url.type == 'getGraphNeighboursById'">
+    <span>Neighbours request:</span>
+    <div class="input-group">
+      Target: <input type="text" ng-model="settings.sigma.url.nodeId" />
+      Edge: <select ng-model="settings.sigma.url.edgeLabel">
+      <option ng-repeat="label in labels | orderBy: 'label'" value="{{label.label}}">{{label.label}}</option>
+    </select>
+      Neighbours type: <select ng-model="settings.sigma.url.rightLabel">
       <option ng-repeat="label in labels | orderBy: 'label'" value="{{label.label}}">{{label.label}}</option>
     </select>
       <span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="action()">Go!</button></span>

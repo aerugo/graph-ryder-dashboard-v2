@@ -7,7 +7,7 @@ import 'jquery-ui-bundle';
 
 
 export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
-  .directive('sigmaPanel', function($http) {
+  .directive('sigmaPanel', function($http, $compile, $timeout) {
     return {
       template: require('./sigma-panel.html'),
       restrict: 'E',
@@ -17,38 +17,46 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
         listener: '&'
       },
       link: function(scope, element) {
-        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel'});
+        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
+          start: function() {
+            if (element.css('z-index') > 100) {
+              element.css('z-index', 10);
+            }
+          }});
         element.resizable({minHeight: 150, minWidth: 150}); // todo refresh on resize
 
         /***** Load properties *******/
         scope.action = function() {
-          console.log(scope.settings);
-          let u = scope.settings.url;
-          let params = {'url': u.type + '/' + u.nodeId + '/' + u.edgeLabel + '/' + u.rightLabel};
-          params['layout'] = u.layout;
-          // todo pack promise
-          $http.get('/api/model/label/' + u.leftLabel).then(left_label => {
-            params['label_key_left'] = left_label.data.labeling;
-            params['color_left'] = left_label.data.color;
-            $http.get('/api/model/label/' + u.rightLabel).then(right_label => {
-              params['label_key_right'] = right_label.data.labeling;
-              params['color_right'] = right_label.data.color;
-              $http.get('/api/model/label/' + u.edgeLabel).then(edge_label => {
-                params['color_edge'] = edge_label.data.color;
-                $http.get('/api/tulip/', {params: params}).then(response => {
-                  scope.settings.graph = response.data;
-                });
-              });
-            });
-          });
+          let panel = document.createElement('setting-panel');
+          panel.setAttribute('settings', 'settingsPanel');
+          angular.element('#' + scope.settings.element).append(panel);
+          $compile(panel)(scope);
         };
-        scope.action();
+        scope.settingsPanel = {
+          sigma: scope.settings,
+          style: scope.settings.settingsPanelStyle
+        };
 
         scope.eventHandler = function(e) {
-          /***** EventHandler *****/
-        // todo remove this dirty double func pass
+          e.element = scope.settings.element;
           scope.listener({e: e});
         };
+
+        scope.$watch('settings.sigma.url.layout', function(newVal, oldVal) {
+          if (newVal !== oldVal) {
+            scope.action();
+          }
+        });
+        if (scope.settings.settingsPanelStyle) {
+          scope.$watch('settings.settingsPanelStyle', function (newVal) {
+            if (newVal && scope.settingPanels.style.display.isDefined()) {
+              scope.settingPanels.style.display = true;
+            }
+          });
+        }
+        $timeout(function () {
+          scope.action();
+        });
       }
     };
   })

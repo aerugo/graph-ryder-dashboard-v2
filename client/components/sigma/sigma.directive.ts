@@ -17,8 +17,8 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         eventHandler: '&'
       },
       link: function (scope, element, attrs) {
-        /****** Inject the template *****/
 
+        /****** Inject the template *****/
         $compile(element.contents())(scope);
         element.html('<div id="' + scope.instanceId + '" class="' + scope.instanceClass + '" ></div>');
 
@@ -81,8 +81,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
 
 
         /**** Events ****/
-        // prevent right click menu
-        element.bind('contextmenu', function(event) {
+        element.bind('contextmenu', function(event) {  // prevent right click menu
           scope.$apply(function() {
             event.preventDefault();
           });
@@ -96,11 +95,13 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         });
 
         s.bind('clickNode clickEdge rightClickNode clickStage rightClickStage', function(e){
+          e.element = scope.settings.element;
           scope.eventHandler({e: e});
           scope.$apply();
         });
 
         lasso.bind('selectedNodes', function(e){
+          e.element = scope.settings.element;
           console.log(e);
         });
 

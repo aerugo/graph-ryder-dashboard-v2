@@ -1,13 +1,13 @@
 <div id="panel_container"></div>
 <div id="contextMenu_container"></div>
 <sigma
-  graph="ctrl.mainGraph.graph"
-  settings="ctrl.mainGraph.settings"
+  graph="ctrl.sigmaPanels[0].graph"
+  settings="ctrl.sigmaPanels[0].settings"
   instance-id="graph-view-sigma"
   instance-class="sigma-large-instance"
   event-handler="ctrl.eventHandler(e)"
 ></sigma>
 <div class="footer" style="z-index: 10">
-  <p>{{ctrl.mainGraph.settings.info}}
+  <p>{{ctrl.sigmaPanels[0].settings.info}}
   </p>
 </div>
