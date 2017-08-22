@@ -121,9 +121,13 @@ export class GraphViewComponent {
         break;
       case 'rightClickNode':
         this.removeContextMenu();
+        let title = 'Menu ' + e.data.node.label;
+        if (title.length > 20) {
+          title = title.substring(0,20) + '...';
+        }
         this.contextMenu = {
           style: {
-            title: 'Menu ' + e.data.node.label,
+            title: title,
             display: true,
             //icon: 'info',
             css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
