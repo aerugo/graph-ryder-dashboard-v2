@@ -87,14 +87,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           });
         });
 
-        s.bind('hovers', function(e){
-          if (scope.settings.info) {
-            scope.settings.info = 'x: ' + e.data.captor.x + ' y: ' + e.data.captor.y; //todo: get rapid info on element
-            scope.$apply();
-          }
-        });
-
-        s.bind('clickNode clickEdge rightClickNode clickStage rightClickStage', function(e){
+        s.bind('clickNode clickEdge rightClickNode clickStage rightClickStage hovers', function(e){
           e.element = scope.settings.element;
           scope.eventHandler({e: e});
           scope.$apply();

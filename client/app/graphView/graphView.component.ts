@@ -10,10 +10,10 @@ export class GraphViewComponent {
   $http;
   $compile;
   $scope;
-  mainGraph;
   detailPanels;
   sigmaPanels;
   settingPanels;
+  footer;
   contextMenu;
 
   /*@ngInject*/
@@ -21,10 +21,10 @@ export class GraphViewComponent {
     this.$http = $http;
     this.$compile = $compile;  // todo clean this
     this.$scope = $scope;
-    this.mainGraph = {};
     this.detailPanels = [];
     this.sigmaPanels = [];
     this.settingPanels = [];
+    this.footer= "Graph-Ryder v2.0";
     this.contextMenu = { style: { display: false }};
   }
 
@@ -40,7 +40,6 @@ export class GraphViewComponent {
       graph: [],
       settings: {
         demo: false,
-        info: 'Graph-Ryder 2.0',
         element: 0
       }
     }); // Main graph is id 0
@@ -103,25 +102,7 @@ export class GraphViewComponent {
   /**** Event handler *****/
   eventHandler(e) {
     switch (e.type) {
-
       /***** Sigma events *****/
-      case 'clickNode':
-        this.removeContextMenu();
-        if (e.data.captor.ctrlKey) {
-          let id = this.detailPanels.push({
-            style: {
-              title: 'Details ' + e.data.node.label,
-              display: true,
-              icon: 'info',
-              css: 'width: 350px; height: 550px; top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
-            },
-            type: 'detail',
-            id: e.data.node.neo4j_id
-          });
-          id--;
-          this.addDetailPanel('detailPanels[' + id + ']');
-        }
-        break;
       case 'rightClickNode':
         this.removeContextMenu();
         let title = 'Menu ' + e.data.node.label;
@@ -166,6 +147,14 @@ export class GraphViewComponent {
         };
         this.addContextPanel('contextMenu');
         break;
+      case 'hovers':
+        if (e.data.enter.nodes.length) {
+          this.footer = 'node : ' + e.data.enter.nodes[0].label;
+        }
+        else if (e.data.enter.edges.length) {
+          this.footer = 'edge : ' + e.data.enter.edges[0].label;
+        }
+        break;
 
       /***** ContextMenu events *****/
       case 'detail':
@@ -200,7 +189,8 @@ export class GraphViewComponent {
             css: 'width: 800px; height: 700px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
           },
           sigmaSettings: {
-            demo: true
+            demo: true,
+            info: 'Graph-Ryder 2.0'
           },
           settingsPanelStyle: {
             title: 'Neighbours',
