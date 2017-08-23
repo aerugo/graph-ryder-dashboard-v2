@@ -52,6 +52,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
             }));
           }
           promises.push($http.get('/api/model/label/' + u.edgeLabel).then(edge_label => {
+            params['label_key_edge'] = edge_label.data.labeling;
             params['color_edge'] = edge_label.data.color;
           }));
           Promise.all(promises).then(function() {
