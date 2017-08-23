@@ -17,90 +17,86 @@ export class ModelComponent {
   }
 
   init() {
-    // todo redo in a cleaner way
-    let labelsCount = {};
     let property = {};
+    let hierarchy = [];
     let http = this.$http;
     let scope = this.$scope;
-    let countLabel = function (label) {
-      http.get('/api/data/countLabel/' + label).then(response => {
-        labelsCount[label] = response.data;
-      });
-    };
+    http.get('/api/data/countLabels/').then(response => {
+      scope.labelsCount = response.data;
+    });
     let getProperty = function (label) {
       http.get('/api/data/getProperties/' + label).then(response => {
         property[label] = response.data;
       });
     };
-    let getObject = function (label, model, coloration) {
-      let find = {};
-      if (!coloration) {
-        return {label: label};
-      } else {
-        angular.forEach(model, function (object) {
-          if (object.label == label) {
-            find = {label: object.label, color: object.color, labeling: object.labeling};
+    let analyse = function(key, labels, model){
+      if(!Object.keys(labels).length) {
+        getProperty(key);
+        let element = {label: key};
+        let find = false;
+        angular.forEach(model, function (e) {
+          if (e.label == key) {
+            element['labeling'] = e.labeling;
+            element['color'] = e.color;
+            find = true;
           }
         });
-        if (Object.keys(find).length) {
-          return find;
-        } else {
-          return {label: label, color: 'rgb(51,122,183)', labeling: 'name'};
+        if (!find) {
+          element['labeling'] = 'name';
+          element['color'] = 'rgb(51,122,183)';
         }
+        return element;
+      }
+      else {
+        let result = [];
+        angular.forEach(labels, function (label, key) {
+          result.push(analyse(key, label, model));
+        });
+        return {label: key, children: result};
       }
     };
+
     http.get('/api/data/getLabelsHierarchy/').then(response => {
       http.get('/api/model/').then(model => {
-        scope.keys = [];
-        let keys2 = {};
-        let keys3 = {};
         angular.forEach(response.data, function (label, key) {
-          getProperty(key);
-          scope.keys.push(getObject(key, model.data, !label.length));
-          countLabel(key);
-          keys2[key] = [];
-          angular.forEach(label, function (l) {
-            angular.forEach(Object.keys(l), function (k) {
-              countLabel(k);
-              keys3[k] = [];
-              if (l[k].length) {
-                keys2[key].push(getObject(k, model.data, false));
-              } else {
-                getProperty(k);
-                keys2[key].push(getObject(k, model.data, true));
-              }
-              angular.forEach(l[k], function (l3) {
-                angular.forEach(Object.keys(l3), function (k3) {
-                  countLabel(k3);
-                  keys3[k].push(getObject(k3, model.data, true));
-                  getProperty(k3);
-                });
-              });
-            });
-          });
+          hierarchy.push(analyse(key, label, model.data));
         });
-        scope.keys2 = keys2;
-        scope.keys3 = keys3;
-        scope.labelsCount = labelsCount;
-        scope.property = property;
       });
     });
+    scope.hierarchy = hierarchy;
+    scope.property = property;
   }
   update() {
     let http = this.$http;
+    let updateChildren = function(e) {
+      if (!e.children) {
+        http.post('/api/model', e);
+      }
+      else {
+        angular.forEach(e.children, function(child) {
+          updateChildren(child);
+        });
+      }
+    };
+    let updateParents = function(e) {
+      if (!e.children) {
+        return [e.label];
+      }
+      else {
+        let element = {label: e.label, children: []};
+        angular.forEach(e.children, function(child) {
+          element.children = element.children.concat(updateParents(child));
+        });
+        http.post('/api/model', element);
+        return element.children;
+      }
+    };
     http.delete('/api/model/all/').then(response => {
-      angular.forEach(this.$scope.keys, function(key){
-        http.post('/api/model', key);
+      angular.forEach(this.$scope.hierarchy, function(key){
+        updateChildren(key);
       });
-      angular.forEach(this.$scope.keys2, function(label){
-        angular.forEach(label, function(key){
-          http.post('/api/model', key);
-        });
-      });
-      angular.forEach(this.$scope.keys3, function(label){
-        angular.forEach(label, function(key){
-          http.post('/api/model', key);
-        });
+      angular.forEach(this.$scope.hierarchy, function(key){
+        updateParents(key);
       });
     });
   }

@@ -38,6 +38,14 @@ export function countLabel(req, res) {
   });
 }
 
+export function countLabels(req, res) {
+  request(config.tulipApi + '/countLabels/', function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
 export function getLabels(req, res) {
   request(config.tulipApi + '/getLabels/', function(error, response, body) {
     if(!error && response.statusCode == 200) {
