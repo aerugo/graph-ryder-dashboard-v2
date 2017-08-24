@@ -18,6 +18,7 @@ export class ModelComponent {
 
   init() {
     let property = {};
+    let newLabels = [];
     let hierarchy = [];
     let http = this.$http;
     let scope = this.$scope;
@@ -44,6 +45,7 @@ export class ModelComponent {
         if (!find) {
           element['labeling'] = 'name';
           element['color'] = 'rgb(51,122,183)';
+          newLabels.push(key);
         }
         return element;
       }
@@ -65,12 +67,15 @@ export class ModelComponent {
     });
     scope.hierarchy = hierarchy;
     scope.property = property;
+    scope.newLabels = newLabels;
   }
   update() {
     let http = this.$http;
+    let that = this;
+    let promises = [];
     let updateChildren = function(e) {
       if (!e.children) {
-        http.post('/api/model', e);
+        promises.push(http.post('/api/model', e));
       }
       else {
         angular.forEach(e.children, function(child) {
@@ -87,17 +92,20 @@ export class ModelComponent {
         angular.forEach(e.children, function(child) {
           element.children = element.children.concat(updateParents(child));
         });
-        http.post('/api/model', element);
+        promises.push(http.post('/api/model', element));
         return element.children;
       }
     };
-    http.delete('/api/model/all/').then(response => {
+    promises.push(http.delete('/api/model/all/').then(response => {
       angular.forEach(this.$scope.hierarchy, function(key){
         updateChildren(key);
       });
       angular.forEach(this.$scope.hierarchy, function(key){
         updateParents(key);
       });
+    }));
+    Promise.all(promises).then(function() {
+      that.init();
     });
   }
 

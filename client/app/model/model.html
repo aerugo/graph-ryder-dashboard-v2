@@ -13,6 +13,7 @@
       <span class="label label-default" colorpicker="rgb" ng-model="key.color" style="background-color: {{key.color}};">{{key.label}}</span>
       <select ng-if="key.labeling" name="labeling" ng-options="option for option in property[key.label] | orderBy" ng-model="key.labeling"></select>
       <span class="badge">{{labelsCount[key.label]}}</span>
+      <span ng-if="newLabels.indexOf(key.label) !== -1" class="label label-danger">New</span>
     </div>
   </script>
   <ul class="list-group">
