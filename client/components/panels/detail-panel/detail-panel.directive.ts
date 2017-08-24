@@ -24,6 +24,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         }});
         element.resizable({minHeight: 150, minWidth: 150});
         let loaded = false;
+        scope.values = {};
 
         /***** Load properties *******/
         scope.load = function(){
@@ -40,6 +41,9 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             });
             $http.get('/api/data/get/' + scope.settings.id).then(response => {
               scope.node = response.data;
+              angular.forEach(Object.keys(scope.node), function(key) {
+                scope.suggestValue(key);
+              });
               // todo labels[0] could be the generic label
               $http.get('/api/data/getProperties/' + scope.labels[0]).then(response => {
                 scope.properties = $(response.data).not(Object.keys(scope.node)).get();
@@ -54,7 +58,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           if (key) {
             // todo labels[0] could be the generic label
             $http.get('/api/data/getPropertyValue/' + scope.labels[0] + '/' + key).then(propertyValue => {
-              scope.values = propertyValue.data;
+              scope.values[key] = propertyValue.data;
             });
           }
         };

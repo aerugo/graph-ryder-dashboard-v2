@@ -7,13 +7,13 @@
   </div>
   <div class="panel-body" >
     <uib-tabset active="activeJustified" justified="true">
-      <uib-tab index="0" heading="Property">
+      <uib-tab index="0" heading="Properties">
         <br>
         <form class="form-horizontal">
           <div class="form-group" ng-repeat="(key, value) in node track by $index">
             <label for="{{key}}" class="control-label col-xs-4">{{key}}</label>
             <div class="col-xs-8">
-              <input type="text" class="form-control" id="{{key}}" ng-model="node[key]" ng-value="value">
+              <input type="text" class="form-control" id="{{key}}" ng-model="node[key]" ng-value="value" uib-typeahead="value for value in values[key] | filter:$viewValue" typeahead-min-length="0">
             </div>
           </div>
           <div class="form-group">
@@ -22,7 +22,7 @@
                 <input type="text" class="form-control" id="newKey" placeholder="newKey" ng-model="newKey" uib-typeahead="property for property in properties | filter:$viewValue" typeahead-min-length="0" typeahead-on-select="suggestValue(newKey)">
               </div>
               <div class="col-xs-8" style="padding-right: 30px;">
-                <input type="text" class="form-control" id="newValue" ng-model="newValue" uib-typeahead="value for value in values | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
+                <input type="text" class="form-control" id="newValue" ng-model="newValue" uib-typeahead="value for value in values[newKey] | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
               </div>
             </div>
           </div>
@@ -33,7 +33,7 @@
           </div>
         </form>
       </uib-tab>
-      <uib-tab index="1" heading="Links">
+      <uib-tab index="1" heading="Attributes">
 
       </uib-tab>
     </uib-tabset>
