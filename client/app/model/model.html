@@ -2,8 +2,9 @@
   <script type="text/ng-template" id="modelTree">
     <div ng-if="key.children" class="div-list-group" >
       <span>{{key.label}}</span>
-      <span ng-if="key.label.substring(0,5) == 'group'" class="badge">Hierarchy cannot be automatically found</span>
-      <span ng-if="key.label.substring(0,5) != 'group'" class="badge">{{labelsCount[key.label]}}</span>
+      <span ng-if="key.label.substring(0,11) == 'ungroupable'" class="badge">Hierarchy cannot be automatically found</span>
+      <select ng-if="key.label.substring(0,11) == 'ungroupable'" name="leader" ng-options="option.label for option in key.children | orderBy" ng-change="modelCtrl.updateUngroupable()" ng-model="key.choice"></select>
+      <span ng-if="key.label.substring(0,11) != 'ungroupable'" class="badge">{{labelsCount[key.label]}}</span>
       <ul class="list-group">
         <li ng-repeat="key in key.children" ng-include="'modelTree'" class="list-group-item" >
         </li>
@@ -17,7 +18,7 @@
     </div>
   </script>
   <ul class="list-group">
-    <li ng-repeat="key in hierarchy" ng-include="'modelTree'" class="list-group-item" ng-class="{'list-group-item-danger': key.label.substring(0,5) == 'group'}"></li>
+    <li ng-repeat="key in hierarchy" ng-include="'modelTree'" class="list-group-item" ng-class="{'list-group-item-danger': key.label.substring(0,11) == 'ungroupable'}"></li>
   </ul>
   <div class="form-group" id="model-button" >
     <button type="submit" class="btn btn-primary" ng-click="modelCtrl.reset()">Reset</button>&nbsp;&nbsp;

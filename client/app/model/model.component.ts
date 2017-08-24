@@ -31,6 +31,7 @@ export class ModelComponent {
       });
     };
     let analyse = function(key, labels, model){
+      /*** Exit ****/
       if(!Object.keys(labels).length) {
         getProperty(key);
         let element = {label: key};
@@ -49,6 +50,33 @@ export class ModelComponent {
         }
         return element;
       }
+      /**** Ungroupable case *****/
+      else if (key.substring(0,11) === 'ungroupable') {
+        let result = [];
+        let found = false;
+        angular.forEach(labels, function (label, k) {
+          angular.forEach(model, function (e) {
+            if (e.label == k && e.children.length) {
+              found = k;
+            }
+          });
+        });
+        if (found) {
+          angular.forEach(labels, function (l, k) {
+            if (k !== found) {
+              result.push(analyse(k, l, model));
+            }
+          });
+          return {label: found, children: result};
+        }
+        else {
+          angular.forEach(labels, function (label, key) {
+            result.push(analyse(key, label, model));
+          });
+          return {label: key, children: result};
+        }
+      }
+      /***** Continue *****/
       else {
         let result = [];
         angular.forEach(labels, function (label, key) {
@@ -60,6 +88,7 @@ export class ModelComponent {
 
     http.get('/api/data/getLabelsHierarchy/').then(response => {
       http.get('/api/model/').then(model => {
+        console.log(model.data);
         angular.forEach(response.data, function (label, key) {
           hierarchy.push(analyse(key, label, model.data));
         });
@@ -108,6 +137,15 @@ export class ModelComponent {
       that.init();
     });
   }
+
+  updateUngroupable = function() {
+    angular.forEach(this.$scope.hierarchy, function(key){
+      if (key.label.substring(0,11) === 'ungroupable' && key.choice) {
+        key.label = key.choice.label;
+        key.children.splice(key.children.indexOf(key.choice),1);
+      }
+    });
+  };
 
   reset() {
     let http = this.$http;
