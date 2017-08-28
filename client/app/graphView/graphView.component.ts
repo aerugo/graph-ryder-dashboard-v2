@@ -49,7 +49,7 @@ export class GraphViewComponent {
         title: 'Main graph',
         display: true,
         icon: 'cog',
-        css: 'width: 650px; height: 150px; right: 10px;'
+        css: 'width: 700px; height: 150px; right: 10px;'
       }
     });
     this.addSettingPanel('settingPanels[0]');
@@ -72,7 +72,7 @@ export class GraphViewComponent {
   addSigmaPanel(settings) {
     let panel = document.createElement('sigma-panel');
     panel.setAttribute('settings', 'ctrl.' + settings);
-    panel.setAttribute('listener', 'ctrl.eventHandler(e)');
+    panel.setAttribute('handler', 'ctrl.eventHandler(e)');
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }
@@ -80,6 +80,7 @@ export class GraphViewComponent {
   addSettingPanel(settings) {
     let panel = document.createElement('setting-panel');
     panel.setAttribute('settings', 'ctrl.' + settings);
+    panel.setAttribute('handler', 'ctrl.eventHandler(e)');
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }
@@ -189,10 +190,10 @@ export class GraphViewComponent {
             css: 'width: 800px; height: 700px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
           },
           sigmaSettings: {
-            demo: true,
+            demo: false,
             info: 'Graph-Ryder 2.0'
           },
-          settingsPanelStyle: {
+          x: {
             title: 'Neighbours',
             display: true,
             icon: 'cog',
@@ -203,10 +204,36 @@ export class GraphViewComponent {
         this.sigmaPanels[idSigma]['element'] = idSigma;
         this.addSigmaPanel('sigmaPanels[' + idSigma + ']');
         break;
+      case 'detach':
+        let idSigma = this.sigmaPanels.push({
+          type: 'sigma',
+          url: e.url,
+          mode: 'panel',
+          style: {
+            title: 'Graph',
+            display: true,
+            icon: 'link',
+            css: 'width: 800px; height: 700px; top: 50px; left : 5px;'
+          },
+          sigmaSettings: {
+            demo: false,
+            info: 'Graph-Ryder 2.0'
+          },
+          settingsPanelStyle: {
+            title: 'Graph',
+            display: false,
+            icon: 'cog',
+            css: 'width: 750px; height: 125px; top: 50px; left: 0px;'
+          }
+        });
+        idSigma--;
+        this.sigmaPanels[idSigma]['element'] = idSigma;
+        this.addSigmaPanel('sigmaPanels[' + idSigma + ']');
+        break;
       case 'settings':
         if (e.element === 0) {
           this.settingPanels[e.element].style.display = true;
-          this.settingPanels[e.element].style.css = 'width: 600px; height: 150px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px; z-index: 110;';
+          this.settingPanels[e.element].style.css = 'width: 700px; height: 150px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px; z-index: 110;';
         }
         else {
           this.sigmaPanels[e.element].settingsPanelStyle.display = true;

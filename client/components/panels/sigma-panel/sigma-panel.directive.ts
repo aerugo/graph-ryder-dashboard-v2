@@ -14,7 +14,7 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
       replace: true,
       scope: {
         settings: '=',
-        listener: '&'
+        handler: '&'
       },
       link: function(scope, element) {
         element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
@@ -29,6 +29,7 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
         scope.action = function() {
           let panel = document.createElement('setting-panel');
           panel.setAttribute('settings', 'settingsPanel');
+          panel.setAttribute('handler', 'eventHandler(e)');
           angular.element('#' + scope.settings.element).append(panel);
           $compile(panel)(scope);
         };
@@ -39,7 +40,7 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
 
         scope.eventHandler = function(e) {
           e.element = scope.settings.element;
-          scope.listener({e: e});
+          scope.handler({e: e});
         };
 
         scope.$watch('settings.sigma.url.layout', function(newVal, oldVal) {

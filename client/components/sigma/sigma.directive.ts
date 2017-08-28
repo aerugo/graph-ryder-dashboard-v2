@@ -21,6 +21,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         /****** Inject the template *****/
         $compile(element.contents())(scope);
         element.html('<div id="' + scope.instanceId + '" class="' + scope.instanceClass + '" ></div>');
+        let firstLaunch = false;
 
         /****** Settings *********/
         let settings = { // default settings
@@ -47,22 +48,20 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           },
           settings: settings
         });
-        // demo mode
-        if (settings.demo) {
-          sigma.layouts.fruchtermanReingold.configure(s, {
-            iterations: 500,
-            easing: 'quadraticInOut',
-            duration: 1500
-          });
-        }
+        sigma.layouts.fruchtermanReingold.configure(s, {
+          iterations: 500,
+          easing: 'quadraticInOut',
+          duration: 1500
+        });
         // console.log(plugins_locate);
         scope.$watch('graph', function() {
           if (scope.graph) {
             s.graph.clear();
             s.graph.read(scope.graph);
             s.refresh();
-            if (settings.demo) {
+            if (settings.demo || !firstLaunch) {
               sigma.layouts.fruchtermanReingold.start(s);
+              firstLaunch = true;
             }
           }
         });

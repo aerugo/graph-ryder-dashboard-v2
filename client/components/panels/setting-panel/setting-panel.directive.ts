@@ -13,7 +13,8 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
       restrict: 'E',
       replace: true,
       scope: {
-        settings: '='
+        settings: '=',
+        handler: '&'
       },
       link: function(scope, element) {
         element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
@@ -23,9 +24,11 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
             }
           }});
         element.resizable({minHeight: 150, minWidth: 150}); // todo refresh on resize
+        let u = Object.assign({}, scope.settings.sigma.url);
 
+        /***** Action *****/
         scope.action = function() {
-          let u = scope.settings.sigma.url;
+          u = Object.assign({}, scope.settings.sigma.url);
           let params = {};
           switch(u.type) {
             case 'getGraph':
@@ -62,6 +65,12 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           });
         };
 
+        scope.actionDetach = function () {
+          let e = {type: 'detach', url: Object.assign({}, scope.settings.sigma.url)};
+          scope.settings.sigma.url = Object.assign({}, u);
+          scope.handler({e: e})
+        };
+
         /***** Get labels *****/
         $http.get('/api/model/').then(model => {
           scope.labels = model.data;
@@ -77,7 +86,6 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
         $timeout(function () {
           scope.action();
         });
-
       }
     };
   })

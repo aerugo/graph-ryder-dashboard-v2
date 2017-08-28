@@ -88,7 +88,6 @@ export class ModelComponent {
 
     http.get('/api/data/getLabelsHierarchy/').then(response => {
       http.get('/api/model/').then(model => {
-        console.log(model.data);
         angular.forEach(response.data, function (label, key) {
           hierarchy.push(analyse(key, label, model.data));
         });
