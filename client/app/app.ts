@@ -26,6 +26,7 @@ import detailPanel from '../components/panels/detail-panel/detail-panel.directiv
 import sigmaPanel from '../components/panels/sigma-panel/sigma-panel.directive';
 import settingPanel from '../components/panels/setting-panel/setting-panel.directive';
 import contextMenu from '../components/contextMenu/contextMenu.directive';
+import searchPanel from '../components/panels/search-panel/search-panel.directive';
 import main from './main/main.component';
 import graphView from './graphView/graphView.component';
 import ModelComponent from './model/model.component';
@@ -57,6 +58,7 @@ angular.module('graphRyderDashboardApp', [
   sigmaPanel,
   settingPanel,
   contextMenu,
+  searchPanel,
   main,
   graphView,
   ModelComponent,

@@ -13,6 +13,7 @@ export class GraphViewComponent {
   detailPanels;
   sigmaPanels;
   settingPanels;
+  searchPanel;
   footer;
   contextMenu;
 
@@ -52,7 +53,16 @@ export class GraphViewComponent {
         css: 'width: 700px; height: 150px; right: 10px;'
       }
     });
+    this.searchPanel = {
+      style: {
+        title: 'SearchBar',
+        display: true,
+        icon: 'search',
+        css: 'width: 700px; height: 400px; left: 10px;'
+      }
+    };
     this.addSettingPanel('settingPanels[0]');
+    this.addSearchPanel('searchPanel');
     this.refresh();
   }
 
@@ -68,7 +78,6 @@ export class GraphViewComponent {
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }
-
   addSigmaPanel(settings) {
     let panel = document.createElement('sigma-panel');
     panel.setAttribute('settings', 'ctrl.' + settings);
@@ -76,7 +85,6 @@ export class GraphViewComponent {
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }
-
   addSettingPanel(settings) {
     let panel = document.createElement('setting-panel');
     panel.setAttribute('settings', 'ctrl.' + settings);
@@ -84,7 +92,13 @@ export class GraphViewComponent {
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }
-
+  addSearchPanel(settings) {
+    let panel = document.createElement('search-panel');
+    panel.setAttribute('settings', 'ctrl.' + settings);
+    panel.setAttribute('handler', 'ctrl.eventHandler(e)');
+    angular.element('#panel_container').append(panel);
+    this.$compile(panel)(this.$scope);
+  }
   addContextPanel(settings) {
     let menu = document.createElement('context-menu');
     menu.setAttribute('settings', 'ctrl.' + settings);
@@ -107,8 +121,8 @@ export class GraphViewComponent {
       case 'rightClickNode':
         this.removeContextMenu();
         let title = 'Menu ' + e.data.node.label;
-        if (title.length > 20) {
-          title = title.substring(0,20) + '...';
+        if (title.length > 15) {
+          title = title.substring(0,15) + '...';
         }
         this.contextMenu = {
           style: {
