@@ -120,7 +120,7 @@ export class GraphViewComponent {
       /***** Sigma events *****/
       case 'rightClickNode':
         this.removeContextMenu();
-        let title = 'Menu ' + e.data.node.label;
+        let title = 'Node ' + e.data.node.label;
         if (title.length > 15) {
           title = title.substring(0,15) + '...';
         }
@@ -137,6 +137,27 @@ export class GraphViewComponent {
           ],
           position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
           element: {neo4j_id: e.data.node.neo4j_id, label: e.data.node.label}
+        };
+        this.addContextPanel('contextMenu');
+        break;
+      case 'rightClickEdge':
+        this.removeContextMenu();
+        let title = 'Edge ' + e.data.edge.neo4j_id;
+        if (title.length > 15) {
+          title = title.substring(0,15) + '...';
+        }
+        this.contextMenu = {
+          style: {
+            title: title,
+            display: true,
+            //icon: 'info',
+            css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
+        },
+          options: [
+            { label: 'Modify / Details', action: 'detail'}
+          ],
+          position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
+          element: {neo4j_id: e.data.edge.neo4j_id, label: e.data.edge.label}
         };
         this.addContextPanel('contextMenu');
         break;

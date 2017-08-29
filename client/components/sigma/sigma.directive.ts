@@ -86,7 +86,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           });
         });
 
-        s.bind('clickNode clickEdge rightClickNode clickStage rightClickStage hovers', function(e){
+        s.bind('clickNode clickEdge rightClickNode rightClickEdge clickStage rightClickStage hovers', function(e){
           e.element = scope.settings.element;
           scope.eventHandler({e: e});
           scope.$apply();
