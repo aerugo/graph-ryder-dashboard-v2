@@ -253,9 +253,9 @@ export class GraphViewComponent {
             demo: false,
             info: 'Graph-Ryder 2.0'
           },
-          x: {
+          settingsPanelStyle: {
             title: 'Neighbours',
-            display: true,
+            display: false,
             icon: 'cog',
             css: 'width: 750px; height: 125px; left: 10px;'
           }
