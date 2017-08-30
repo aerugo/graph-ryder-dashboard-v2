@@ -37,11 +37,11 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
             });
           }
           else if (scope.step === 1) {
-
             $http.get('/api/data/getProperties/' + scope.label).then(properties => {
               angular.forEach(properties.data, function (property, key) {
                 scope.parameters.push({key: property, name: property, placeholder: property, color: "rgb(127,183,51)"});
               });
+              scope.parameters.push({key: '*', name: '*', placeholder: '*', color: "rgb(127,183,51)"});
             });
           }
           else if (scope.step === 2) {
@@ -49,11 +49,10 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
               angular.forEach(values.data, function (value, key) {
                 scope.parameters.push({key: value, name: value, placeholder: value, color: "rgb(127,183,51)"});
               });
+              scope.parameters.push({key: '*', name: '*', placeholder: '*', color: "rgb(127,183,51)"});
             });
           }
           scope.step++;
-        };
-        scope.enterEditMode = function (e, i) {
         };
         scope.searchQueryTypeaheadOnSelect =  function (index) {
           if (scope.step === 1) {
@@ -68,7 +67,12 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           else if (scope.step === 2) {
             scope.searchParams[scope.searchParams.length-1].name += "->" + index.key;
             scope.searchParams[scope.searchParams.length-1].property = index.key;
-            scope.prop = index.key;
+            if (index.key === '*') {
+              scope.step = 0;
+            }
+            else {
+              scope.prop = index.key;
+            }
             scope.init();
           }
           else if (scope.step === 3) {
@@ -80,9 +84,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
             scope.init();
           }
         };
-        scope.searchQueryChanged = function (searchQuery) {
 
-        };
         scope.removeSearchParam = function (index) {
           scope.searchParams.splice(index, 1);
           scope.step = 0;
@@ -90,6 +92,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           scope.searchQuery = '';
           scope.init();
         };
+
         scope.removeAll = function () {
           scope.searchParams = [];
           scope.step = 0;
@@ -97,12 +100,15 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           scope.searchQuery = '';
           scope.init();
         };
+
         scope.action = function () {
           console.log(scope.searchParams);
         };
+
         scope.focus  = function(){
           angular.element("#searchBox").focus();
         };
+
         scope.init();
       }
     };

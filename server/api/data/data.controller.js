@@ -30,6 +30,16 @@ export function set(req, res) {
   });
 }
 
+export function create(req, res) {
+  request({url: config.tulipApi + '/create/', method: 'POST', json: req.body}, function(error, response, body) {
+    console.log(response.statusCode);
+    if(!error && response.statusCode == 200) {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.end(body.toString());
+    }
+  });
+}
+
 export function countLabel(req, res) {
   request(config.tulipApi + '/countLabel/' + req.param('label'), function(error, response, body) {
     if(!error && response.statusCode == 200) {

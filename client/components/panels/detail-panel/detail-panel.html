@@ -1,5 +1,5 @@
-<div class="panel panel-primary my-panel detail-panel" style="{{settings.style.css}} border-color: {{color}};" ng-show="settings.style.display" >
-  <div class="panel-heading" style="background-color: {{color}}; border-color: {{color}};">
+<div class="panel panel-primary my-panel detail-panel" style="{{settings.style.css}} border-color: {{realLabel.color}};" ng-show="settings.style.display" >
+  <div class="panel-heading" style="background-color: {{realLabel.color}}; border-color: {{realLabel.color}};">
     <span><i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
     <span ng-repeat="label in labels" ><span class="label label-default" >{{label}}</span>&nbsp;</span>
     <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -9,28 +9,36 @@
       <uib-tab index="0" heading="Properties">
         <br>
         <form class="form-horizontal">
+          <div class="input-group" ng-if="!realLabel">
+            <label for="label" class="control-label col-xs-4">Type: </label>
+            <div class="col-xs-8">
+              <select id="label" ng-model="realLabel" ng-options="label.label for label in labelsList | orderBy: 'label'" ng-change="getProperties(realLabel)">
+              </select>
+            </div>
+          </div>
           <div class="form-group" ng-repeat="(key, value) in node track by $index">
             <label for="{{key}}" class="control-label col-xs-4">{{key}}</label>
             <div class="col-xs-8">
               <input type="text" class="form-control" id="{{key}}" ng-model="node[key]" ng-value="value" uib-typeahead="value for value in values[key] | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
             </div>
           </div>
-          <div class="form-group">
-            <div class="form-group">
-              <div class="col-xs-4" style="padding-left: 40px;">
-                <input type="text" class="form-control" id="newKey" placeholder="newKey" ng-model="newKey" uib-typeahead="property for property in properties | filter:$viewValue" typeahead-min-length="0" typeahead-on-select="suggestValue(newKey)">
-              </div>
-              <div class="col-xs-8" style="padding-right: 30px;">
-                <input type="text" class="form-control" id="newValue" ng-model="newValue" uib-typeahead="value for value in values[newKey] | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-xs-offset-2 col-xs-8" style="padding-bottom: 20px;">
-              <button type="submit" class="btn btn-primary" style="background-color: {{color}}; border-color: {{color}};" ng-click="update()">Update</button>
-            </div>
-          </div>
         </form>
+        <form class="form-group" ng-if="realLabel">
+          <fieldset>
+            <label for="newkey" class="control-label col-xs-4"><i class="fa fa-plus" aria-hidden="true"  ></i> Add a property</label>
+            <div class="col-xs-8" style="padding-left: 20px;">
+              <input type="text" class="form-control"  id="newkey" ng-model="newkey" placeholder="new key" uib-typeahead="property for property in properties | filter:$viewValue" typeahead-min-length="0" typeahead-on-select="addNewKey(newkey)">
+              <button class="btn btn-primary" type="submit" ng-click="addNewKey(newkey)">Add</button>
+            </div>
+          </fieldset>
+        </form>
+        <div class="form-group">
+          <div class="col-xs-offset-2 col-xs-8" style="padding-bottom: 20px;">
+            <button ng-if="settings.id" class="btn btn-primary" style="background-color: {{realLabel.color}}; border-color: {{ realLabel.color}};" ng-click="update()">Update</button>
+            <button ng-if="!settings.id" class="btn btn-primary" style="background-color: {{realLabel.color}}; border-color: {{ realLabel.color}};" ng-click="create()" ng-disabled="!realLabel" >Create</button>
+          </div>
+        </div>
+
       </uib-tab>
       <uib-tab index="1" heading="Attributes">
 

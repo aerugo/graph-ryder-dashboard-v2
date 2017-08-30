@@ -13,7 +13,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
       restrict: 'E',
       replace: true,
       scope: {
-        settings: '='
+        settings: '=',
+        handler: '&'
       },
       link: function(scope, element) {
         element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
@@ -25,6 +26,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         element.resizable({minHeight: 150, minWidth: 150});
         let loaded = false;
         scope.values = {};
+        scope.newkey = '';
 
         /***** Load properties *******/
         scope.load = function(){
@@ -34,40 +36,77 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               angular.forEach(scope.labels, function(label) {
                 $http.get('/api/model/label/' + label).then(model => {
                   if (model.data.color) {
-                    scope.color = model.data.color;
+                    $http.get('/api/data/get/' + scope.settings.id).then(response => {
+                      scope.node = response.data;
+                      scope.getProperties(model.data);
+                      angular.forEach(Object.keys(scope.node), function(key) {
+                        scope.suggestValue(scope.realLabel, key);
+                      });
+                    });
+                    loaded = true;
                   }
                 });
               });
             });
-            $http.get('/api/data/get/' + scope.settings.id).then(response => {
-              scope.node = response.data;
-              angular.forEach(Object.keys(scope.node), function(key) {
-                scope.suggestValue(key);
-              });
-              // todo labels[0] could be the generic label
-              $http.get('/api/data/getProperties/' + scope.labels[0]).then(response => {
-                scope.properties = $(response.data).not(Object.keys(scope.node)).get();
-              });
+          }
+          if (!loaded && !scope.settings.id) {
+            scope.node = {};
+            $http.get('/api/model/').then(model => {
+              scope.labelsList = model.data;
+              loaded = true;
             });
-            loaded = true;
           }
         };
 
+        scope.getProperties = function (label) {
+          scope.realLabel = label;
+          scope.labels = [label.label];
+          scope.node[label.labeling] = '';
+          scope.suggestValue(scope.realLabel, label.labeling);
+          angular.element("#" + label.labeling).focus(); // todo does not work
+          $http.get('/api/data/getProperties/' + label.label).then(response => {
+            scope.properties = $(response.data).not(Object.keys(scope.node)).get();
+          });
+        };
+
         /****** Search for available values ******/
-        scope.suggestValue = function (key) {
+        scope.suggestValue = function (label, key) {
           if (key) {
-            // todo labels[0] could be the generic label
-            $http.get('/api/data/getPropertyValue/' + scope.labels[0] + '/' + key).then(propertyValue => {
+            $http.get('/api/data/getPropertyValue/' + label.label + '/' + key).then(propertyValue => {
               scope.values[key] = propertyValue.data;
             });
           }
         };
 
+        scope.addNewKey = function (key) {
+          scope.node[key] = '';
+          scope.getProperties(scope.realLabel);
+          scope.suggestValue(scope.realLabel, key);
+          angular.element("#" + key).focus(); // todo does not work
+        };
+
         /****** Update the element *****/
         scope.update = function() {
-          // todo manage the additional field
           $http.put('/api/data/set/' + scope.settings.id, scope.node).then(response => {
-            scope.settings.style.display = false; //todo close the panel instead
+            // todo check the response
+            scope.settings.style.display = false; //todo delete the panel instead
+          });
+        };
+
+        /****** Create the element *****/
+        scope.create = function() {
+          scope.node.labels = scope.labels;
+          $http.post('/api/data/create/', scope.node).then(response => {
+            scope.settings.style.display = false; //todo delete the panel instead
+            console.log(response);
+            scope.handler({e: {
+              type: 'addGo',
+              position: scope.settings.position,
+              element: scope.settings.element,
+              node: response.data,
+              label: scope.node[scope.realLabel.labeling],
+              color: scope.realLabel.color
+            }});
           });
         };
         $timeout(function () {

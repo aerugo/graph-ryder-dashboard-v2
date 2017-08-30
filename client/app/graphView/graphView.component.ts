@@ -38,7 +38,7 @@ export class GraphViewComponent {
         rightLabel: 'Person',
         edgeLabel: 'Financial'
       },
-      graph: [],
+      graph: {new: []},
       settings: {
         demo: false,
         element: 0
@@ -56,25 +56,20 @@ export class GraphViewComponent {
     this.searchPanel = {
       style: {
         title: 'SearchBar',
-        display: true,
+        display: false,
         icon: 'search',
-        css: 'width: 700px; height: 400px; left: 10px;'
+        css: 'width: 950px; height: 275px; left: 10px;'
       }
     };
     this.addSettingPanel('settingPanels[0]');
     this.addSearchPanel('searchPanel');
-    this.refresh();
-  }
-
-  /**** Refresh the view *****/
-  refresh() {
-
   }
 
   /***** Add panels *****/
   addDetailPanel(settings) {
     let panel = document.createElement('detail-panel');
     panel.setAttribute('settings', 'ctrl.' + settings);
+    panel.setAttribute('handler', 'ctrl.eventHandler(e)');
     angular.element('#panel_container').append(panel);
     this.$compile(panel)(this.$scope);
   }
@@ -176,9 +171,15 @@ export class GraphViewComponent {
           options: [
             { label: 'Add node', action: 'add'},
             { label: 'Apply layout', action: 'layout'},
+            { label: 'SearchBar', action: 'search'},
             { label: 'Settings', action: 'settings'}
             ],
-          position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
+          position: {
+            clientY: e.data.captor.clientY,
+            clientX: e.data.captor.clientX,
+            x: e.data.captor.x,
+            y: e.data.captor.y
+          },
           element: e.element
         };
         this.addContextPanel('contextMenu');
@@ -193,6 +194,32 @@ export class GraphViewComponent {
         break;
 
       /***** ContextMenu events *****/
+      case 'add':
+        let id = this.detailPanels.push({
+          style: {
+            title: 'Create new node',
+            display: true,
+            icon: 'plus',
+            css: 'width: 350px; height: 550px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
+          },
+          type: 'create',
+          element: e.element,
+          position: {y: e.position.y, x: e.position.x}
+        });
+        id--;
+        this.addDetailPanel('detailPanels[' + id + ']');
+      break;
+      case 'addGo':
+        this.sigmaPanels[e.element].graph.new = [];
+          this.sigmaPanels[e.element].graph.new.push({
+            id: e.node,
+            neo4j_id: e.node,
+            label: e.label,
+            color: e.color,
+            x: e.position.x,
+            y: e.position.y,
+        });
+      break;
       case 'detail':
         let id = this.detailPanels.push({
           style: {
@@ -273,6 +300,9 @@ export class GraphViewComponent {
         else {
           this.sigmaPanels[e.element].settingsPanelStyle.display = true;
         }
+        break;
+      case 'search':
+        this.searchPanel.style.display = true;
         break;
       case 'layout':
         this.$http.get('/api/tulip/getLayouts').then(model => {

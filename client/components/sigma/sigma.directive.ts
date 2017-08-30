@@ -53,7 +53,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           easing: 'quadraticInOut',
           duration: 1500
         });
-        // console.log(plugins_locate);
+
         scope.$watch('graph', function() {
           if (scope.graph) {
             s.graph.clear();
@@ -63,6 +63,14 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
               sigma.layouts.fruchtermanReingold.start(s);
               firstLaunch = true;
             }
+          }
+        });
+
+        scope.$watch('graph.new', function() {
+          if(scope.graph.new) {
+            let node = scope.graph.new.pop();
+            s.graph.addNode(node);
+            s.refresh();
           }
         });
 
