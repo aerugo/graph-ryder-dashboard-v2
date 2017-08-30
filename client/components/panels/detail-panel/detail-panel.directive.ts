@@ -61,9 +61,11 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.getProperties = function (label) {
           scope.realLabel = label;
           scope.labels = [label.label];
-          scope.node[label.labeling] = '';
+          if (!Object.keys(scope.node).includes(label.labeling)) {
+            scope.node[label.labeling] = '';
+          }
           scope.suggestValue(scope.realLabel, label.labeling);
-          angular.element("#" + label.labeling).focus(); // todo does not work
+          // angular.element("#" + label.labeling).focus(); // todo does not work
           $http.get('/api/data/getProperties/' + label.label).then(response => {
             scope.properties = $(response.data).not(Object.keys(scope.node)).get();
           });
@@ -82,7 +84,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           scope.node[key] = '';
           scope.getProperties(scope.realLabel);
           scope.suggestValue(scope.realLabel, key);
-          angular.element("#" + key).focus(); // todo does not work
+          // angular.element("#" + key).focus(); // todo does not work
         };
 
         /****** Update the element *****/

@@ -32,31 +32,30 @@ export class ModelComponent {
     };
     let analyse = function(key, labels, model){
       /*** Exit ****/
-      if(!Object.keys(labels).length) {
+      if (!Object.keys(labels).length) {
         getProperty(key);
-        let element = {label: key};
+        let element = {label: key, labeling: '', color: ''};
         let find = false;
         angular.forEach(model, function (e) {
-          if (e.label == key) {
-            element['labeling'] = e.labeling;
-            element['color'] = e.color;
+          if (e.label === key) {
+            element.labeling = e.labeling;
+            element.color = e.color;
             find = true;
           }
         });
         if (!find) {
-          element['labeling'] = 'name';
-          element['color'] = 'rgb(51,122,183)';
+          element.labeling = 'name';
+          element.color = 'rgb(51,122,183)';
           newLabels.push(key);
         }
         return element;
-      }
-      /**** Ungroupable case *****/
-      else if (key.substring(0,11) === 'ungroupable') {
+      } else if (key.substring(0, 11) === 'ungroupable') {
+        /**** Ungroupable case *****/
         let result = [];
         let found = false;
         angular.forEach(labels, function (label, k) {
           angular.forEach(model, function (e) {
-            if (e.label == k && e.children.length) {
+            if (e.label === k && e.children.length) {
               found = k;
             }
           });
@@ -68,19 +67,17 @@ export class ModelComponent {
             }
           });
           return {label: found, children: result};
-        }
-        else {
-          angular.forEach(labels, function (label, key) {
-            result.push(analyse(key, label, model));
+        } else {
+          angular.forEach(labels, function (label, k) {
+            result.push(analyse(k, label, model));
           });
           return {label: key, children: result};
         }
-      }
-      /***** Continue *****/
-      else {
+      } else {
+        /***** Continue *****/
         let result = [];
-        angular.forEach(labels, function (label, key) {
-          result.push(analyse(key, label, model));
+        angular.forEach(labels, function (label, k) {
+          result.push(analyse(k, label, model));
         });
         return {label: key, children: result};
       }
@@ -104,8 +101,7 @@ export class ModelComponent {
     let updateChildren = function(e) {
       if (!e.children) {
         promises.push(http.post('/api/model', e));
-      }
-      else {
+      } else {
         angular.forEach(e.children, function(child) {
           updateChildren(child);
         });
@@ -114,8 +110,7 @@ export class ModelComponent {
     let updateParents = function(e) {
       if (!e.children) {
         return [e.label];
-      }
-      else {
+      } else {
         let element = {label: e.label, children: []};
         angular.forEach(e.children, function(child) {
           element.children = element.children.concat(updateParents(child));
@@ -139,9 +134,9 @@ export class ModelComponent {
 
   updateUngroupable = function() {
     angular.forEach(this.$scope.hierarchy, function(key){
-      if (key.label.substring(0,11) === 'ungroupable' && key.choice) {
+      if (key.label.substring(0, 11) === 'ungroupable' && key.choice) {
         key.label = key.choice.label;
-        key.children.splice(key.children.indexOf(key.choice),1);
+        key.children.splice(key.children.indexOf(key.choice), 1);
       }
     });
   };

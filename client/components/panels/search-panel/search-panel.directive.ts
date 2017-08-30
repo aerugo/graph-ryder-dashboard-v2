@@ -20,7 +20,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           }});
         element.resizable({minHeight: 150, minWidth: 150}); // todo refresh on resize
 
-        scope.placeholder = "Search ...";
+        scope.placeholder = 'Search ...';
         scope.searchQuery = '';
         scope.searchParams = [];
         scope.parameters = [];
@@ -35,21 +35,19 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
                 scope.parameters.push({ key: label.label, name: label.label, placeholder: label.label, color: label.color });
               });
             });
-          }
-          else if (scope.step === 1) {
+          } else if (scope.step === 1) {
             $http.get('/api/data/getProperties/' + scope.label).then(properties => {
               angular.forEach(properties.data, function (property, key) {
-                scope.parameters.push({key: property, name: property, placeholder: property, color: "rgb(127,183,51)"});
+                scope.parameters.push({key: property, name: property, placeholder: property, color: 'rgb(127,183,51)'});
               });
-              scope.parameters.push({key: '*', name: '*', placeholder: '*', color: "rgb(127,183,51)"});
+              scope.parameters.push({key: '*', name: '*', placeholder: '*', color: 'rgb(127,183,51)'});
             });
-          }
-          else if (scope.step === 2) {
+          } else if (scope.step === 2) {
             $http.get('/api/data/getPropertyValue/' + scope.label + '/' + scope.prop).then(values => {
               angular.forEach(values.data, function (value, key) {
-                scope.parameters.push({key: value, name: value, placeholder: value, color: "rgb(127,183,51)"});
+                scope.parameters.push({key: value, name: value, placeholder: value, color: 'rgb(127,183,51)'});
               });
-              scope.parameters.push({key: '*', name: '*', placeholder: '*', color: "rgb(127,183,51)"});
+              scope.parameters.push({key: '*', name: '*', placeholder: '*', color: 'rgb(127,183,51)'});
             });
           }
           scope.step++;
@@ -63,21 +61,18 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
             });
             scope.label = index.key;
             scope.init();
-          }
-          else if (scope.step === 2) {
-            scope.searchParams[scope.searchParams.length-1].name += "->" + index.key;
-            scope.searchParams[scope.searchParams.length-1].property = index.key;
+          } else if (scope.step === 2) {
+            scope.searchParams[scope.searchParams.length - 1].name += '->' + index.key;
+            scope.searchParams[scope.searchParams.length - 1].property = index.key;
             if (index.key === '*') {
               scope.step = 0;
-            }
-            else {
+            } else {
               scope.prop = index.key;
             }
             scope.init();
-          }
-          else if (scope.step === 3) {
-            scope.searchParams[scope.searchParams.length-1].name += "->" + index.key;
-            scope.searchParams[scope.searchParams.length-1].value = index.key;
+          } else if (scope.step === 3) {
+            scope.searchParams[scope.searchParams.length - 1].name += '->' + index.key;
+            scope.searchParams[scope.searchParams.length - 1].value = index.key;
             scope.label = '';
             scope.prop = '';
             scope.step = 0;
@@ -106,7 +101,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
         };
 
         scope.focus  = function(){
-          angular.element("#searchBox").focus();
+          angular.element('#searchBox').focus();
         };
 
         scope.init();

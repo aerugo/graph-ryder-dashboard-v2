@@ -67,7 +67,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         });
 
         scope.$watch('graph.new', function() {
-          if(scope.graph.new) {
+          if (scope.graph.new) {
             let node = scope.graph.new.pop();
             s.graph.addNode(node);
             s.refresh();

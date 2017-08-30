@@ -25,7 +25,8 @@ export function set(req, res) {
   request({url: config.tulipApi + '/set/' + req.param('id'), method: 'PUT', json: req.body}, function(error, response, body) {
     console.log(response.statusCode);
     if(!error && response.statusCode == 200) {
-      return res.send(response.statusCode);
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.end(body.toString());
     }
   });
 }

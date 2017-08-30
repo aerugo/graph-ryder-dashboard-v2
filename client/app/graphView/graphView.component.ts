@@ -1,7 +1,6 @@
 'use strict';
 const angular = require('angular');
 const uiRouter = require('angular-ui-router');
-const ngResource = require('angular-resource');
 
 import routes from './graphView.routes';
 import {isUndefined} from 'util';
@@ -25,7 +24,7 @@ export class GraphViewComponent {
     this.detailPanels = [];
     this.sigmaPanels = [];
     this.settingPanels = [];
-    this.footer= "Graph-Ryder v2.0";
+    this.footer = 'Graph-Ryder v2.0';
     this.contextMenu = { style: { display: false }};
   }
 
@@ -117,7 +116,7 @@ export class GraphViewComponent {
         this.removeContextMenu();
         let title = 'Node ' + e.data.node.label;
         if (title.length > 15) {
-          title = title.substring(0,15) + '...';
+          title = title.substring(0, 15) + '...';
         }
         this.contextMenu = {
           style: {
@@ -139,7 +138,7 @@ export class GraphViewComponent {
         this.removeContextMenu();
         let title = 'Edge ' + e.data.edge.neo4j_id;
         if (title.length > 15) {
-          title = title.substring(0,15) + '...';
+          title = title.substring(0, 15) + '...';
         }
         this.contextMenu = {
           style: {
@@ -187,8 +186,7 @@ export class GraphViewComponent {
       case 'hovers':
         if (e.data.enter.nodes.length) {
           this.footer = 'node : ' + e.data.enter.nodes[0].label;
-        }
-        else if (e.data.enter.edges.length) {
+        } else if (e.data.enter.edges.length) {
           this.footer = 'edge : ' + e.data.enter.edges[0].label;
         }
         break;
@@ -263,7 +261,7 @@ export class GraphViewComponent {
           }
         });
         idSigma--;
-        this.sigmaPanels[idSigma]['element'] = idSigma;
+        this.sigmaPanels[idSigma].element = idSigma;
         this.addSigmaPanel('sigmaPanels[' + idSigma + ']');
         break;
       case 'detach':
@@ -289,15 +287,14 @@ export class GraphViewComponent {
           }
         });
         idSigma--;
-        this.sigmaPanels[idSigma]['element'] = idSigma;
+        this.sigmaPanels[idSigma].element = idSigma;
         this.addSigmaPanel('sigmaPanels[' + idSigma + ']');
         break;
       case 'settings':
         if (e.element === 0) {
           this.settingPanels[e.element].style.display = true;
           this.settingPanels[e.element].style.css = 'width: 700px; height: 150px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px; z-index: 110;';
-        }
-        else {
+        } else {
           this.sigmaPanels[e.element].settingsPanelStyle.display = true;
         }
         break;

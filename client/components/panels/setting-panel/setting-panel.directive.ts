@@ -29,34 +29,43 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
         /***** Action *****/
         scope.action = function() {
           u = Object.assign({}, scope.settings.sigma.url);
-          let params = {};
-          switch(u.type) {
+          let params = {
+            url: '',
+            label_key_left: '',
+            label_key_right: '',
+            color_left: '',
+            color_right: '',
+            layout: '',
+            label_key_edge: '',
+            color_edge: ''
+          };
+          switch (u.type) {
             case 'getGraph':
-              params['url'] = u.type + '/' +  u.leftLabel + '/' + u.edgeLabel + '/' + u.rightLabel;
+              params.url = u.type + '/' +  u.leftLabel + '/' + u.edgeLabel + '/' + u.rightLabel;
               break;
             case 'getGraphNeighboursById':
-              params['url'] = u.type + '/' +  u.nodeId + '/' + u.edgeLabel + '/' + u.rightLabel;
+              params.url = u.type + '/' +  u.nodeId + '/' + u.edgeLabel + '/' + u.rightLabel;
               break;
           }
-          params['layout'] = u.layout;
+          params.layout = u.layout;
           let promises = [];
           promises.push($http.get('/api/model/label/' + u.leftLabel).then(left_label => {
-            params['label_key_left'] = left_label.data.labeling;
-            params['color_left'] = left_label.data.color;
+            params.label_key_left = left_label.data.labeling;
+            params.color_left = left_label.data.color;
             if (u.leftLabel === u.rightLabel) {
-              params['label_key_right'] = left_label.data.labeling;
-              params['color_right'] = left_label.data.color;
+              params.label_key_right = left_label.data.labeling;
+              params.color_right = left_label.data.color;
             }
           }));
           if (u.leftLabel !== u.rightLabel) {
             promises.push($http.get('/api/model/label/' + u.rightLabel).then(right_label => {
-              params['label_key_right'] = right_label.data.labeling;
-              params['color_right'] = right_label.data.color;
+              params.label_key_right = right_label.data.labeling;
+              params.color_right = right_label.data.color;
             }));
           }
           promises.push($http.get('/api/model/label/' + u.edgeLabel).then(edge_label => {
-            params['label_key_edge'] = edge_label.data.labeling;
-            params['color_edge'] = edge_label.data.color;
+            params.label_key_edge = edge_label.data.labeling;
+            params.color_edge = edge_label.data.color;
           }));
           Promise.all(promises).then(function() {
             $http.get('/api/tulip/' + u.type, {params: params}).then(response => {
@@ -68,7 +77,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
         scope.actionDetach = function () {
           let e = {type: 'detach', url: Object.assign({}, scope.settings.sigma.url)};
           scope.settings.sigma.url = Object.assign({}, u);
-          scope.handler({e: e})
+          scope.handler({e: e});
         };
 
         /***** Get labels *****/
