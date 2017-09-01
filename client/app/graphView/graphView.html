@@ -8,6 +8,6 @@
   event-handler="ctrl.eventHandler(e)"
 ></sigma>
 <div class="footer" style="z-index: 10">
-  <p>{{ctrl.footer}}
+  <p><span ng-repeat="label in ctrl.footer.labels" ><span class="label label-default" style="background-color: {{label.color}}; border: solid 0.1em dimgrey;">{{label.label}}</span> {{label.labeling}}</span>: {{ctrl.footer.text}}
   </p>
 </div>

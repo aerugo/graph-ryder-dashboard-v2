@@ -28,8 +28,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.values = {};
         scope.newkey = '';
 
-        /***** Load properties *******/
         scope.load = function(){
+          /***** Load properties *******/
           if (!loaded && scope.settings.id) {
             $http.get('/api/data/getLabels/' + scope.settings.id).then(labels => {
               scope.labels = labels.data;
@@ -49,6 +49,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               });
             });
           }
+          /****** New Item ******/
           if (!loaded && !scope.settings.id) {
             scope.node = {};
             $http.get('/api/model/').then(model => {
@@ -100,7 +101,6 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           scope.node.labels = scope.labels;
           $http.post('/api/data/create/', scope.node).then(response => {
             scope.settings.style.display = false; //todo delete the panel instead
-            console.log(response);
             scope.handler({e: {
               type: 'addGo',
               position: scope.settings.position,

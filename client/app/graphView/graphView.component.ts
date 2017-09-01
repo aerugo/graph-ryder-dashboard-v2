@@ -24,7 +24,7 @@ export class GraphViewComponent {
     this.detailPanels = [];
     this.sigmaPanels = [];
     this.settingPanels = [];
-    this.footer = 'Graph-Ryder v2.0';
+    this.footer = {text: 'Graph-Ryder v2.0', labels : []};
     this.contextMenu = { style: { display: false }};
   }
 
@@ -49,7 +49,7 @@ export class GraphViewComponent {
         title: 'Main graph',
         display: true,
         icon: 'cog',
-        css: 'width: 700px; height: 150px; right: 10px;'
+        css: 'width: 700px; height: 125px; right: 10px;'
       }
     });
     this.searchPanel = {
@@ -185,9 +185,37 @@ export class GraphViewComponent {
         break;
       case 'hovers':
         if (e.data.enter.nodes.length) {
-          this.footer = 'node : ' + e.data.enter.nodes[0].label;
+          let footer = {text: e.data.enter.nodes[0].label, labels: []};
+          let http = this.$http;
+          angular.forEach(e.data.enter.nodes[0].labels.split(','), function(label) {
+            label = label.replace('[', '').replace(']', '').replace("'", '').replace("'", '').replace(' ', '');
+            http.get('/api/model/label/' + label).then(model => {
+              if (model.data.color) {
+                footer.labels.push({
+                  label: label,
+                  color: model.data.color,
+                  labeling: model.data.labeling
+                });
+              }
+            });
+          });
+          this.footer = footer;
         } else if (e.data.enter.edges.length) {
-          this.footer = 'edge : ' + e.data.enter.edges[0].label;
+          let footer = {text: e.data.enter.edges[0].label, labels: []};
+          let http = this.$http;
+          angular.forEach(e.data.enter.edges[0].labels.split(','), function(label) {
+            label = label.replace('[', '').replace(']', '').replace("'", '').replace("'", '').replace(' ', '');
+            http.get('/api/model/label/' + label).then(model => {
+              if (model.data.color) {
+                footer.labels.push({
+                  label: label,
+                  color: model.data.color,
+                  labeling: model.data.labeling
+                });
+              }
+            });
+          });
+          this.footer = footer;
         }
         break;
 

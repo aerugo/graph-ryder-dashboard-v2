@@ -18,7 +18,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
               element.css('z-index', 10);
             }
           }});
-        element.resizable({minHeight: 150, minWidth: 150}); // todo refresh on resize
+        element.resizable({minHeight: 150, minWidth: 150});
 
         scope.placeholder = 'Search ...';
         scope.searchQuery = '';
@@ -100,7 +100,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           console.log(scope.searchParams);
         };
 
-        scope.focus  = function(){
+        scope.focus = function(){
           angular.element('#searchBox').focus();
         };
 

@@ -23,8 +23,9 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
               element.css('z-index', 10);
             }
           }});
-        element.resizable({minHeight: 150, minWidth: 150}); // todo refresh on resize
-        let u = Object.assign({}, scope.settings.sigma.url);
+        element.resizable({minHeight: 125, minWidth: 150});
+        let u = {type: '', leftLabel: '', edgeLabel: '', rightLabel: '', nodeId: '', layout: ''};
+        u = Object.assign({}, scope.settings.sigma.url);
 
         /***** Action *****/
         scope.action = function() {
