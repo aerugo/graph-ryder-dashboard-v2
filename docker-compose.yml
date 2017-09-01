@@ -1,0 +1,23 @@
+version: '2.2'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - neo4j
+      - mongo
+      - api
+  api:
+    build: ../private-graph-ryder-api/
+    depends_on:
+      - neo4j
+      - mongo
+  neo4j:
+    image: "neo4j:3.2"
+    volumes:
+      - ./neo4j/data:/data
+      - ./neo4j/conf:/conf
+      - ./neo4j/plugins:/plugins
+  mongo:
+    image: "mongo:3.4.6"
