@@ -26,13 +26,13 @@ var all = {
   port: process.env.PORT || 9000,
 
   // Tulip Python API port
-  tulipApi: 'http://localhost:5000',
+  tulipApi: 'http://tulip:5000',
 
   // Server IP
   ip: process.env.IP || '0.0.0.0',
 
   // Should we populate the DB with sample data?
-  seedDB: false,
+  seedDB: true,
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {

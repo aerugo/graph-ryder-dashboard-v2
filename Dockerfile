@@ -10,6 +10,8 @@ WORKDIR /opt/app
 ADD ./client /opt/app/client
 ADD ./server /opt/app/server
 ADD ./typings /opt/app/typings
+ADD ./.babelrc /opt/app
+ADD ./.eslintrc /opt/app
 ADD ./package.json /opt/app
 ADD ./gulpfile.babel.js /opt/app
 ADD ./spec.js /opt/app
