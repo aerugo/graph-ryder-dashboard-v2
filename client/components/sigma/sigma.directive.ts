@@ -66,11 +66,19 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           }
         });
 
-        scope.$watch('graph.new', function() {
-          if (scope.graph.new) {
-            let node = scope.graph.new.pop();
-            s.graph.addNode(node);
-            s.refresh();
+        scope.$watch('graph.action', function() {
+          if (scope.graph.action && scope.graph.action.type) {
+            if (scope.graph.action.type === 'addNode') {
+              s.graph.addNode(scope.graph.action.node);
+              s.refresh();
+            } else if (scope.graph.action.type === 'delete') {
+              angular.forEach(s.graph.nodes(), function(node) {
+                if (node.neo4j_id === scope.graph.action.targetId) {
+                  s.graph.dropNode(node.id);
+                }
+              });
+              s.refresh();
+            }
           }
         });
 

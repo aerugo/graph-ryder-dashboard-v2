@@ -21,6 +21,16 @@ export function get(req, res) {
   });
 }
 
+export function create(req, res) {
+  request({url: config.tulipApi + '/create/', method: 'POST', json: req.body}, function(error, response, body) {
+    console.log(response.statusCode);
+    if(!error && response.statusCode == 200) {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.end(body.toString());
+    }
+  });
+}
+
 export function set(req, res) {
   request({url: config.tulipApi + '/set/' + req.param('id'), method: 'PUT', json: req.body}, function(error, response, body) {
     console.log(response.statusCode);
@@ -31,8 +41,8 @@ export function set(req, res) {
   });
 }
 
-export function create(req, res) {
-  request({url: config.tulipApi + '/create/', method: 'POST', json: req.body}, function(error, response, body) {
+export function destroy(req, res) {
+  request({url: config.tulipApi + '/' + req.param('id'), method: 'DELETE'}, function(error, response, body) {
     console.log(response.statusCode);
     if(!error && response.statusCode == 200) {
       res.writeHead(200, {'Content-Type': 'text/html'});

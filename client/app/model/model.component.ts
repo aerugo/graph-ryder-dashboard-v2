@@ -30,11 +30,11 @@ export class ModelComponent {
         property[label] = response.data;
       });
     };
-    let analyse = function(key, labels, model){
+    let analyse = function(parents, key, labels, model){
       /*** Exit ****/
       if (!Object.keys(labels).length) {
         getProperty(key);
-        let element = {label: key, labeling: '', color: ''};
+        let element = {label: key, labeling: '', color: '', parents: parents};
         let find = false;
         angular.forEach(model, function (e) {
           if (e.label === key) {
@@ -44,7 +44,7 @@ export class ModelComponent {
           }
         });
         if (!find) {
-          element.labeling = 'name';
+          element.labeling = 'Undefined';
           element.color = 'rgb(51,122,183)';
           newLabels.push(key);
         }
@@ -63,13 +63,15 @@ export class ModelComponent {
         if (found) {
           angular.forEach(labels, function (l, k) {
             if (k !== found) {
-              result.push(analyse(k, l, model));
+              parents.indexOf(key) === -1 ? parents.push(k) : null;
+              result.push(analyse(parents, k, l, model));
             }
           });
           return {label: found, children: result};
         } else {
           angular.forEach(labels, function (label, k) {
-            result.push(analyse(k, label, model));
+            parents.indexOf(key) === -1 ? parents.push(key) : null;
+            result.push(analyse(parents, k, label, model));
           });
           return {label: key, children: result};
         }
@@ -77,7 +79,8 @@ export class ModelComponent {
         /***** Continue *****/
         let result = [];
         angular.forEach(labels, function (label, k) {
-          result.push(analyse(k, label, model));
+          parents.indexOf(key) === -1 ? parents.push(key) : null;
+          result.push(analyse(parents, k, label, model));
         });
         return {label: key, children: result};
       }
@@ -86,7 +89,7 @@ export class ModelComponent {
     http.get('/api/data/getLabelsHierarchy/').then(response => {
       http.get('/api/model/').then(model => {
         angular.forEach(response.data, function (label, key) {
-          hierarchy.push(analyse(key, label, model.data));
+          hierarchy.push(analyse([], key, label, model.data));
         });
       });
     });
@@ -95,6 +98,7 @@ export class ModelComponent {
     scope.newLabels = newLabels;
   }
   update() {
+    console.log(this.$scope.hierarchy);
     let http = this.$http;
     let that = this;
     let promises = [];
@@ -137,6 +141,9 @@ export class ModelComponent {
       if (key.label.substring(0, 11) === 'ungroupable' && key.choice) {
         key.label = key.choice.label;
         key.children.splice(key.children.indexOf(key.choice), 1);
+        angular.forEach(key.children, function (children) {
+          children.parents = [key.choice.label];
+        });
       }
     });
   };

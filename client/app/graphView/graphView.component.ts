@@ -130,7 +130,8 @@ export class GraphViewComponent {
             { label: 'View Neighbours', action: 'neighbour'}
           ],
           position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
-          element: {neo4j_id: e.data.node.neo4j_id, label: e.data.node.label}
+          node: {neo4j_id: e.data.node.neo4j_id, label: e.data.node.label},
+          element: e.element
         };
         this.addContextPanel('contextMenu');
         break;
@@ -228,7 +229,7 @@ export class GraphViewComponent {
             icon: 'plus',
             css: 'width: 350px; height: 550px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
           },
-          type: 'create',
+          type: 'createNode',
           element: e.element,
           position: {y: e.position.y, x: e.position.x}
         });
@@ -236,26 +237,35 @@ export class GraphViewComponent {
         this.addDetailPanel('detailPanels[' + id + ']');
       break;
       case 'addGo':
-        this.sigmaPanels[e.element].graph.new = [];
-          this.sigmaPanels[e.element].graph.new.push({
+        this.sigmaPanels[e.element].graph.action = {
+          type: 'addNode',
+          node: {
             id: e.node,
             neo4j_id: e.node,
             label: e.label,
             color: e.color,
             x: e.position.x,
-            y: e.position.y,
-        });
+            y: e.position.y
+          }
+        };
+      break;
+      case 'delete':
+          this.sigmaPanels[e.element].graph.action = {
+            type: 'delete',
+            targetId: e.target
+        };
       break;
       case 'detail':
         let id = this.detailPanels.push({
           style: {
-            title: 'Details ' + e.element.label,
+            title: 'Details ' + e.node.label,
             display: true,
             icon: 'info',
             css: 'width: 350px; height: 550px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
           },
           type: 'detail',
-          id: e.element.neo4j_id,
+          element: e.element,
+          id: e.node.neo4j_id,
         });
         id--;
         this.addDetailPanel('detailPanels[' + id + ']');

@@ -52,8 +52,16 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           /****** New Item ******/
           if (!loaded && !scope.settings.id) {
             scope.node = {};
+            scope.labelsList = [];
             $http.get('/api/model/').then(model => {
-              scope.labelsList = model.data;
+              angular.forEach(model.data, function(label) {
+                if (scope.settings.type === 'createNode' && label.parents.indexOf('Link') === -1 && label.children.length === 0 && label.parents.indexOf('Time') === -1 && label.label !== 'TimeTreeRoot' && label.label !== 'Link') {
+                  scope.labelsList.push(label)
+                }
+                if (scope.settings.type === 'createEdge' && label.parents.indexOf('Link') !== -1) {
+                  scope.labelsList.push(label)
+                }
+              });
               loaded = true;
             });
           }
@@ -61,7 +69,11 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
 
         scope.getProperties = function (label) {
           scope.realLabel = label;
-          scope.labels = [label.label];
+          if (label.parents) {
+            scope.labels = label.parents.concat(label.label);
+          } else {
+            scope.labels = [label.label];
+          }
           if (!Object.keys(scope.node).includes(label.labeling)) {
             scope.node[label.labeling] = '';
           }
@@ -95,6 +107,22 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             scope.settings.style.display = false; //todo delete the panel instead
           });
         };
+
+        /****** Delete the element *****/
+        scope.delete = function() {
+          let element = scope.settings.element;
+          let target = scope.settings.id;
+          $http.delete('/api/data/' + scope.settings.id).then(response => {
+            // todo check the response
+            scope.settings.style.display = false; //todo delete the panel instead
+            scope.handler({e: {
+              type: 'delete',
+              target: target,
+              element: element
+            }});
+          });
+        };
+
 
         /****** Create the element *****/
         scope.create = function() {

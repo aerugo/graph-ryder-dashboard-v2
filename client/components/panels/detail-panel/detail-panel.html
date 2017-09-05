@@ -35,6 +35,7 @@
         <div class="form-group">
           <div class="col-xs-offset-2 col-xs-8" style="padding-bottom: 20px;">
             <button ng-if="settings.id" class="btn btn-primary" style="background-color: {{realLabel.color}}; border-color: {{ realLabel.color}};" ng-click="update()">Update</button>
+            <button ng-if="settings.id" class="btn btn-danger" ng-click="delete()">Delete</button>
             <button ng-if="!settings.id" class="btn btn-primary" style="background-color: {{realLabel.color}}; border-color: {{ realLabel.color}};" ng-click="create()" ng-disabled="!realLabel" >Create</button>
           </div>
         </div>

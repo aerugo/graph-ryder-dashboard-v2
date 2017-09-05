@@ -18,6 +18,7 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
           scope.handler({e: {
             type: option.action,
             element: scope.settings.element,
+            node: scope.settings.node,
             position: scope.settings.position,
             optionLabel: option.label
           }});

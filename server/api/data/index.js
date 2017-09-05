@@ -13,9 +13,8 @@ router.get('/getLabelsHierarchy/', auth.isAuthenticated(), controller.getLabelsH
 router.get('/getLabels/:id', auth.isAuthenticated(), controller.getLabelsById);
 router.get('/getProperties/:label', auth.isAuthenticated(), controller.getProperties);
 router.get('/getPropertyValue/:label/:key', auth.isAuthenticated(), controller.getPropertyValue);
-router.post('/create', controller.create);
+router.post('/create', auth.isAuthenticated(), controller.create);
 router.put('/set/:id', auth.isAuthenticated(), controller.set);
-// router.patch('/:id', controller.patch);
-// router.delete('/:id', controller.destroy);
+router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 module.exports = router;
