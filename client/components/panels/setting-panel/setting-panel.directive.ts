@@ -71,6 +71,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           Promise.all(promises).then(function() {
             $http.get('/api/tulip/' + u.type, {params: params}).then(response => {
               scope.settings.sigma.graph = response.data;
+              scope.settings.sigma.graph.action = '';
             });
           });
         };

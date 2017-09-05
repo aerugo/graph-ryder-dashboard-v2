@@ -37,7 +37,7 @@ export class GraphViewComponent {
         rightLabel: 'Person',
         edgeLabel: 'Financial'
       },
-      graph: {new: []},
+      graph: {action: ''},
       settings: {
         demo: false,
         element: 0
@@ -275,14 +275,14 @@ export class GraphViewComponent {
           type: 'sigma',
           url: {
             type: 'getGraphNeighboursById', //todo check the type of the node
-            nodeId: e.element.neo4j_id,
+            nodeId: e.node.neo4j_id,
             leftLabel: 'Person',
             rightLabel: 'Person',
             edgeLabel: 'Link'
           },
           mode: 'panel',
           style: {
-            title: 'Neighbours of ' + e.element.label,
+            title: 'Neighbours of ' + e.node.label,
             display: true,
             icon: 'link',
             css: 'width: 800px; height: 700px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'

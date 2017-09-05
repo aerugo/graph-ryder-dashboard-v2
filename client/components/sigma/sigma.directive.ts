@@ -67,7 +67,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         });
 
         scope.$watch('graph.action', function() {
-          if (scope.graph.action && scope.graph.action.type) {
+          if (scope.graph.action && scope.graph.action !== 'undefined' && scope.graph.action !== '') {
             if (scope.graph.action.type === 'addNode') {
               s.graph.addNode(scope.graph.action.node);
               s.refresh();
