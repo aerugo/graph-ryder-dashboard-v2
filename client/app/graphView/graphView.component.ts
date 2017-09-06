@@ -126,6 +126,7 @@ export class GraphViewComponent {
             css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
         },
           options: [
+            { label: 'Hide', action: 'delete'},
             { label: 'Modify / Details', action: 'detail'},
             { label: 'View Neighbours', action: 'neighbour'}
           ],
@@ -240,9 +241,10 @@ export class GraphViewComponent {
         this.sigmaPanels[e.element].graph.action = {
           type: 'addNode',
           node: {
-            id: e.node,
-            neo4j_id: e.node,
+            id: e.neo4j_id,
+            neo4j_id: e.neo4j_id,
             label: e.label,
+            labels: e.labels.toString(),
             color: e.color,
             x: e.position.x,
             y: e.position.y
@@ -250,9 +252,9 @@ export class GraphViewComponent {
         };
       break;
       case 'delete':
-          this.sigmaPanels[e.element].graph.action = {
+        this.sigmaPanels[e.element].graph.action = {
             type: 'delete',
-            targetId: e.target
+            targetId: e.node.neo4j_id
         };
       break;
       case 'detail':

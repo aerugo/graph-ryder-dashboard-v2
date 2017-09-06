@@ -110,15 +110,13 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
 
         /****** Delete the element *****/
         scope.delete = function() {
-          let element = scope.settings.element;
-          let target = scope.settings.id;
           $http.delete('/api/data/' + scope.settings.id).then(response => {
             // todo check the response
             scope.settings.style.display = false; //todo delete the panel instead
             scope.handler({e: {
               type: 'delete',
-              target: target,
-              element: element
+              node: {neo4j_id: scope.settings.id},
+              element: scope.settings.element
             }});
           });
         };
@@ -133,8 +131,9 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               type: 'addGo',
               position: scope.settings.position,
               element: scope.settings.element,
-              node: response.data,
+              neo4j_id: response.data,
               label: scope.node[scope.realLabel.labeling],
+              labels: scope.node.labels,
               color: scope.realLabel.color
             }});
           });

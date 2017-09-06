@@ -49,21 +49,21 @@ export class ModelComponent {
           newLabels.push(key);
         }
         return element;
-      } else if (key.substring(0, 11) === 'ungroupable') {
         /**** Ungroupable case *****/
+      } else if (key.substring(0, 11) === 'ungroupable') {
         let result = [];
         let found = false;
-        angular.forEach(labels, function (label, k) {
+        angular.forEach(labels, function (label, k1) {
           angular.forEach(model, function (e) {
-            if (e.label === k && e.children.length) {
-              found = k;
+            if (e.label === k1 && e.children.length) {
+              found = k1;
             }
           });
         });
         if (found) {
           angular.forEach(labels, function (l, k) {
             if (k !== found) {
-              parents.indexOf(key) === -1 ? parents.push(k) : null;
+              parents.indexOf(key) === -1 ? parents.push(found) : null;
               result.push(analyse(parents, k, l, model));
             }
           });
