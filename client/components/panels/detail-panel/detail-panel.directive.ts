@@ -113,11 +113,19 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           $http.delete('/api/data/' + scope.settings.id).then(response => {
             // todo check the response
             scope.settings.style.display = false; //todo delete the panel instead
-            scope.handler({e: {
-              type: 'delete',
-              node: {neo4j_id: scope.settings.id},
-              element: scope.settings.element
-            }});
+            if (scope.labels.indexOf('Link')  === -1) {
+              scope.handler({e: {
+                type: 'deleteNode',
+                node: {neo4j_id: scope.settings.id},
+                element: scope.settings.element
+              }});
+            } else {
+              scope.handler({e: {
+                type: 'deleteEdge',
+                edge: {neo4j_id: scope.settings.id},
+                element: scope.settings.element
+              }});
+            }
           });
         };
 
@@ -127,15 +135,29 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           scope.node.labels = scope.labels;
           $http.post('/api/data/create/', scope.node).then(response => {
             scope.settings.style.display = false; //todo delete the panel instead
-            scope.handler({e: {
-              type: 'addGo',
-              position: scope.settings.position,
-              element: scope.settings.element,
-              neo4j_id: response.data,
-              label: scope.node[scope.realLabel.labeling],
-              labels: scope.node.labels,
-              color: scope.realLabel.color
-            }});
+            if (scope.settings.type === 'createNode') {
+              scope.handler({e: {
+                type: 'addNodeGo',
+                position: scope.settings.position,
+                element: scope.settings.element,
+                neo4j_id: response.data,
+                label: scope.node[scope.realLabel.labeling],
+                labels: scope.node.labels,
+                color: scope.realLabel.color
+              }});
+            } else if (scope.settings.type === 'createEdge') {
+              $http.post('/api/data/create/', scope.node).then(response2 => {
+                scope.handler({e: {
+                  type: 'addEdgeGo',
+                  position: scope.settings.position,
+                  element: scope.settings.element,
+                  neo4j_id: response.data,
+                  label: scope.node[scope.realLabel.labeling],
+                  labels: scope.node.labels,
+                  color: scope.realLabel.color
+                }});
+              });
+            }
           });
         };
         $timeout(function () {
