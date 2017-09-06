@@ -56,10 +56,10 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             $http.get('/api/model/').then(model => {
               angular.forEach(model.data, function(label) {
                 if (scope.settings.type === 'createNode' && label.parents.indexOf('Link') === -1 && label.children.length === 0 && label.parents.indexOf('Time') === -1 && label.label !== 'TimeTreeRoot' && label.label !== 'Link') {
-                  scope.labelsList.push(label)
+                  scope.labelsList.push(label);
                 }
                 if (scope.settings.type === 'createEdge' && label.parents.indexOf('Link') !== -1) {
-                  scope.labelsList.push(label)
+                  scope.labelsList.push(label);
                 }
               });
               loaded = true;
@@ -71,8 +71,6 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           scope.realLabel = label;
           if (label.parents) {
             scope.labels = label.parents.concat(label.label);
-          } else {
-            scope.labels = [label.label];
           }
           if (!Object.keys(scope.node).includes(label.labeling)) {
             scope.node[label.labeling] = '';
@@ -83,7 +81,6 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             scope.properties = $(response.data).not(Object.keys(scope.node)).get();
           });
         };
-
         /****** Search for available values ******/
         scope.suggestValue = function (label, key) {
           if (key) {
@@ -92,7 +89,6 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             });
           }
         };
-
         scope.addNewKey = function (key) {
           scope.node[key] = '';
           scope.getProperties(scope.realLabel);
@@ -129,7 +125,6 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           });
         };
 
-
         /****** Create the element *****/
         scope.create = function() {
           scope.node.labels = scope.labels;
@@ -146,20 +141,27 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                 color: scope.realLabel.color
               }});
             } else if (scope.settings.type === 'createEdge') {
-              $http.post('/api/data/create/', scope.node).then(response2 => {
-                scope.handler({e: {
-                  type: 'addEdgeGo',
-                  position: scope.settings.position,
-                  element: scope.settings.element,
-                  neo4j_id: response.data,
-                  label: scope.node[scope.realLabel.labeling],
-                  labels: scope.node.labels,
-                  color: scope.realLabel.color
-                }});
+              $http.post('/api/data/create/', scope.node).then(response => {
+                console.log(response);
+                $http.post('/api/data/createEdges/', scope.node).then(response2 => {
+                  scope.handler({
+                    e: {
+                      type: 'addEdgeGo',
+                      position: scope.settings.position,
+                      element: scope.settings.element,
+                      neo4j_id: response.data,
+                      label: scope.node[scope.realLabel.labeling],
+                      labels: scope.node.labels,
+                      color: scope.realLabel.color
+                    }
+                  });
+                });
               });
             }
           });
         };
+
+        /****** Load when ready *****/
         $timeout(function () {
           scope.load();
         });

@@ -40,7 +40,8 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           defaultNodeActiveBorderColor: '#fff',
           defaultNodeActiveOuterBorderColor: 'rgb(236, 81, 72)',
           nodeHaloColor: 'rgba(236, 81, 72, 0.2)',
-          nodeHaloSize: 25
+          nodeHaloSize: 25,
+          autoCurveSortByDirection: true
         };
         if (scope.settings) {
           Object.keys(scope.settings).forEach(function(key) { settings[key] = scope.settings[key]; });
@@ -59,6 +60,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           if (scope.graph) {
             s.graph.clear();
             s.graph.read(scope.graph);
+            sigma.canvas.edges.autoCurve(s);
             s.refresh();
             if (settings.demo || !firstLaunch) {
               sigma.layouts.fruchtermanReingold.start(s);
@@ -68,23 +70,27 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         });
         scope.$watch('graph.action', function() {
           if (scope.graph.action && scope.graph.action !== 'undefined' && scope.graph.action !== '') {
-            if (scope.graph.action.type === 'addNode') {
-              s.graph.addNode(scope.graph.action.node);
-            } else if (scope.graph.action.type === 'deleteNode') {
-              angular.forEach(s.graph.nodes(), function(node) {
-                if (node.neo4j_id === scope.graph.action.targetId) {
-                  s.graph.dropNode(node.id);
-                }
-              });
-
-            } else if (scope.graph.action.type === 'deleteEdge') {
-              angular.forEach(s.graph.edges(), function(edge) {
-                if (edge.neo4j_id === scope.graph.action.targetId) {
-                  s.graph.dropEdge(edge.id);
-                }
-              });
+            switch (scope.graph.action.type) {
+              case 'addNode':
+                s.graph.addNode(scope.graph.action.node);
+                break;
+              case 'deleteNode':
+                angular.forEach(s.graph.nodes(), function (node) {
+                  if (node.neo4j_id === scope.graph.action.targetId) {
+                    s.graph.dropNode(node.id);
+                  }
+                });
+                break;
+              case 'deleteEdge':
+                angular.forEach(s.graph.edges(), function (edge) {
+                  if (edge.neo4j_id === scope.graph.action.targetId) {
+                    s.graph.dropEdge(edge.id);
+                  }
+                });
+                break;
             }
             s.refresh();
+            scope.graph.action = 'undefined';
           }
         });
 
@@ -141,7 +147,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
             event.preventDefault();
           });
         });
-        s.bind('clickNode clickEdge rightClickNode rightClickEdge clickStage rightClickStage hovers', function(e){
+        s.bind('clickNode clickEdge rightClickNode rightClickEdge clickStage rightClickStage leftClickStage hovers', function(e){
           e.element = scope.settings.element;
           scope.eventHandler({e: e});
           scope.$apply();

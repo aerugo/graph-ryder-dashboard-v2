@@ -3,7 +3,6 @@ const angular = require('angular');
 const uiRouter = require('angular-ui-router');
 
 import routes from './graphView.routes';
-import {isUndefined} from 'util';
 
 export class GraphViewComponent {
   $http;
@@ -103,9 +102,7 @@ export class GraphViewComponent {
   }
 
   removeContextMenu() {
-    if (isUndefined(angular.element('#contextMenu')) === false) {
-      angular.element('#contextMenu').remove();
-    }
+    angular.element('#contextMenu').remove();
   }
 
   /**** Event handler *****/
@@ -210,6 +207,9 @@ export class GraphViewComponent {
         };
         this.addContextPanel('contextMenu');
         break;
+      case 'leftClickStage' && 'clickNode' && 'clickEdge':
+        this.removeContextMenu();
+        break;
       case 'hovers':
         if (e.data.enter.nodes.length) {
           let footer = {text: e.data.enter.nodes[0].label, labels: []};
@@ -303,7 +303,7 @@ export class GraphViewComponent {
       case 'deleteEdge':
         this.sigmaPanels[e.element].graph.action = {
             type: 'deleteEdge',
-            targetId: e.node.neo4j_id
+            targetId: e.edge.neo4j_id
         };
       break;
       case 'detail':
