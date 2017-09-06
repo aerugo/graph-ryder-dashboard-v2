@@ -128,7 +128,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         /****** Create the element *****/
         scope.create = function() {
           scope.node.labels = scope.labels;
-          $http.post('/api/data/create/', scope.node).then(response => {
+          $http.post('/api/data/createNode/', scope.node).then(response => {
             scope.settings.style.display = false; //todo delete the panel instead
             if (scope.settings.type === 'createNode') {
               scope.handler({e: {
@@ -141,20 +141,18 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                 color: scope.realLabel.color
               }});
             } else if (scope.settings.type === 'createEdge') {
-              $http.post('/api/data/create/', scope.node).then(response => {
-                console.log(response);
-                $http.post('/api/data/createEdges/', scope.node).then(response2 => {
-                  scope.handler({
-                    e: {
-                      type: 'addEdgeGo',
-                      position: scope.settings.position,
-                      element: scope.settings.element,
-                      neo4j_id: response.data,
-                      label: scope.node[scope.realLabel.labeling],
-                      labels: scope.node.labels,
-                      color: scope.realLabel.color
-                    }
-                  });
+              let edge = {id: response.data, source: scope.settings.node[0].neo4j_id, target: scope.settings.node[1].neo4j_id}
+              $http.post('/api/data/createEdge/', edge).then(response2 => {
+                scope.handler({
+                  e: {
+                    type: 'addEdgeGo',
+                    position: scope.settings.position,
+                    element: scope.settings.element,
+                    neo4j_id: response.data,
+                    label: scope.node[scope.realLabel.labeling],
+                    labels: scope.node.labels,
+                    color: scope.realLabel.color
+                  }
                 });
               });
             }

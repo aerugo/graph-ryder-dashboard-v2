@@ -151,7 +151,7 @@ export class GraphViewComponent {
             },
             options: options,
             position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
-            nodes: this.sigmaPanels[e.element].graph.selection,
+            node: this.sigmaPanels[e.element].graph.selection,
             element: e.element
           };
           this.addContextPanel('contextMenu');
@@ -274,6 +274,7 @@ export class GraphViewComponent {
             css: 'width: 350px; height: 550px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
           },
           type: 'createEdge',
+          node: e.node,
           element: e.element,
           position: {y: e.position.y, x: e.position.x}
         });
@@ -294,6 +295,7 @@ export class GraphViewComponent {
           }
         };
       break;
+      // todo addEdgeGo
       case 'deleteNode':
         this.sigmaPanels[e.element].graph.action = {
             type: 'deleteNode',

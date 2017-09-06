@@ -13,7 +13,8 @@ router.get('/getLabelsHierarchy/', auth.isAuthenticated(), controller.getLabelsH
 router.get('/getLabels/:id', auth.isAuthenticated(), controller.getLabelsById);
 router.get('/getProperties/:label', auth.isAuthenticated(), controller.getProperties);
 router.get('/getPropertyValue/:label/:key', auth.isAuthenticated(), controller.getPropertyValue);
-router.post('/create', auth.isAuthenticated(), controller.create);
+router.post('/createNode', auth.isAuthenticated(), controller.createNode);
+router.post('/createEdge', auth.isAuthenticated(), controller.createEdge);
 router.put('/set/:id', auth.isAuthenticated(), controller.set);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
