@@ -141,17 +141,18 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                 color: scope.realLabel.color
               }});
             } else if (scope.settings.type === 'createEdge') {
-              let edge = {id: response.data, source: scope.settings.node[0].neo4j_id, target: scope.settings.node[1].neo4j_id}
+              let edge = {id: response.data, source: scope.settings.node[0].neo4j_id, target: scope.settings.node[1].neo4j_id}; // todo clean
               $http.post('/api/data/createEdge/', edge).then(response2 => {
                 scope.handler({
                   e: {
                     type: 'addEdgeGo',
-                    position: scope.settings.position,
                     element: scope.settings.element,
                     neo4j_id: response.data,
                     label: scope.node[scope.realLabel.labeling],
                     labels: scope.node.labels,
-                    color: scope.realLabel.color
+                    color: scope.realLabel.color,
+                    source: scope.settings.node[0].id,
+                    target: scope.settings.node[1].id
                   }
                 });
               });

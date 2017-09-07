@@ -74,6 +74,9 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
               case 'addNode':
                 s.graph.addNode(scope.graph.action.node);
                 break;
+              case 'addEdge':
+                s.graph.addEdge(scope.graph.action.edge);
+                break;
               case 'deleteNode':
                 angular.forEach(s.graph.nodes(), function (node) {
                   if (node.neo4j_id === scope.graph.action.targetId) {
@@ -89,6 +92,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
                 });
                 break;
             }
+            sigma.canvas.edges.autoCurve(s);
             s.refresh();
             scope.graph.action = 'undefined';
           }

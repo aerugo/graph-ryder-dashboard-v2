@@ -295,7 +295,20 @@ export class GraphViewComponent {
           }
         };
       break;
-      // todo addEdgeGo
+      case 'addEdgeGo':
+        this.sigmaPanels[e.element].graph.action = {
+          type: 'addEdge',
+          edge: {
+            id: e.neo4j_id,
+            neo4j_id: e.neo4j_id,
+            label: e.label,
+            labels: e.labels.toString(),
+            color: e.color,
+            source: e.source,
+            target: e.target
+          }
+        };
+      break;
       case 'deleteNode':
         this.sigmaPanels[e.element].graph.action = {
             type: 'deleteNode',
