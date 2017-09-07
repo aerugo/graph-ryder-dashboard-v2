@@ -35,6 +35,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           zoomDef: 1.1,
           centerOnLoad: true,
           demo: false,
+          active: false,
           nodeActiveBorderSize: 2,
           nodeActiveOuterBorderSize: 3,
           defaultNodeActiveBorderColor: '#fff',
@@ -72,13 +73,26 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           if (scope.graph.action && scope.graph.action !== 'undefined' && scope.graph.action !== '') {
             switch (scope.graph.action.type) {
               case 'addNode':
-                s.graph.addNode(scope.graph.action.node);
+                angular.forEach(scope.graph.action.node, function (node) {
+                  s.graph.addNode(node);
+                });
                 break;
               case 'addEdge':
-                s.graph.addEdge(scope.graph.action.edge);
+                angular.forEach(scope.graph.action.edge, function (edge) {
+                  s.graph.addEdge(edge);
+                });
+                break;
+              case 'selection':
+                activeState.dropNodes();
+                angular.forEach(scope.graph.action.selection, function (node) {
+                  angular.forEach(s.graph.nodes(), function (n) {
+                    if (n.id === node.id) {
+                      activeState.addNodes([node.id]);
+                    }
+                  });
+                });
                 break;
               case 'deleteNode':
-                console.log(scope.graph.action.targets);
                 angular.forEach(scope.graph.action.targets, function (target) {
                   s.graph.dropNode(target.id);
                 });
@@ -96,12 +110,8 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         });
 
         /**** Tools *****/
-        let activeState = sigma.plugins.activeState(s);
         let keyboard = sigma.plugins.keyboard(s, s.renderers[0]);
-        let select = sigma.plugins.select(s, activeState);
-        select.init();
-        select.bindKeyboard(keyboard);
-        let dragListener = sigma.plugins.dragNodes(s, s.renderers[0], activeState);
+        let activeState = sigma.plugins.activeState(s);
         let lasso = new sigma.plugins.lasso(s, s.renderers[0], {
           'strokeStyle': 'rgb(236, 81, 72)',
           'lineWidth': 2,
@@ -114,16 +124,61 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           easing: 'quadraticInOut',
           duration: 1500
         });
-        function renderHalo() {
-          s.renderers[0].halo({
-            nodes: activeState.nodes()
+        if (settings.active) {
+          let select = sigma.plugins.select(s, activeState);
+          let dragListener = sigma.plugins.dragNodes(s, s.renderers[0], activeState);
+          function renderHalo() {
+            s.renderers[0].halo({
+              nodes: activeState.nodes()
+            });
+          }
+          s.renderers[0].bind('render', function(e) {
+            renderHalo();
           });
+          select.init();
+          select.bindKeyboard(keyboard);
+        } else {
+          let dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
         }
-        s.renderers[0].bind('render', function(e) {
-          renderHalo();
-        });
 
         /**** Bindings ****/
+        if (settings.active) {
+          lasso.bind('selectedNodes', function (e) {
+            activeState.dropEdges();
+            let nodes = e.data;
+            if (!nodes.length) {
+              activeState.dropNodes();
+            }
+            activeState.addNodes(nodes.map(function(n) { return n.id; }));
+            setTimeout(function() {
+              lasso.deactivate();
+              s.refresh({ skipIdexation: true });
+            }, 0);
+            e.element = scope.settings.element;
+            e.data = activeState.nodes();
+            scope.eventHandler({e: e});
+            scope.$apply();
+          });
+          var activeNodesCallback = _.debounce(function(e) {
+            e.element = scope.settings.element;
+            e.data = activeState.nodes();
+            scope.eventHandler({e: e});
+          });
+          var activeEdgesCallback = _.debounce(function(e) {
+            e.element = scope.settings.element;
+            e.data = activeState.edges();
+            scope.eventHandler({e: e});
+          });
+          activeState.bind('activeNodes', activeNodesCallback);
+          activeState.bind('activeEdges', activeEdgesCallback);
+        } else {
+          lasso.bind('selectedNodes', function (e) {
+            e.element = scope.settings.element;
+            scope.eventHandler({e: e});
+            lasso.deactivate();
+            scope.$apply();
+          };
+        }
         keyboard.bind('32+83', function() {
           if (lasso.isActive) {
             lasso.deactivate();
@@ -131,41 +186,11 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
             lasso.activate();
           }
         });
-        lasso.bind('selectedNodes', function (e) {
-          activeState.dropEdges();
-          let nodes = e.data;
-          if (!nodes.length) {
-            activeState.dropNodes();
-          }
-          activeState.addNodes(nodes.map(function(n) { return n.id; }));
-          setTimeout(function() {
-            lasso.deactivate();
-            s.refresh({ skipIdexation: true });
-          }, 0);
-          e.element = scope.settings.element;
-          e.data = activeState.nodes();
-          scope.eventHandler({e: e});
-          scope.$apply();
-        });
         element.bind('contextmenu', function(event) {  // prevent right click menu
           scope.$apply(function() {
             event.preventDefault();
           });
         });
-
-        var activeNodesCallback = _.debounce(function(e) {
-          e.element = scope.settings.element;
-          e.data = activeState.nodes();
-          scope.eventHandler({e: e});
-        });
-        activeState.bind('activeNodes', activeNodesCallback);
-        var activeEdgesCallback = _.debounce(function(e) {
-          e.element = scope.settings.element;
-          e.data = activeState.edges();
-          scope.eventHandler({e: e});
-        });
-        activeState.bind('activeEdges', activeEdgesCallback);
-
         s.bind('clickNode clickEdge rightClickNode rightClickEdge clickStage rightClickStage leftClickStage hovers', function(e){
           e.element = scope.settings.element;
           scope.eventHandler({e: e});

@@ -39,7 +39,8 @@ export class GraphViewComponent {
       graph: {action: '', selection: []},
       settings: {
         demo: false,
-        element: 0
+        element: 0,
+        active: true
       }
     }); // Main graph is id 0
     this.settingPanels.push({
@@ -138,10 +139,12 @@ export class GraphViewComponent {
         /**** Multiple nodes *****/
           this.removeContextMenu();
           let title = 'Selection ' + this.sigmaPanels[e.element].graph.selection.length + ' nodes';
-          let options = [{ label: 'Hide', action: 'deleteNode'}];
+          let options = [];
           if (this.sigmaPanels[e.element].graph.selection.length === 2) {
             options.push({ label: 'Add edge', action: 'addEdge'});
           }
+          options.push({ label: 'View interaction', action: 'viewInteraction'}); // todo add interaction View
+          options.push({ label: 'Hide', action: 'deleteNode'});
           this.contextMenu = {
             style: {
               title: title,
@@ -172,7 +175,8 @@ export class GraphViewComponent {
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
             options: [
-              {label: 'Modify / Details', action: 'detail'}
+              {label: 'Modify / Details', action: 'detail'},
+              { label: 'Hide', action: 'deleteEdge'}
             ],
             position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
             node: [{id: e.data.edge.id, label: e.data.edge.label}],
@@ -226,8 +230,17 @@ export class GraphViewComponent {
         };
         this.addContextPanel('contextMenu');
         break;
-      case 'leftClickStage' && 'clickNode' && 'clickEdge':
+      case 'leftClickStage' && 'clickEdge':
         this.removeContextMenu();
+        break;
+      case 'clickNode':
+        this.removeContextMenu();
+        if (!this.sigmaPanels[e.element].graph.active) {
+          this.sigmaPanels[0].graph.action = {
+            type: 'selection',
+            selection: e.data
+          };
+        }
         break;
       case 'hovers':
         if (e.data.enter.nodes.length) {
@@ -265,7 +278,12 @@ export class GraphViewComponent {
         }
         break;
       case 'selectedNodes':
-        this.sigmaPanels[e.element].graph.selection = e.data;
+        if (!this.sigmaPanels[e.element].graph.active && e.data.length) {
+          this.sigmaPanels[0].graph.action = {
+            type: 'selection',
+            selection: e.data
+          };
+        }
         break;
       case 'activeNodes':
         this.sigmaPanels[e.element].graph.selection = e.data;
@@ -309,27 +327,27 @@ export class GraphViewComponent {
       case 'addNodeGo':
         this.sigmaPanels[e.element].graph.action = {
           type: 'addNode',
-          node: {
+          node: [{
             id: e.id,
             label: e.label,
             labels: e.labels.toString(),
             color: e.color,
             x: e.position.x,
             y: e.position.y
-          }
+          }]
         };
       break;
       case 'addEdgeGo':
         this.sigmaPanels[e.element].graph.action = {
           type: 'addEdge',
-          edge: {
+          edge: [{
             id: e.id,
             label: e.label,
             labels: e.labels.toString(),
             color: e.color,
             source: e.source,
             target: e.target
-          }
+          }]
         };
       break;
       case 'deleteNode':
@@ -378,7 +396,8 @@ export class GraphViewComponent {
           },
           sigmaSettings: {
             demo: false,
-            info: 'Graph-Ryder 2.0'
+            info: 'Graph-Ryder 2.0',
+            active: false
           },
           settingsPanelStyle: {
             title: 'Neighbours',
@@ -404,7 +423,8 @@ export class GraphViewComponent {
           },
           sigmaSettings: {
             demo: false,
-            info: 'Graph-Ryder 2.0'
+            info: 'Graph-Ryder 2.0',
+            active: false
           },
           settingsPanelStyle: {
             title: 'Graph',
