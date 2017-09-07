@@ -72,7 +72,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           if (label.parents) {
             scope.labels = label.parents.concat(label.label);
           }
-          if (!Object.keys(scope.node).includes(label.labeling)) {
+          if (label.labeling && !Object.keys(scope.node).includes(label.labeling)) {
             scope.node[label.labeling] = '';
           }
           scope.suggestValue(scope.realLabel, label.labeling);
@@ -112,13 +112,13 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             if (scope.labels.indexOf('Link')  === -1) {
               scope.handler({e: {
                 type: 'deleteNode',
-                node: {neo4j_id: scope.settings.id},
+                node: {id: scope.settings.id},
                 element: scope.settings.element
               }});
             } else {
               scope.handler({e: {
                 type: 'deleteEdge',
-                edge: {neo4j_id: scope.settings.id},
+                edge: {id: scope.settings.id},
                 element: scope.settings.element
               }});
             }
@@ -135,19 +135,19 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                 type: 'addNodeGo',
                 position: scope.settings.position,
                 element: scope.settings.element,
-                neo4j_id: response.data,
+                id: response.data,
                 label: scope.node[scope.realLabel.labeling],
                 labels: scope.node.labels,
                 color: scope.realLabel.color
               }});
             } else if (scope.settings.type === 'createEdge') {
-              let edge = {id: response.data, source: scope.settings.node[0].neo4j_id, target: scope.settings.node[1].neo4j_id}; // todo clean
+              let edge = {id: response.data, source: scope.settings.node[0].id, target: scope.settings.node[1].id}; // todo clean
               $http.post('/api/data/createEdge/', edge).then(response2 => {
                 scope.handler({
                   e: {
                     type: 'addEdgeGo',
                     element: scope.settings.element,
-                    neo4j_id: response.data,
+                    id: response.data,
                     label: scope.node[scope.realLabel.labeling],
                     labels: scope.node.labels,
                     color: scope.realLabel.color,

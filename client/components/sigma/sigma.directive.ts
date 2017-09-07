@@ -78,17 +78,14 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
                 s.graph.addEdge(scope.graph.action.edge);
                 break;
               case 'deleteNode':
-                angular.forEach(s.graph.nodes(), function (node) {
-                  if (node.neo4j_id === scope.graph.action.targetId) {
-                    s.graph.dropNode(node.id);
-                  }
+                console.log(scope.graph.action.targets);
+                angular.forEach(scope.graph.action.targets, function (target) {
+                  s.graph.dropNode(target.id);
                 });
                 break;
               case 'deleteEdge':
-                angular.forEach(s.graph.edges(), function (edge) {
-                  if (edge.neo4j_id === scope.graph.action.targetId) {
-                    s.graph.dropEdge(edge.id);
-                  }
+                angular.forEach(scope.graph.action.targets, function (target) {
+                  s.graph.dropEdge(target.id);
                 });
                 break;
             }
@@ -102,6 +99,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         let activeState = sigma.plugins.activeState(s);
         let keyboard = sigma.plugins.keyboard(s, s.renderers[0]);
         let select = sigma.plugins.select(s, activeState);
+        select.init();
         select.bindKeyboard(keyboard);
         let dragListener = sigma.plugins.dragNodes(s, s.renderers[0], activeState);
         let lasso = new sigma.plugins.lasso(s, s.renderers[0], {
@@ -136,13 +134,16 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
         lasso.bind('selectedNodes', function (e) {
           activeState.dropEdges();
           let nodes = e.data;
-          if (!nodes.length) activeState.dropNodes();
+          if (!nodes.length) {
+            activeState.dropNodes();
+          }
           activeState.addNodes(nodes.map(function(n) { return n.id; }));
           setTimeout(function() {
             lasso.deactivate();
             s.refresh({ skipIdexation: true });
           }, 0);
           e.element = scope.settings.element;
+          e.data = activeState.nodes();
           scope.eventHandler({e: e});
           scope.$apply();
         });
@@ -151,6 +152,20 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
             event.preventDefault();
           });
         });
+
+        var activeNodesCallback = _.debounce(function(e) {
+          e.element = scope.settings.element;
+          e.data = activeState.nodes();
+          scope.eventHandler({e: e});
+        });
+        activeState.bind('activeNodes', activeNodesCallback);
+        var activeEdgesCallback = _.debounce(function(e) {
+          e.element = scope.settings.element;
+          e.data = activeState.edges();
+          scope.eventHandler({e: e});
+        });
+        activeState.bind('activeEdges', activeEdgesCallback);
+
         s.bind('clickNode clickEdge rightClickNode rightClickEdge clickStage rightClickStage leftClickStage hovers', function(e){
           e.element = scope.settings.element;
           scope.eventHandler({e: e});

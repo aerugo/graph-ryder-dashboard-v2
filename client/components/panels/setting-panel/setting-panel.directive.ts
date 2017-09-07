@@ -32,13 +32,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           u = Object.assign({}, scope.settings.sigma.url);
           let params = {
             url: '',
-            label_key_left: '',
-            label_key_right: '',
-            color_left: '',
-            color_right: '',
-            layout: '',
-            label_key_edge: '',
-            color_edge: ''
+            layout: ''
           };
           switch (u.type) {
             case 'getGraph':
@@ -49,31 +43,10 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
               break;
           }
           params.layout = u.layout;
-          let promises = [];
-          promises.push($http.get('/api/model/label/' + u.leftLabel).then(left_label => {
-            params.label_key_left = left_label.data.labeling;
-            params.color_left = left_label.data.color;
-            if (u.leftLabel === u.rightLabel) {
-              params.label_key_right = left_label.data.labeling;
-              params.color_right = left_label.data.color;
-            }
-          }));
-          if (u.leftLabel !== u.rightLabel) {
-            promises.push($http.get('/api/model/label/' + u.rightLabel).then(right_label => {
-              params.label_key_right = right_label.data.labeling;
-              params.color_right = right_label.data.color;
-            }));
-          }
-          promises.push($http.get('/api/model/label/' + u.edgeLabel).then(edge_label => {
-            params.label_key_edge = edge_label.data.labeling;
-            params.color_edge = edge_label.data.color;
-          }));
-          Promise.all(promises).then(function() {
-            $http.get('/api/tulip/' + u.type, {params: params}).then(response => {
-              scope.settings.sigma.graph = response.data;
-              scope.settings.sigma.graph.action = '';
-              scope.settings.sigma.graph.selection = [];
-            });
+          $http.get('/api/tulip/' + u.type, {params: params}).then(response => {
+            scope.settings.sigma.graph = response.data;
+            scope.settings.sigma.graph.action = '';
+            scope.settings.sigma.graph.selection = [];
           });
         };
 

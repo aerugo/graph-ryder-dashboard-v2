@@ -44,7 +44,6 @@ export class ModelComponent {
           }
         });
         if (!find) {
-          element.labeling = 'Undefined';
           element.color = 'rgb(51,122,183)';
           newLabels.push(key);
         }

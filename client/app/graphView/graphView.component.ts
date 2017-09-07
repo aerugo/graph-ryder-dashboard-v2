@@ -111,7 +111,7 @@ export class GraphViewComponent {
       /***** Sigma events *****/
       case 'rightClickNode':
         /**** Single node *****/
-        if (!this.sigmaPanels[e.element].graph.selection.length) {
+        if (this.sigmaPanels[e.element].graph.selection.length === 1 || this.sigmaPanels[e.element].graph.selection.indexOf(e.data.node) === -1) {
           this.removeContextMenu();
           let title = 'Node ' + e.data.node.label;
           if (title.length > 15) {
@@ -125,12 +125,12 @@ export class GraphViewComponent {
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
             options: [
-              { label: 'Hide', action: 'deleteNode'},
               { label: 'Modify / Details', action: 'detail'},
-              { label: 'View Neighbours', action: 'neighbour'}
+              { label: 'View Neighbours', action: 'neighbour'},
+              { label: 'Hide', action: 'deleteNode'}
             ],
             position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
-            node: {neo4j_id: e.data.node.neo4j_id, label: e.data.node.label},
+            node: [{id: e.data.node.id, id: e.data.node.id, label: e.data.node.label}],
             element: e.element
           };
           this.addContextPanel('contextMenu');
@@ -138,7 +138,7 @@ export class GraphViewComponent {
         /**** Multiple nodes *****/
           this.removeContextMenu();
           let title = 'Selection ' + this.sigmaPanels[e.element].graph.selection.length + ' nodes';
-          let options = [{ label: 'Hide', action: 'delete'}];
+          let options = [{ label: 'Hide', action: 'deleteNode'}];
           if (this.sigmaPanels[e.element].graph.selection.length === 2) {
             options.push({ label: 'Add edge', action: 'addEdge'});
           }
@@ -158,26 +158,45 @@ export class GraphViewComponent {
         }
         break;
       case 'rightClickEdge':
-        this.removeContextMenu();
-        let title = 'Edge ' + e.data.edge.neo4j_id;
-        if (title.length > 15) {
-          title = title.substring(0, 15) + '...';
+        if (this.sigmaPanels[e.element].graph.selection.length === 1 || this.sigmaPanels[e.element].graph.selection.indexOf(e.data.edge) === -1) {
+          this.removeContextMenu();
+          let title = 'Edge ' + e.data.edge.id;
+          if (title.length > 15) {
+            title = title.substring(0, 15) + '...';
+          }
+          this.contextMenu = {
+            style: {
+              title: title,
+              display: true,
+              //icon: 'info',
+              css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
+            },
+            options: [
+              {label: 'Modify / Details', action: 'detail'}
+            ],
+            position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
+            node: [{id: e.data.edge.id, label: e.data.edge.label}],
+            element: e.element
+          };
+          this.addContextPanel('contextMenu');
+        } else {
+          this.removeContextMenu();
+          let title = 'Selection ' + this.sigmaPanels[e.element].graph.selection.length + ' edges';
+          let options = [{ label: 'Hide', action: 'deleteEdge'}];
+          this.contextMenu = {
+            style: {
+              title: title,
+              display: true,
+              //icon: 'info',
+              css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
+            },
+            options: options,
+            position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
+            node: this.sigmaPanels[e.element].graph.selection,
+            element: e.element
+          };
+          this.addContextPanel('contextMenu');
         }
-        this.contextMenu = {
-          style: {
-            title: title,
-            display: true,
-            //icon: 'info',
-            css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
-        },
-          options: [
-            { label: 'Modify / Details', action: 'detail'}
-          ],
-          position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
-          node: {neo4j_id: e.data.edge.neo4j_id, label: e.data.edge.label},
-          element: e.element
-        };
-        this.addContextPanel('contextMenu');
         break;
       case 'clickStage':
         this.removeContextMenu();
@@ -248,6 +267,12 @@ export class GraphViewComponent {
       case 'selectedNodes':
         this.sigmaPanels[e.element].graph.selection = e.data;
         break;
+      case 'activeNodes':
+        this.sigmaPanels[e.element].graph.selection = e.data;
+        break;
+      case 'activeEdges':
+        this.sigmaPanels[e.element].graph.selection = e.data;
+        break;
 
       /***** ContextMenu events *****/
       case 'addNode':
@@ -285,8 +310,7 @@ export class GraphViewComponent {
         this.sigmaPanels[e.element].graph.action = {
           type: 'addNode',
           node: {
-            id: e.neo4j_id,
-            neo4j_id: e.neo4j_id,
+            id: e.id,
             label: e.label,
             labels: e.labels.toString(),
             color: e.color,
@@ -299,8 +323,7 @@ export class GraphViewComponent {
         this.sigmaPanels[e.element].graph.action = {
           type: 'addEdge',
           edge: {
-            id: e.neo4j_id,
-            neo4j_id: e.neo4j_id,
+            id: e.id,
             label: e.label,
             labels: e.labels.toString(),
             color: e.color,
@@ -312,26 +335,26 @@ export class GraphViewComponent {
       case 'deleteNode':
         this.sigmaPanels[e.element].graph.action = {
             type: 'deleteNode',
-            targetId: e.node.neo4j_id
+            targets: e.node
         };
       break;
       case 'deleteEdge':
         this.sigmaPanels[e.element].graph.action = {
             type: 'deleteEdge',
-            targetId: e.edge.neo4j_id
+            targets: e.node
         };
       break;
       case 'detail':
         let id = this.detailPanels.push({
           style: {
-            title: 'Details ' + e.node.label,
+            title: 'Details ' + e.node[0].label,
             display: true,
             icon: 'info',
-            css: 'width: 350px; height: 550px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
+            css: 'width: 450px; height: 650px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
           },
           type: 'detail',
           element: e.element,
-          id: e.node.neo4j_id,
+          id: e.node[0].id,
         });
         id--;
         this.addDetailPanel('detailPanels[' + id + ']');
@@ -341,14 +364,14 @@ export class GraphViewComponent {
           type: 'sigma',
           url: {
             type: 'getGraphNeighboursById', //todo check the type of the node
-            nodeId: e.node.neo4j_id,
+            nodeId: e.node[0].id,
             leftLabel: 'Person',
             rightLabel: 'Person',
             edgeLabel: 'Link'
           },
           mode: 'panel',
           style: {
-            title: 'Neighbours of ' + e.node.label,
+            title: 'Neighbours of ' + e.node[0].label,
             display: true,
             icon: 'link',
             css: 'width: 800px; height: 700px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
