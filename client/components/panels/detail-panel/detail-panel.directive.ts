@@ -27,6 +27,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         let loaded = false;
         scope.values = {};
         scope.newkey = '';
+        scope.node = {};
 
         scope.load = function(){
           /***** Load properties *******/
@@ -35,12 +36,14 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               scope.labels = labels.data;
               angular.forEach(scope.labels, function(label) {
                 $http.get('/api/model/label/' + label).then(model => {
-                  if (model.data.color) {
+                  if (model.data.color) { //todo add additional info like Require and order
                     $http.get('/api/data/get/' + scope.settings.id).then(response => {
-                      scope.node = response.data;
                       scope.getProperties(model.data);
-                      angular.forEach(Object.keys(scope.node), function(key) {
-                        scope.suggestValue(scope.realLabel, key);
+                      angular.forEach(model.data.prop, function(p) {
+                        if (Object.keys(response.data).indexOf(p) !== -1) {
+                          scope.node[p] = response.data[p];
+                        }
+                        scope.suggestValue(scope.realLabel, p);
                       });
                     });
                     loaded = true;
@@ -53,12 +56,12 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           if (!loaded && !scope.settings.id) {
             scope.node = {};
             scope.labelsList = [];
+            scope.parents = {};
             $http.get('/api/model/').then(model => {
               angular.forEach(model.data, function(label) {
-                if (scope.settings.type === 'createNode' && label.parents.indexOf('Link') === -1 && label.children.length === 0 && label.parents.indexOf('Time') === -1 && label.label !== 'TimeTreeRoot' && label.label !== 'Link') {
+                if (scope.settings.type === 'createNode' && label.children.length === 0  && label.parents.indexOf('Link') === -1 && label.parents.indexOf('Time') === -1 && label.parents.indexOf('Geo') === -1 && label.label !== 'TimeTreeRoot' && label.label !== 'Link') {
                   scope.labelsList.push(label);
-                }
-                if (scope.settings.type === 'createEdge' && label.parents.indexOf('Link') !== -1) {
+                } else if (scope.settings.type === 'createEdge' && label.children.length === 0  && label.parents.indexOf('Link') !== -1) {
                   scope.labelsList.push(label);
                 }
               });
@@ -90,10 +93,13 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           }
         };
         scope.addNewKey = function (key) {
-          scope.node[key] = '';
-          scope.getProperties(scope.realLabel);
-          scope.suggestValue(scope.realLabel, key);
-          // angular.element("#" + key).focus(); // todo does not work
+          if( key !== '') {
+            scope.node[key] = '';
+            scope.newkey = '';
+            scope.getProperties(scope.realLabel);
+            scope.suggestValue(scope.realLabel, key);
+            // angular.element("#" + key).focus(); // todo does not work
+          }
         };
 
         /****** Update the element *****/
@@ -112,13 +118,13 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             if (scope.labels.indexOf('Link')  === -1) {
               scope.handler({e: {
                 type: 'deleteNode',
-                node: {id: scope.settings.id},
+                node: [{id: scope.settings.id}],
                 element: scope.settings.element
               }});
             } else {
               scope.handler({e: {
                 type: 'deleteEdge',
-                edge: {id: scope.settings.id},
+                edge: [{id: scope.settings.id}],
                 element: scope.settings.element
               }});
             }

@@ -7,7 +7,8 @@ var ModelSchema = new mongoose.Schema({
   color: String,
   labeling: String,
   children: Array,
-  parents: Array
+  parents: Array,
+  prop: Array
 });
 
 export default mongoose.model('Model', ModelSchema);

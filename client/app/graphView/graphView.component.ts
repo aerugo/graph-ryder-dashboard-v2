@@ -235,7 +235,7 @@ export class GraphViewComponent {
         break;
       case 'clickNode':
         this.removeContextMenu();
-        if (!this.sigmaPanels[e.element].graph.active) {
+        if (!this.sigmaPanels[e.element].settings.active) {
           this.sigmaPanels[0].graph.action = {
             type: 'selection',
             selection: e.data
@@ -278,7 +278,8 @@ export class GraphViewComponent {
         }
         break;
       case 'selectedNodes':
-        if (!this.sigmaPanels[e.element].graph.active && e.data.length) {
+        console.log(e);
+        if (!this.sigmaPanels[e.element].settings.active && e.data.length) {
           this.sigmaPanels[0].graph.action = {
             type: 'selection',
             selection: e.data
@@ -359,7 +360,7 @@ export class GraphViewComponent {
       case 'deleteEdge':
         this.sigmaPanels[e.element].graph.action = {
             type: 'deleteEdge',
-            targets: e.node
+            targets: e.edge
         };
       break;
       case 'detail':
@@ -421,7 +422,7 @@ export class GraphViewComponent {
             icon: 'link',
             css: 'width: 800px; height: 700px; top: 50px; left : 5px;'
           },
-          sigmaSettings: {
+          settings: {
             demo: false,
             info: 'Graph-Ryder 2.0',
             active: false

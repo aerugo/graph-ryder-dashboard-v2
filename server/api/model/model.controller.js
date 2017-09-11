@@ -82,7 +82,7 @@ export function show(req, res) {
 
 // Gets a single Model from the DB
 export function showByLabel(req, res) {
-  return Model.findOne({label: req.params.label}, 'label color labeling').exec()
+  return Model.findOne({label: req.params.label}, 'label color labeling, prop').exec()
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));

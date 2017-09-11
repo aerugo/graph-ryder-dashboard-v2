@@ -9,25 +9,26 @@
       <uib-tab index="0" heading="Properties">
         <br>
         <form class="form-horizontal">
-          <div class="input-group" ng-if="!realLabel">
-            <label for="label" class="control-label col-xs-4">Type: </label>
-            <div class="col-xs-8">
-              <select id="label" ng-model="realLabel" ng-options="label.label for label in labelsList | orderBy: 'label'" ng-change="getProperties(realLabel)">
-              </select>
-            </div>
-          </div>
-          <div class="form-group" ng-repeat="(key, value) in node track by $index">
+          <div class="form-group" ng-repeat="(key, value) in node">
             <label for="{{key}}" class="control-label col-xs-4">{{key}}</label>
             <div class="col-xs-8">
               <input type="text" class="form-control" id="{{key}}" ng-model="node[key]" ng-value="value" uib-typeahead="value for value in values[key] | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
             </div>
           </div>
         </form>
+        <form class="form-group" ng-if="!realLabel">
+          <fieldset>
+            <label for="label" class="control-label col-xs-4"><i class="fa fa-plus" aria-hidden="true"  ></i> Select a Label</label>
+            <div class="col-xs-8" style="padding-left: 20px;">
+              <select id="label" ng-model="realLabel" ng-options="label.label for label in labelsList | orderBy: 'label'" ng-change="getProperties(realLabel)"></select>
+            </div>
+          </fieldset>
+        </form>
         <form class="form-group" ng-if="realLabel">
           <fieldset>
             <label for="newkey" class="control-label col-xs-4"><i class="fa fa-plus" aria-hidden="true"  ></i> Add a property</label>
             <div class="col-xs-8" style="padding-left: 20px;">
-              <input type="text" class="form-control"  id="newkey" ng-model="newkey" placeholder="new key" uib-typeahead="property for property in properties | filter:$viewValue" typeahead-min-length="0" typeahead-on-select="addNewKey(newkey)">
+              <input type="text" class="form-control" id="newkey" ng-model="newkey" placeholder="new key" uib-typeahead="property for property in properties | filter:$viewValue" typeahead-min-length="0" typeahead-on-select="addNewKey(newkey); newkey = '';" >
               <button class="btn btn-primary" type="submit" ng-click="addNewKey(newkey)">Add</button>
             </div>
           </fieldset>
