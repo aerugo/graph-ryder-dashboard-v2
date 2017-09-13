@@ -35,7 +35,10 @@ export class ModelComponent {
       /*** Exit ****/
       if (!Object.keys(labels).length) {
         getProperty(key, property);
-        let element = {label: key, labeling: '', color: '', parents: parents};
+        let element = {label: key, labeling: '', color: '', parents: []};
+        angular.forEach(parents, function (p) {
+          element.parents.push(p);
+        });
         let find = false;
         angular.forEach(model, function (e) {
           if (e.label === key) {
