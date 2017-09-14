@@ -93,7 +93,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           }
         };
         scope.addNewKey = function (key) {
-          if( key !== '') {
+          if ( key !== '') {
             scope.node[key] = '';
             scope.newkey = '';
             scope.getProperties(scope.realLabel);

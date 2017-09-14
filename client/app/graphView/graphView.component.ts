@@ -360,10 +360,13 @@ export class GraphViewComponent {
       case 'deleteEdge':
         this.sigmaPanels[e.element].graph.action = {
             type: 'deleteEdge',
-            targets: e.edge
+            targets: e.node
         };
       break;
       case 'detail':
+        if (e.node[0].id.charAt(0) === 'd') {
+          e.node[0].id = e.node[0].id.substring(2);
+        }
         let id = this.detailPanels.push({
           style: {
             title: 'Details ' + e.node[0].label,
