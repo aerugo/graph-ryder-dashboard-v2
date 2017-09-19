@@ -24,7 +24,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
             }
           }});
         element.resizable({minHeight: 125, minWidth: 150});
-        let u = {type: '', leftLabel: '', edgeLabel: '', rightLabel: '', nodeId: '', layout: ''};
+        let u = {type: '', leftLabel: '', edgeLabel: '', rightLabel: '', nodeId: '', layout: '', query: ''};
         u = Object.assign({}, scope.settings.sigma.url);
 
         /***** Action *****/
@@ -32,7 +32,8 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           u = Object.assign({}, scope.settings.sigma.url);
           let params = {
             url: '',
-            layout: ''
+            layout: '',
+            query: ''
           };
           switch (u.type) {
             case 'getGraph':
@@ -41,12 +42,19 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
             case 'getGraphNeighboursById':
               params.url = u.type + '/' +  u.nodeId + '/' + u.edgeLabel + '/' + u.rightLabel;
               break;
+            case 'getQueryGraph':
+              params.url = u.type;
+              angular.forEach(u.query, function (q, index) {
+                params.query += q.name + '/';
+              });
+              break;
           }
           params.layout = u.layout;
           $http.get('/api/tulip/' + u.type, {params: params}).then(response => {
             scope.settings.sigma.graph = response.data;
             scope.settings.sigma.graph.action = '';
             scope.settings.sigma.graph.selection = [];
+            scope.settings.sigma.url.done = true;
           });
         };
 
@@ -61,8 +69,8 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           scope.labels = model.data;
         });
 
-        scope.$watch('settings.sigma.url.layout', function(newVal, oldVal) {
-          if (newVal !== oldVal) {
+        scope.$watch('settings.sigma.url.done', function(newVal) {
+          if (!newVal) {
             scope.action();
           }
         });

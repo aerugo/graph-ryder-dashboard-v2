@@ -49,19 +49,20 @@ export class GraphViewComponent {
         title: 'Main graph',
         display: true,
         icon: 'cog',
-        css: 'width: 700px; height: 125px; right: 10px;'
+        css: 'width: 900px; height: 125px; right: 10px;'
       }
     });
     this.searchPanel = {
+      element: 'undefined',
       style: {
         title: 'SearchBar',
-        display: false,
+        display: true,
         icon: 'search',
         css: 'width: 950px; height: 275px; left: 10px;'
       }
     };
-    this.addSettingPanel('settingPanels[0]');
     this.addSearchPanel('searchPanel');
+    this.addSettingPanel('settingPanels[0]');
   }
 
   /***** Add panels *****/
@@ -365,7 +366,7 @@ export class GraphViewComponent {
       break;
       case 'detail':
         if (e.node[0].id.charAt(0) === 'd') {
-          e.node[0].id = e.node[0].id.substring(2);
+          e.node[0].id = e.node[0].id.substring(3);
         }
         let id = this.detailPanels.push({
           style: {
@@ -450,7 +451,15 @@ export class GraphViewComponent {
         }
         break;
       case 'search':
-        this.searchPanel.style.display = true;
+        this.searchPanel = {
+          element: e,
+          style: {
+            title: 'SearchBar',
+            display: true,
+            icon: 'search',
+            css: 'width: 950px; height: 275px; left: 10px;'
+          }
+        };
         break;
       case 'layout':
         this.$http.get('/api/tulip/getLayouts').then(model => {
@@ -474,7 +483,17 @@ export class GraphViewComponent {
         break;
       case 'layoutGo':
         this.sigmaPanels[e.element].url.layout = e.optionLabel;
+        this.sigmaPanels[e.element].url.done = false;
       break;
+
+      /***** Search bar ******/
+      case 'searchQuery':
+        this.sigmaPanels[0].url = {
+          type: 'getQueryGraph',
+          query: e.search,
+          done: false
+        };
+        break;
     }
   }
 }

@@ -124,7 +124,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             } else {
               scope.handler({e: {
                 type: 'deleteEdge',
-                edge: [{id: scope.settings.id}],
+                node: [{id: scope.settings.id}],
                 element: scope.settings.element
               }});
             }

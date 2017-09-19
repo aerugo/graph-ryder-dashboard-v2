@@ -5,14 +5,23 @@ import routing from './main.routes';
 export class MainController {
   $http;
   socket;
-  graph;
-  settings;
+  sigma;
 
   /*@ngInject*/
   constructor($http, $scope, socket) {
     this.$http = $http;
     this.socket = socket;
-    this.settings = {demo: true};
+    this.sigma = {
+      graph: {
+        action: '',
+        selection: []
+      },
+      settings: {
+        demo: true,
+        element: 0,
+        active: true
+      }
+    };
   }
 
   /**** Init the view *****/
@@ -23,7 +32,9 @@ export class MainController {
   /**** Refresh the sigma view ****/
   refresh() {
     this.$http.get('/api/tulip/getGraph/random').then(response => {
-      this.graph = response.data;
+      this.sigma.graph = response.data;
+      this.sigma.graph.action = '';
+      this.sigma.graph.selection = [];
     });
   }
 }

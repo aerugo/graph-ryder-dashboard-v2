@@ -31,7 +31,7 @@ export class ModelComponent {
         property[label] = response.data;
       });
     };
-    let analyse = function(parents, key, labels, model, property){
+    let analyse = function(parents, key, labels, model, property) {
       /*** Exit ****/
       if (!Object.keys(labels).length) {
         getProperty(key, property);
@@ -64,28 +64,40 @@ export class ModelComponent {
           });
         });
         if (found) {
+          let p = [];
+          angular.forEach(parents, function (parent) {
+            p.push(parent);
+          });
+          p.indexOf(key) === -1 ? p.push(key) : null;
           angular.forEach(labels, function (l, k) {
             if (k !== found) {
-              parents.indexOf(key) === -1 ? parents.push(found) : null;
               result.push(analyse(parents, k, l, model, property));
             }
           });
           return {label: found, children: result};
         } else {
+          let p = [];
+          angular.forEach(parents, function (parent) {
+            p.push(parent);
+          });
+          p.indexOf(key) === -1 ? p.push(key) : null;
           angular.forEach(labels, function (label, k) {
-            parents.indexOf(key) === -1 ? parents.push(key) : null;
-            result.push(analyse(parents, k, label, model, property));
+            result.push(analyse(p, k, label, model, property));
           });
           return {label: key, children: result};
         }
       } else {
         /***** Continue *****/
         let result = [];
-        angular.forEach(labels, function (label, k) {
-          parents.indexOf(key) === -1 ? parents.push(key) : null;
-          result.push(analyse(parents, k, label, model, property));
+        let p = [];
+        angular.forEach(parents, function (parent) {
+          p.push(parent);
         });
-        return {label: key, children: result};
+        p.indexOf(key) === -1 ? p.push(key) : null;
+        angular.forEach(labels, function (label, k) {
+          result.push(analyse(p, k, label, model, property));
+        });
+        return {label: key, children: result, parents: parents};
       }
     };
     let property = this.property;
@@ -119,7 +131,7 @@ export class ModelComponent {
       if (!e.children) {
         return [e.label];
       } else {
-        let element = {label: e.label, children: []};
+        let element = {label: e.label, children: [], parents: e.parents};
         angular.forEach(e.children, function(child) {
           element.children = element.children.concat(updateParents(child));
         });

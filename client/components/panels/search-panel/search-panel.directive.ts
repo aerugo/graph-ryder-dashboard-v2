@@ -9,7 +9,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
       replace: true,
       scope: {
         settings: '=',
-        handler: '@'
+        handler: '&'
       },
       link: function(scope, element, attrs) {
         element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
@@ -32,7 +32,12 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           if (scope.step === 0) {
             $http.get('/api/model/').then(labels => {
               angular.forEach(labels.data  , function (label, key) {
-                scope.parameters.push({ key: label.label, name: label.label, placeholder: label.label, color: label.color });
+                let k = '';
+                angular.forEach(label.parents  , function (p) {
+                  k += p + ':';
+                });
+                k += label.label;
+                scope.parameters.push({ key: k, name: label.label, placeholder: label.label, color: label.color });
               });
             });
           } else if (scope.step === 1) {
@@ -55,7 +60,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
         scope.searchQueryTypeaheadOnSelect =  function (index) {
           if (scope.step === 1) {
             scope.searchParams.push({
-              name: index.name,
+              name: index.key,
               label: index.key,
               color: index.color
             });
@@ -97,7 +102,11 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
         };
 
         scope.action = function () {
-          console.log(scope.searchParams);
+          scope.handler({ e: {
+              type: 'searchQuery',
+              element: scope.settings.element,
+              search: scope.searchParams
+            }});
         };
 
         scope.focus = function(){
