@@ -100,6 +100,21 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
     },
 
     /**
+     * Update lastRequest
+     *
+     * @param  {String}   request
+     * @param  {Function} callback    - function(error, user)
+     * @return {Promise}
+     */
+    lastRequest(request, callback?: Function) {
+      return User.lastRequest({ id: currentUser._id }, { request }, function() {
+        return safeCb(callback)(null);
+      }, function(err) {
+        return safeCb(callback)(err);
+      }).$promise;
+    },
+
+    /**
      * Gets all available info on a user
      *
      * @param  {Function} [callback] - function(user)

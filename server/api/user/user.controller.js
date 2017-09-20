@@ -99,6 +99,24 @@ export function changePassword(req, res) {
 }
 
 /**
+ * Change a last request
+ */
+export function lastRequest(req, res) {
+  var userId = req.user._id;
+  var newRequest = String(req.body.request);
+
+  return User.findById(userId).exec()
+    .then(user => {
+      user.lastRequest = newRequest;
+      return user.save()
+        .then(() => {
+          res.status(204).end();
+        })
+        .catch(validationError(res));
+    });
+}
+
+/**
  * Get my info
  */
 export function me(req, res, next) {

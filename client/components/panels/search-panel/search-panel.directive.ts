@@ -2,7 +2,7 @@
 const angular = require('angular');
 
 export default angular.module('graphRyderDashboardApp.searchPanel', [])
-  .directive('searchPanel', function($http) {
+  .directive('searchPanel', function($http, $timeout) {
     return {
       template: require('./search-panel.html'),
       restrict: 'E',
@@ -29,6 +29,31 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
         scope.init = function () {
           scope.searchQuery = '';
           scope.parameters = [];
+          if (scope.lastRequest) {
+            $http.get('/api/model/').then(labels => {
+              angular.forEach(scope.lastRequest.split('/')  , function (e) {
+                if (e) {
+                  let color = '';
+                  angular.forEach(labels.data, function (label) {
+                    if (label.color && e.split(':')[e.split(':').length-1].split('->')[0] === label.label) {
+                      color = label.color;
+                    }
+                  });
+                  scope.searchParams.push({
+                    name: e,
+                    label: e,
+                    color: color
+                  });
+                }
+              });
+            scope.lastRequest = false;
+            scope.handler({ e: {
+              type: 'searchQuery',
+              element: scope.settings.element,
+              search: scope.searchParams
+            }});
+            });
+          }
           if (scope.step === 0) {
             $http.get('/api/model/').then(labels => {
               angular.forEach(labels.data  , function (label, key) {
@@ -113,7 +138,10 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           angular.element('#searchBox').focus();
         };
 
-        scope.init();
+        $timeout(function () {
+          scope.lastRequest = scope.settings.user().lastRequest;
+          scope.init();
+        });
       }
     };
   })

@@ -29,7 +29,7 @@
       </div>
       <div class="search-parameter-suggestions" ng-show="parameters">
         <!--<span class="title">{{parametersLabel}}:</span>-->
-        <span class="search-parameter" ng-repeat="param in parameters"
+        <span class="search-parameter" ng-repeat="param in parameters | orderBy: 'name'"
               data-key="{{param.key}}"
               ng-mousedown="searchQueryTypeaheadOnSelect(param)"
               style="background-color: {{param.color}}" >

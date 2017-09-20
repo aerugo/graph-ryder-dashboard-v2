@@ -26,16 +26,17 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
         element.resizable({minHeight: 150, minWidth: 150}); // todo refresh on resize
 
         /***** Load properties *******/
+        scope.settingsPanel = {
+          sigma: scope.settings,
+          style: scope.settings.settingsPanelStyle
+        };
+
         scope.action = function() {
           let panel = document.createElement('setting-panel');
           panel.setAttribute('settings', 'settingsPanel');
           panel.setAttribute('handler', 'eventHandler(e)');
           angular.element('#' + scope.settings.element).append(panel);
           $compile(panel)(scope);
-        };
-        scope.settingsPanel = {
-          sigma: scope.settings,
-          style: scope.settings.settingsPanelStyle
         };
 
         scope.eventHandler = function(e) {
@@ -50,8 +51,8 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
         });
         if (scope.settings.settingsPanelStyle) {
           scope.$watch('settings.settingsPanelStyle', function (newVal) {
-            if (newVal && scope.settingPanels.style.display.isDefined()) {
-              scope.settingPanels.style.display = true;
+            if (newVal) {
+              scope.settingsPanel.style.display = true;
             }
           });
         }

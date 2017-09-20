@@ -14,9 +14,12 @@ export class GraphViewComponent {
   searchPanel;
   footer;
   contextMenu;
+  Auth;
+  getCurrentUser: Function;
 
   /*@ngInject*/
-  constructor($http, $scope, $compile) {
+  constructor(Auth, $http, $scope, $compile) {
+    this.Auth = Auth;
     this.$http = $http;
     this.$compile = $compile;  // todo clean this
     this.$scope = $scope;
@@ -25,19 +28,18 @@ export class GraphViewComponent {
     this.settingPanels = [];
     this.footer = {text: 'Graph-Ryder v2.0', labels : []};
     this.contextMenu = { style: { display: false }};
+    this.getCurrentUser = Auth.getCurrentUserSync;
   }
 
   /**** Init the view ****/
   $onInit() {
     this.sigmaPanels.push({
       url: {
-        type: 'getGraph',
-        leftLabel: 'Person',
-        rightLabel: 'Person',
-        edgeLabel: 'Financial'
+        type: '',
+        query: ''
       },
       graph: {action: '', selection: []},
-      settings: {
+      sigmaSettings: {
         demo: false,
         element: 0,
         active: true
@@ -47,18 +49,19 @@ export class GraphViewComponent {
       sigma: this.sigmaPanels[0],
       style: {
         title: 'Main graph',
-        display: true,
+        display: false,
         icon: 'cog',
         css: 'width: 900px; height: 125px; right: 10px;'
       }
     });
     this.searchPanel = {
-      element: 'undefined',
+      element: 0,
+      user: this.getCurrentUser,
       style: {
         title: 'SearchBar',
         display: true,
         icon: 'search',
-        css: 'width: 950px; height: 275px; left: 10px;'
+        css: 'width: 950px; height: 275px; right: 10px;'
       }
     };
     this.addSearchPanel('searchPanel');
@@ -236,7 +239,7 @@ export class GraphViewComponent {
         break;
       case 'clickNode':
         this.removeContextMenu();
-        if (!this.sigmaPanels[e.element].settings.active) {
+        if (!this.sigmaPanels[e.element].sigmaSettings.active) {
           this.sigmaPanels[0].graph.action = {
             type: 'selection',
             selection: e.data
@@ -279,8 +282,7 @@ export class GraphViewComponent {
         }
         break;
       case 'selectedNodes':
-        console.log(e);
-        if (!this.sigmaPanels[e.element].settings.active && e.data.length) {
+        if (!this.sigmaPanels[e.element].sigmaSettings.active && e.data.length) {
           this.sigmaPanels[0].graph.action = {
             type: 'selection',
             selection: e.data
@@ -397,7 +399,7 @@ export class GraphViewComponent {
             title: 'Neighbours of ' + e.node[0].label,
             display: true,
             icon: 'link',
-            css: 'width: 800px; height: 700px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
+            css: 'width: 1000px; height: 800px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
           },
           sigmaSettings: {
             demo: false,
@@ -408,7 +410,7 @@ export class GraphViewComponent {
             title: 'Neighbours',
             display: false,
             icon: 'cog',
-            css: 'width: 750px; height: 125px; left: 10px;'
+            css: 'width: 950px; height: 125px; left: 10px;'
           }
         });
         idSigma--;
@@ -493,6 +495,16 @@ export class GraphViewComponent {
           query: e.search,
           done: false
         };
+        break;
+      case 'lastRequest':
+        console.log(e);
+        this.Auth.lastRequest(e.request)
+          .then(() => {
+            console.log('Request successfully changed.');
+          })
+          .catch(() => {
+            console.log('Fail to update the request');
+          });
         break;
     }
   }

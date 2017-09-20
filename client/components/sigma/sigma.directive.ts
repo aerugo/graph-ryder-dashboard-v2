@@ -147,9 +147,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           lasso.bind('selectedNodes', function (e) {
             activeState.dropEdges();
             let nodes = e.data;
-            if (!nodes.length) {
-              activeState.dropNodes();
-            }
+            activeState.dropNodes();
             activeState.addNodes(nodes.map(function(n) { return n.id; }));
             setTimeout(function() {
               lasso.deactivate();

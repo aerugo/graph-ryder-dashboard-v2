@@ -11,6 +11,12 @@ export function UserResource($resource) {
         controller: 'password'
       }
     },
+    lastRequest: {
+      method: 'PUT',
+      params: {
+        controller: 'lastrequest'
+      }
+    },
     get: {
       method: 'GET',
       params: {
