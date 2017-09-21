@@ -61,7 +61,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           if (ready) {
             $http.get('/api/tulip/' + u.type, {params: params}).then(response => {
               scope.settings.sigma.graph = response.data;
-              if (response.data.nodes.length && u.type === 'getQueryGraph') {
+              if (response.data.nodes.length && u.type === 'getQueryGraph' && scope.settings.sigma.sigmaSettings.element === 0) {
                 scope.handler({e: {type: 'lastRequest', request: params.query}});
               }
               scope.settings.sigma.graph.action = '';
@@ -84,13 +84,6 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
 
         scope.$watch('settings.sigma.url.done', function(newVal) {
           if (newVal === false) {
-            scope.action();
-          }
-        });
-
-        /**** Init ****/
-        $timeout(function () {
-          if (scope.settings.sigma.url.type = "getGraphNeighboursById") {
             scope.action();
           }
         });

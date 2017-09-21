@@ -3,7 +3,7 @@
   <div class="panel-heading">
     <span>
     <i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
-    <span ng-if="settings.sigma.url.type == 'getGraph'">
+    <span ng-if="settings.sigma.url.type == 'getGraph' || settings.sigma.url.type == 'getQueryGraph'">
       <button class="btn btn-primary" type="button">Nodes <span class="badge">{{settings.sigma.graph.nodes.length}}</span></button>
       <button class="btn btn-primary" type="button">Edges <span class="badge">{{settings.sigma.graph.edges.length}}</span></button>
     </span>
@@ -38,6 +38,13 @@
       <option ng-repeat="label in labels | orderBy: 'label'" value="{{label.label}}">{{label.label}}</option>
     </select>
       <span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="action()">Go!</button></span>
+    </div>
+  </div>
+  <!-- Query -->
+  <div class="panel-body" ng-if="settings.sigma.url.type == 'getQueryGraph'">
+    <span>Query request:</span>
+    <div class="input-group">
+      {{settings.sigma.url.query}}
     </div>
   </div>
 </div>

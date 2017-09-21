@@ -7,7 +7,7 @@ module.exports = {
 
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://mongo/graphryderdashboard-dev'
+    uri: 'mongodb://localhost/graphryderdashboard-dev'
   },
 
   // Seed database on startup

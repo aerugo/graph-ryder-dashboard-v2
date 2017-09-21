@@ -27,7 +27,7 @@ export class ModelComponent {
       scope.labelsCount = response.data;
     });
     let getProperty = function (label, property) {
-      http.get('/api/data/getProperties/' + label).then(response => {
+      http.get('/api/data/getPropertiesByLabel/' + label).then(response => {
         property[label] = response.data;
       });
     };

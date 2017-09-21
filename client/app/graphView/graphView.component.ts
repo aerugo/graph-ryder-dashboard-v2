@@ -390,9 +390,10 @@ export class GraphViewComponent {
           url: {
             type: 'getGraphNeighboursById', //todo check the type of the node
             nodeId: e.node[0].id,
-            leftLabel: 'Person',
-            rightLabel: 'Person',
-            edgeLabel: 'Link'
+            leftLabel: 'Node',
+            rightLabel: 'Node',
+            edgeLabel: 'Link',
+            done: false
           },
           mode: 'panel',
           style: {
@@ -408,7 +409,7 @@ export class GraphViewComponent {
           },
           settingsPanelStyle: {
             title: 'Neighbours',
-            display: false,
+            display: true,
             icon: 'cog',
             css: 'width: 950px; height: 125px; left: 10px;'
           }
@@ -426,9 +427,9 @@ export class GraphViewComponent {
             title: 'Graph',
             display: true,
             icon: 'link',
-            css: 'width: 800px; height: 700px; top: 50px; left : 5px;'
+            css: 'width: 1000px; height: 800px; top: 50px; left : 5px;'
           },
-          settings: {
+          settingsSigma: {
             demo: false,
             info: 'Graph-Ryder 2.0',
             active: false
@@ -496,8 +497,38 @@ export class GraphViewComponent {
           done: false
         };
         break;
+      case 'searchQueryDetach':
+        let idSigma = this.sigmaPanels.push({
+          type: 'sigma',
+          url: {
+            type: 'getQueryGraph',
+            query: e.search,
+            done: false
+          },
+          mode: 'panel',
+          style: {
+            title: 'Graph',
+            display: true,
+            icon: 'search',
+            css: 'width: 1000px; height: 800px; top: 50px; left : 5px;'
+          },
+          sigmaSettings: {
+            demo: false,
+            info: 'Graph-Ryder 2.0',
+            active: false
+          },
+          settingsPanelStyle: {
+            title: 'Graph',
+            display: false,
+            icon: 'cog',
+            css: 'width: 750px; height: 125px; top: 50px; left: 0px;'
+          }
+        });
+        idSigma--;
+        this.sigmaPanels[idSigma].element = idSigma;
+        this.addSigmaPanel('sigmaPanels[' + idSigma + ']');
+        break;
       case 'lastRequest':
-        console.log(e);
         this.Auth.lastRequest(e.request)
           .then(() => {
             console.log('Request successfully changed.');

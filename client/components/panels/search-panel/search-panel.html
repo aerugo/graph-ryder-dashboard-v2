@@ -36,7 +36,10 @@
               {{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>
             </span>
       </div>
-      <span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="action()">Go!</button></span>
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" ng-click="action()">Go!
+        <button class="btn btn-default" type="button" ng-click="detach()">Detach !</button>
+      </span>
     </div>
   </div>
 </div>

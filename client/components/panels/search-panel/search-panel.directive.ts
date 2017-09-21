@@ -66,7 +66,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
               });
             });
           } else if (scope.step === 1) {
-            $http.get('/api/data/getProperties/' + scope.label).then(properties => {
+            $http.get('/api/data/getPropertiesByLabel/' + scope.label).then(properties => {
               angular.forEach(properties.data, function (property, key) {
                 scope.parameters.push({key: property, name: property, placeholder: property, color: 'rgb(127,183,51)'});
               });
@@ -129,6 +129,14 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
         scope.action = function () {
           scope.handler({ e: {
               type: 'searchQuery',
+              element: scope.settings.element,
+              search: scope.searchParams
+            }});
+        };
+
+        scope.detach = function () {
+          scope.handler({ e: {
+              type: 'searchQueryDetach',
               element: scope.settings.element,
               search: scope.searchParams
             }});

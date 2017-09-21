@@ -13,8 +13,16 @@
 let request = require('request');
 import config from '../../config/environment';
 
-export function get(req, res) {
+export function getProperties(req, res) {
   request({url: config.tulipApi + '/get/' + req.param('id'), qs: {keys: '*'}}, function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
+export function getAttributes(req, res) {
+  request({url: config.tulipApi + '/get/' + req.param('id'), qs: {attrs: '*'}}, function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }
@@ -101,7 +109,7 @@ export function getLabelsById(req, res) {
   });
 }
 
-export function getProperties(req, res) {
+export function getPropertiesByLabel(req, res) {
   request(config.tulipApi + '/getProperties/' + req.param('label'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);

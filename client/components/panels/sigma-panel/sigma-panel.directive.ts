@@ -44,18 +44,6 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
           scope.handler({e: e});
         };
 
-        scope.$watch('settings.sigma.url.layout', function(newVal, oldVal) {
-          if (newVal !== oldVal) {
-            scope.action();
-          }
-        });
-        if (scope.settings.settingsPanelStyle) {
-          scope.$watch('settings.settingsPanelStyle', function (newVal) {
-            if (newVal) {
-              scope.settingsPanel.style.display = true;
-            }
-          });
-        }
         $timeout(function () {
           scope.action();
         });

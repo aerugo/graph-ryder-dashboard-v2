@@ -28,6 +28,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.values = {};
         scope.newkey = '';
         scope.node = {};
+        scope.attributs = {};
 
         scope.load = function(){
           /***** Load properties *******/
@@ -37,7 +38,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               angular.forEach(scope.labels, function(label) {
                 $http.get('/api/model/label/' + label).then(model => {
                   if (model.data.color) { //todo add additional info like Require and order
-                    $http.get('/api/data/get/' + scope.settings.id).then(response => {
+                    $http.get('/api/data/getProperties/' + scope.settings.id).then(response => {
                       scope.getProperties(model.data);
                       angular.forEach(model.data.prop, function(p) {
                         if (Object.keys(response.data).indexOf(p) !== -1) {
@@ -49,6 +50,22 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                     loaded = true;
                   }
                 });
+              });
+            });
+            $http.get('/api/data/getAttributes/' + scope.settings.id).then(response => {
+              angular.forEach(response.data, function(attrs, key) {
+                if (key !== 'Node' && key !== 'id') {
+                  $http.get('/api/model/label/' + key).then(m => {
+                    angular.forEach(attrs, function(attr) {
+                      $http.get('/api/data/getProperties/' + attr).then(r => {
+                        if (!Object.keys(scope.attributs).includes(key)) {
+                          scope.attributs[key] = [];
+                        }
+                        scope.attributs[key].push({id: attr, value: r.data[m.data.labeling]});
+                      });
+                    });
+                  });
+                }
               });
             });
           }
@@ -76,11 +93,11 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             scope.labels = label.parents.concat(label.label);
           }
           if (label.labeling && !Object.keys(scope.node).includes(label.labeling)) {
-            scope.node[label.labeling] = '';
+              scope.node[label.labeling] = '';
           }
           scope.suggestValue(scope.realLabel, label.labeling);
           // angular.element("#" + label.labeling).focus(); // todo does not work
-          $http.get('/api/data/getProperties/' + label.label).then(response => {
+          $http.get('/api/data/getPropertiesByLabel/' + label.label).then(response => {
             scope.properties = $(response.data).not(Object.keys(scope.node)).get();
           });
         };
@@ -164,6 +181,16 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               });
             }
           });
+        };
+
+        /****** Open detail *********/
+        scope.detail = function(id, label) {
+          scope.handler({e: {
+            type: 'detail',
+            element: scope.settings.element,
+            node: [{id: id.toString(), label: label}],
+            position: {clientY: 100, clientX: 100}
+          }});
         };
 
         /****** Load when ready *****/
