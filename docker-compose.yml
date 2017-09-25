@@ -2,26 +2,25 @@ version: '3.3'
 services:
   web:
     build: .
-    ports:
-      - "3000:3000"
-    links:
-      - mongo
-      - api
+    restart: always
   api:
     build: ../private-graph-ryder-api/
-    expose:
-      - "5000"
-    links:
-      - neo4j
-      - mongo
+    restart: always
   neo4j:
     image: "neo4j:3.2"
-    expose:
-     - "7474"
-     - "7687"
     volumes:
       - ../neo4j/data:/data
       - ../neo4j/conf:/conf
       - ../neo4j/plugins:/plugins
+    restart: always
   mongo:
     image: "mongo:3.4.6"
+    restart: always
+  proxy:
+    image: "nginx"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ../certs/:/etc/nginx/web/
+    restart: always

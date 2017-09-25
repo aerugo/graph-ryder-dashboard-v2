@@ -26,7 +26,7 @@ var all = {
   port: process.env.PORT || 9000,
 
   // Tulip Python API port
-  tulipApi: 'http://localhost:5000',
+  tulipApi: 'http://api:5000',
 
   // Server IP
   ip: process.env.IP || '0.0.0.0',
