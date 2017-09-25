@@ -27,3 +27,20 @@ Please refer to the Generator [guide](https://angular-fullstack.github.io/guides
 ## Build & development
 
 Run `gulp build` for building and `gulp serve` for preview.
+
+## Launch Graph-ryder full plateform
+
+1. git clone https://github.com/norbertFeron/private-graph-ryder-dashboard.git
+
+2. git clone https://github.com/norbertFeron/private-graph-ryder-api.git
+
+3. mv YOUR_NEO4J_WITH_PLUGINS neo4j
+
+4. import your server.crt and server.key in "certs" folder
+
+4. Api config file ( in private-graph-ryder-api ):
+   - cp config.example.ini config.ini
+   - nano config.ini 
+   - set your neo4j password
+   
+5. docker-compose up ( in private-graph-ryder-dashboard )
