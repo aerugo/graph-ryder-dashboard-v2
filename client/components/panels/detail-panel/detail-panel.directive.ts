@@ -18,12 +18,16 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
       },
       link: function(scope, element) {
         element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
-        start: function() {
-          if (element.css('z-index') > 100) {
-            element.css('z-index', 10);
-          }
+          start: function() {
+            if (element.css('z-index') > 100) {
+              element.css('z-index', 10);
+            }
+        }, stop: function(event, ui) {
+            scope.settings.style.css = scope.settings.style.css.split('top:')[0] + 'top: ' + ui.position.top + 'px; left : ' + ui.position.left + 'px;';
+          }});
+        element.resizable({minHeight: 150, minWidth: 150, stop: function(event, ui) {
+          scope.settings.style.css = 'width: ' + ui.size.width + 'px; height: ' + ui.size.height + 'px; top: ' + ui.position.top + 'px; left : ' + ui.position.left + 'px;';
         }});
-        element.resizable({minHeight: 150, minWidth: 150});
         let loaded = false;
         scope.values = {};
         scope.newkey = '';

@@ -211,6 +211,7 @@ export class GraphViewComponent {
         break;
       case 'rightClickStage':
         this.removeContextMenu();
+        let xy = e.data.renderer.camera.cameraPosition(e.data.captor.x, e.data.captor.y);
         this.contextMenu = {
           style: {
             title: 'Menu graph',
@@ -227,8 +228,8 @@ export class GraphViewComponent {
           position: {
             clientY: e.data.captor.clientY,
             clientX: e.data.captor.clientX,
-            x: e.data.captor.x,
-            y: e.data.captor.y
+            x: xy.x,  // todo find the good position
+            y: xy.y
           },
           element: e.element
         };
@@ -455,12 +456,12 @@ export class GraphViewComponent {
         break;
       case 'search':
         this.searchPanel = {
-          element: e,
+          element: 0,
           style: {
             title: 'SearchBar',
             display: true,
             icon: 'search',
-            css: 'width: 950px; height: 275px; left: 10px;'
+            css: 'width: 950px; height: 275px; right: 10px;'
           }
         };
         break;

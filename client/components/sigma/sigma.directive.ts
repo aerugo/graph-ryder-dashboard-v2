@@ -42,7 +42,8 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           defaultNodeActiveOuterBorderColor: 'rgb(236, 81, 72)',
           nodeHaloColor: 'rgba(236, 81, 72, 0.2)',
           nodeHaloSize: 25,
-          autoCurveSortByDirection: true
+          autoCurveSortByDirection: true,
+          autoRescale: false
         };
         if (scope.settings) {
           Object.keys(scope.settings).forEach(function(key) { settings[key] = scope.settings[key]; });
@@ -56,6 +57,22 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           },
           settings: settings
         });
+        let conf = {
+          animation: {
+            node: {
+              duration: 800
+            },
+            edge: {
+              duration: 800
+            },
+            center: {
+              duration: 800
+            }
+          },
+          //focusOut: true,
+          zoomDef: 1
+        };
+        let locate = sigma.plugins.locate(s, conf);
 
         scope.$watch('graph', function() {
           if (scope.graph) {
@@ -63,10 +80,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
             s.graph.read(scope.graph);
             sigma.canvas.edges.autoCurve(s);
             s.refresh();
-            if (settings.demo || !firstLaunch) {
-              sigma.layouts.fruchtermanReingold.start(s);
-              firstLaunch = true;
-            }
+            locate.center();
           }
         });
         scope.$watch('graph.action', function(newVal) {
@@ -74,7 +88,10 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
             switch (newVal.type) {
               case 'addNode':
                 angular.forEach(scope.graph.action.node, function (node) {
+                  node.size = 4;
                   s.graph.addNode(node);
+                  activeState.dropNodes();
+                  activeState.addNodes([node.id]);
                 });
                 break;
               case 'addEdge':
@@ -84,13 +101,16 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
                 break;
               case 'selection':
                 activeState.dropNodes();
+                let nodes = [];
                 angular.forEach(scope.graph.action.selection, function (node) {
                   angular.forEach(s.graph.nodes(), function (n) {
                     if (n.id === node.id) {
                       activeState.addNodes([node.id]);
+                      nodes.push(node.id);
                     }
                   });
                 });
+                locate.nodes(nodes);
                 break;
               case 'deleteNode':
                 angular.forEach(scope.graph.action.targets, function (target) {
