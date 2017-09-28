@@ -82,8 +82,10 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               angular.forEach(model.data, function(label) {
                 if (scope.settings.type === 'createNode' && label.children.length === 0  && label.parents.indexOf('Link') === -1 && label.parents.indexOf('Time') === -1 && label.parents.indexOf('Geo') === -1 && label.label !== 'TimeTreeRoot' && label.label !== 'Link') {
                   scope.labelsList.push(label);
+                  scope.isEdge = false;
                 } else if (scope.settings.type === 'createEdge' && label.children.length === 0  && label.parents.indexOf('Link') !== -1) {
                   scope.labelsList.push(label);
+                  scope.isEdge = true;
                 }
               });
               loaded = true;
@@ -195,6 +197,12 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             node: [{id: id.toString(), label: label}],
             position: {clientY: 100, clientX: 100}
           }});
+        };
+
+        scope.reverse = function() {
+          let tmp = scope.settings.node[0];
+          scope.settings.node[0] = scope.settings.node[1];
+          scope.settings.node[1] = tmp;
         };
 
         /****** Load when ready *****/

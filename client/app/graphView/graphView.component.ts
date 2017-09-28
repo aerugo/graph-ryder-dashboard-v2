@@ -351,7 +351,8 @@ export class GraphViewComponent {
             labels: e.labels.toString(),
             color: e.color,
             source: e.source,
-            target: e.target
+            target: e.target,
+            type: 'arrow'
           }]
         };
       break;
