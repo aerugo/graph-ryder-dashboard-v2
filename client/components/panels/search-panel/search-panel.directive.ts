@@ -29,6 +29,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
         scope.init = function () {
           scope.searchQuery = '';
           scope.parameters = [];
+          scope.directed = true;
           if (scope.lastRequest) {
             $http.get('/api/model/').then(labels => {
               angular.forEach(scope.lastRequest.split('/')  , function (e) {
@@ -50,7 +51,8 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
             scope.handler({ e: {
               type: 'searchQuery',
               element: scope.settings.element,
-              search: scope.searchParams
+              search: scope.searchParams,
+              directed: scope.directed
             }});
             });
           }
@@ -130,7 +132,8 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           scope.handler({ e: {
               type: 'searchQuery',
               element: scope.settings.element,
-              search: scope.searchParams
+              search: scope.searchParams,
+              directed: scope.directed
             }});
         };
 
@@ -138,7 +141,8 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           scope.handler({ e: {
               type: 'searchQueryDetach',
               element: scope.settings.element,
-              search: scope.searchParams
+              search: scope.searchParams,
+              directed: scope.directed
             }});
         };
 

@@ -61,7 +61,7 @@ export class GraphViewComponent {
         title: 'SearchBar',
         display: true,
         icon: 'search',
-        css: 'width: 950px; height: 275px; right: 10px;'
+        css: 'width: 950px; height: 375px; right: 10px;'
       }
     };
     this.addSearchPanel('searchPanel');
@@ -374,7 +374,7 @@ export class GraphViewComponent {
         }
         let id = this.detailPanels.push({
           style: {
-            title: 'Details ' + e.node[0].label,
+            title: 'Details ' + e.node[0].id,
             display: true,
             icon: 'info',
             css: 'width: 450px; height: 650px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
@@ -462,7 +462,7 @@ export class GraphViewComponent {
             title: 'SearchBar',
             display: true,
             icon: 'search',
-            css: 'width: 950px; height: 275px; right: 10px;'
+            css: 'width: 950px; height: 375px; right: 10px;'
           }
         };
         break;
@@ -496,6 +496,7 @@ export class GraphViewComponent {
         this.sigmaPanels[0].url = {
           type: 'getQueryGraph',
           query: e.search,
+          directed: e.directed,
           done: false
         };
         break;
@@ -505,6 +506,7 @@ export class GraphViewComponent {
           url: {
             type: 'getQueryGraph',
             query: e.search,
+            directed: e.directed,
             done: false
           },
           mode: 'panel',

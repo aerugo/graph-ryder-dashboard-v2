@@ -24,7 +24,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
             }
           }});
         element.resizable({minHeight: 125, minWidth: 150});
-        let u = {type: '', leftLabel: '', edgeLabel: '', rightLabel: '', nodeId: '', layout: '', query: ''};
+        let u = {type: '', leftLabel: '', edgeLabel: '', rightLabel: '', nodeId: '', layout: '', query: '', directed: ''};
         u = Object.assign({}, scope.settings.sigma.url);
 
         /***** Action *****/
@@ -33,7 +33,8 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           let params = {
             url: '',
             layout: '',
-            query: ''
+            query: '',
+            directed: ''
           };
           let ready = false;
           switch (u.type) {
@@ -51,6 +52,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
               break;
             case 'getQueryGraph':
               params.url = u.type;
+              params.directed = u.directed;
               angular.forEach(u.query, function (q, index) {
                 params.query += q.name + '/';
               });
