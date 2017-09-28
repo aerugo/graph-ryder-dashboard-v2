@@ -79,7 +79,16 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
 
         /***** Get labels *****/
         $http.get('/api/model/').then(model => {
+          scope.nodeLabels = [];
+          scope.edgeLabels = [];
           scope.labels = model.data;
+          angular.forEach(model.data, function(label) {
+            if (label.parents.indexOf('Node') !== -1) {
+              scope.nodeLabels.push(label);
+            } else if (label.parents.indexOf('Link') !== -1) {
+              scope.edgeLabels.push(label);
+            }
+          });
         });
 
         scope.$watch('settings.sigma.url.done', function(newVal) {

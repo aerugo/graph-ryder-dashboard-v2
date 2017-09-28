@@ -32,10 +32,10 @@
     <div class="input-group">
       Target: <input type="text" ng-model="settings.sigma.url.nodeId" />
       Edge: <select ng-model="settings.sigma.url.edgeLabel">
-      <option ng-repeat="label in labels | orderBy: 'label'" value="{{label.label}}">{{label.label}}</option>
+      <option ng-repeat="label in edgeLabels | orderBy: 'label'" value="{{label.label}}">{{label.label}}</option>
     </select>
       Neighbours type: <select ng-model="settings.sigma.url.rightLabel">
-      <option ng-repeat="label in labels | orderBy: 'label'" value="{{label.label}}">{{label.label}}</option>
+      <option ng-repeat="label in nodeLabels | orderBy: 'label'" value="{{label.label}}">{{label.label}}</option>
     </select>
       <span class="input-group-btn"><button class="btn btn-default" type="button" ng-click="action()">Go!</button></span>
     </div>
