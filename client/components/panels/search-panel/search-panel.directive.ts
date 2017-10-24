@@ -59,12 +59,14 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           if (scope.step === 0) {
             $http.get('/api/model/').then(labels => {
               angular.forEach(labels.data  , function (label, key) {
-                let k = '';
-                angular.forEach(label.parents  , function (p) {
-                  k += p + ':';
-                });
-                k += label.label;
-                scope.parameters.push({ key: k, name: label.label, placeholder: label.label, color: label.color });
+                if (label.children.length === 0) {
+                  let k = '';
+                  angular.forEach(label.parents  , function (p) {
+                    k += p + ':';
+                  });
+                  k += label.label;
+                  scope.parameters.push({ key: k, name: label.label, placeholder: label.label, color: label.color });
+                }
               });
             });
           } else if (scope.step === 1) {

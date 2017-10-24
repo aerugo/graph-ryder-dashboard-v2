@@ -110,7 +110,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
                     }
                   });
                 });
-                locate.nodes(nodes);
+                //locate.nodes(nodes);
                 break;
               case 'deleteNode':
                 angular.forEach(scope.graph.action.targets, function (target) {
