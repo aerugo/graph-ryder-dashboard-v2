@@ -44,8 +44,9 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                   if (model.data.color) { //todo add additional info like Require and order
                     $http.get('/api/data/getProperties/' + scope.settings.id).then(response => {
                       scope.getProperties(model.data);
-                      angular.forEach(model.data.prop, function(p) {
-                        if (Object.keys(response.data).indexOf(p) !== -1) {
+                      angular.forEach(Object.keys(response.data), function(p) {
+                        // if (Object.keys(response.data).indexOf(p) !== -1) {
+                        if (p !== 'id') {
                           scope.node[p] = response.data[p];
                         }
                         scope.suggestValue(scope.realLabel, p);
@@ -98,9 +99,6 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           if (label.parents) {
             scope.labels = label.parents.concat(label.label);
           }
-          if (label.labeling && !Object.keys(scope.node).includes(label.labeling)) {
-              scope.node[label.labeling] = '';
-          }
           scope.suggestValue(scope.realLabel, label.labeling);
           // angular.element("#" + label.labeling).focus(); // todo does not work
           $http.get('/api/data/getPropertiesByLabel/' + label.label).then(response => {
@@ -117,7 +115,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         };
         scope.addNewKey = function (key) {
           if ( key !== '') {
-            scope.node[key] = '';
+            scope.node[key] = [''];
             scope.newkey = '';
             scope.getProperties(scope.realLabel);
             scope.suggestValue(scope.realLabel, key);
