@@ -126,6 +126,7 @@ export class GraphViewComponent {
             style: {
               title: title,
               display: true,
+              draggable: true,
               //icon: 'info',
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
@@ -153,6 +154,7 @@ export class GraphViewComponent {
             style: {
               title: title,
               display: true,
+              draggable: true,
               //icon: 'info',
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
@@ -175,6 +177,7 @@ export class GraphViewComponent {
             style: {
               title: title,
               display: true,
+              draggable: true,
               //icon: 'info',
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
@@ -195,6 +198,7 @@ export class GraphViewComponent {
             style: {
               title: title,
               display: true,
+              draggable: true,
               //icon: 'info',
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
@@ -216,6 +220,7 @@ export class GraphViewComponent {
           style: {
             title: 'Menu graph',
             display: true,
+            draggable: true,
             //icon: 'info',
             css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
           },
@@ -311,6 +316,7 @@ export class GraphViewComponent {
           position: {y: e.position.y, x: e.position.x}
         });
         id--;
+        this.detailPanels[id].id = id;
         this.addDetailPanel('detailPanels[' + id + ']');
       break;
       case 'addEdge':
@@ -327,6 +333,7 @@ export class GraphViewComponent {
           position: {y: e.position.y, x: e.position.x}
         });
         id--;
+        this.detailPanels[id].id = id;
         this.addDetailPanel('detailPanels[' + id + ']');
       break;
       case 'addNodeGo':
@@ -384,6 +391,7 @@ export class GraphViewComponent {
           id: e.node[0].id,
         });
         id--;
+        this.detailPanels[id].panel_id = id;
         this.addDetailPanel('detailPanels[' + id + ']');
       break;
       case 'neighbour':

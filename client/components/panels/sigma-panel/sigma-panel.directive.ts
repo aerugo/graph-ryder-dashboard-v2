@@ -44,6 +44,10 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
           scope.handler({e: e});
         };
 
+        scope.close = function() {
+          element.remove();
+        };
+
         $timeout(function () {
           scope.action();
         });

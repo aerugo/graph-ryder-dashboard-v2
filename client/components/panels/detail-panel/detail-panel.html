@@ -1,10 +1,12 @@
 <div class="panel panel-primary my-panel detail-panel" style="{{settings.style.css}} border-color: {{realLabel.color}};" ng-show="settings.style.display" >
   <div class="panel-heading" style="background-color: {{realLabel.color}}; border-color: {{realLabel.color}};">
     <span><i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
-    <span ng-repeat="label in labels" ><span class="label label-default" >{{label}}</span>&nbsp;</span>
-    <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <span ng-repeat="label in labels" ><span class="label label-default" >{{realLabel.label}}</span>&nbsp;</span>
+    <!--<span ng-repeat="label in labels" ><span class="label label-default" >{{label}}</span>&nbsp;</span>-->
+    <button type="button" class="pull-right close" ng-click="close()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
   <div class="panel-body" >
+    <div id="contextMenu_container_detail_{{settings.panel_id}}"></div>
     <uib-tabset active="activeJustified" justified="true">
       <uib-tab index="0" heading="Properties">
         <br>
@@ -17,9 +19,15 @@
             </div>
           </div>
           <div class="form-group" ng-repeat="(key, v) in node">
-            <label class="control-label col-xs-4">{{key}}</label>
-            <div class="col-xs-8">
-              <input ng-repeat="value in v track by $index" type="text" class="form-control" ng-model="node[key][$index].value" uib-typeahead="value for value in values[key] | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
+            <label class="control-label col-xs-4" ng-if="key !== 'delete'">{{key}}</label>
+            <div class="col-xs-8" ng-if="key !== 'delete'">
+              <p class="input-group" ng-repeat="value in v track by $index">
+                <input type="text" class="form-control" ng-model="node[key][$index].value" uib-typeahead="value for value in values[key] | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
+                <span class="input-group-btn">
+                  <button ng-repeat="a in value.attrs" type="button" class="btn btn-default" ng-click="detail(a)"  title="{{a}}" ><i class="fa fa-info" ></i></button>
+                  <button type="button" class="btn btn-default" ng-click="openMenu($event, key, value.pid, value.attrs)" ><i class="fa fa-cog"></i></button>
+                </span>
+              </p>
             </div>
           </div>
         </form>

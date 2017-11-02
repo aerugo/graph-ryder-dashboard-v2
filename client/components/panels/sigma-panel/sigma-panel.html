@@ -7,7 +7,7 @@
       <button class="btn btn-success" type="button">Nodes <span class="badge">{{settings.graph.nodes.length}}</span></button>
       <button class="btn btn-success" type="button">Edges <span class="badge">{{settings.graph.edges.length}}</span></button>
     </span>
-    <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="pull-right close" ng-click="close()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
   <div class="panel-body" >
     <div id="{{settings.element}}"></div>

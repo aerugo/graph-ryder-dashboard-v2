@@ -12,16 +12,25 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
         handler: '&'
       },
       link: function(scope, element, attrs) {
-        element.draggable({handle: '.menu-title', containment: 'body', scroll: false, stack: '.panel' });
+        if (scope.settings.style.draggable) {
+          element.draggable({handle: '.menu-title', containment: 'body', scroll: false, stack: '.panel' });
+        }
         scope.choice = function(option) {
           element.remove();
           scope.handler({e: {
             type: option.action,
+            key: option.key,
+            pid: option.pid,
+            aid: option.aid,
             element: scope.settings.element,
             node: scope.settings.node,
             position: scope.settings.position,
             optionLabel: option.label
           }});
+        };
+
+        scope.close = function() {
+          element.remove();
         };
         // prevent right click menu
         element.bind('contextmenu', function(event) {

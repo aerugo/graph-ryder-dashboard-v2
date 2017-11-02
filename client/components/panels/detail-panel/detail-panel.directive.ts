@@ -7,7 +7,7 @@ import 'jquery-ui-bundle';
 
 
 export default angular.module('graphRyderDashboardApp.detailPanel', [])
-  .directive('detailPanel', function($http, $timeout) {
+  .directive('detailPanel', function($http, $timeout, $compile) {
     return {
       template: require('./detail-panel.html'),
       restrict: 'E',
@@ -33,6 +33,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.newkey = '';
         scope.node = {};
         scope.attributs = {};
+        scope.menu = [];
 
         scope.load = function(){
           /***** Load properties *******/
@@ -51,6 +52,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                         }
                         scope.suggestValue(scope.realLabel, p);
                       });
+                      scope.node['create'] = [];
+                      scope.node['delete'] = [];
                     });
                     loaded = true;
                   }
@@ -201,6 +204,103 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           let tmp = scope.settings.node[0];
           scope.settings.node[0] = scope.settings.node[1];
           scope.settings.node[1] = tmp;
+        };
+
+        scope.addContextPanel = function() {
+          angular.element('#contextMenu').remove();
+          let menu = document.createElement('context-menu');
+          menu.setAttribute('settings', 'contextMenu');
+          menu.setAttribute('handler', 'eventHandler(e)');
+          menu.setAttribute('id', 'contextMenu');
+          angular.element('#contextMenu_container_detail_' + scope.settings.panel_id).append(menu);
+          $compile(menu)(scope);
+        };
+
+        scope.eventHandler = function(e) {
+          console.log(e);
+          switch (e.type) {
+            case 'add':
+              scope.node[e.key].push({value: ''});
+              break;
+            case 'attach':
+              angular.element('#contextMenu').remove();
+              scope.contextMenu = {
+                style: {
+                  title: 'Attach attr',
+                  display: true,
+                  draggable: false,
+                  //icon: 'cog',
+                  css: 'top: 300px; left : 150px;'
+                },
+                fields: [{ label: 'Attr id: ', key: e.key, pid: e.pid, aid: '', action: 'attachGo'}]
+              };
+              scope.addContextPanel();
+              break;
+            case 'attachGo':
+              let target = false;
+              angular.forEach(scope.node[e.key], function (p, i) {
+                if (p.pid === e.pid) {
+                  target = i;
+                }
+              });
+              if (!scope.node[e.key][target].attrs) {
+                scope.node[e.key][target].attrs = [];
+              }
+              scope.node[e.key][target].attrs.push(e.aid);
+              scope.node['create'].push({pid: e.pid, aid: e.aid});
+              break;
+            case 'detach':
+              let target_p = false;
+              angular.forEach(scope.node[e.key], function (p, i) {
+                if (p.pid === e.pid) {
+                  target_p = i;
+                }
+              });
+              scope.node[e.key][target_p].attrs.pop(e.aid);
+              scope.node['delete'].push({pid: e.pid, aid: e.aid});
+              break;
+            case 'remove':
+              let t = false;
+              angular.forEach(scope.node[e.key], function (p, index) {
+                if (p.pid === e.pid) {
+                  t = index;
+                }
+              });
+              scope.node[e.key].splice(t, 1);
+              scope.node['delete'].push({pid: e.pid});
+              if (!scope.node[e.key].length) {
+                delete scope.node[e.key];
+              }
+              break;
+          }
+        };
+
+        scope.openMenu = function(event, key, pid, attrs) {
+          let opt = [
+            { label: 'Add same', action: 'add', key: key},
+            { label: 'Attach attr', action: 'attach', key: key, pid: pid}
+          ];
+          if (attrs && attrs.length) {
+            angular.forEach(attrs, function(a) {
+              opt.push({ label: 'Detach ' + a, action: 'detach', key: key, pid: pid, aid: a});
+            });
+          }
+          opt.push({ label: 'Remove property', action: 'remove', key: key, pid: pid});
+          scope.contextMenu = {
+            style: {
+              title: 'Property ' + key,
+              display: true,
+              draggable: false,
+              //icon: 'cog',
+              css: 'top: 300px; left : 150px;'
+            },
+            options: opt
+          };
+          scope.addContextPanel();
+        };
+
+        scope.close = function() {
+          element.remove();
         };
 
         /****** Load when ready *****/
