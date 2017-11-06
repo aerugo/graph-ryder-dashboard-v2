@@ -19,7 +19,7 @@
     </div>
   </script>
   <ul class="list-group">
-    <li ng-repeat="key in hierarchy" ng-include="'modelTree'" class="list-group-item" ng-class="{'list-group-item-danger': key.label.substring(0,11) == 'ungroupable'}"></li>
+    <li ng-repeat="key in hierarchy" ng-include="'modelTree'" class="list-group-item" ng-class="{'list-group-item-danger': key.label.substring(0,11) == 'ungroupable'}" ng-if="key.label !== 'Property'"></li>
   </ul>
   <div class="form-group" id="model-button" >
     <button type="submit" class="btn btn-primary" ng-click="modelCtrl.reset()">Reset</button>&nbsp;&nbsp;

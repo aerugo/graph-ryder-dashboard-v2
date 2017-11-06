@@ -375,24 +375,45 @@ export class GraphViewComponent {
             targets: e.node
         };
       break;
+      case 'close':
+        let found = -1;
+        angular.forEach(this.detailPanels, function(panel, index) {
+          if (panel.id === e.element) {
+            found = index;
+          }
+        });
+        delete this.detailPanels[found];
+        break;
       case 'detail':
         if (e.node[0].id.charAt(0) === 'd') {
           e.node[0].id = e.node[0].id.substring(3);
         }
-        let id = this.detailPanels.push({
-          style: {
-            title: 'Details ' + e.node[0].id,
-            display: true,
-            icon: 'info',
-            css: 'width: 450px; height: 650px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
-          },
-          type: 'detail',
-          element: e.element,
-          id: e.node[0].id,
+        let found = false;
+        angular.forEach(this.detailPanels, function(panel, index) {
+          if (panel.id === e.node[0].id) {
+            panel.style.css = 'width: 450px; height: 650px; top: ' + (Math.random() * (400 - 600) + 400) + 'px; left : ' + (Math.random() * (400 - 600) + 400) + 'px;';
+            found = true;
+          }
         });
-        id--;
-        this.detailPanels[id].panel_id = id;
-        this.addDetailPanel('detailPanels[' + id + ']');
+        if (!found) {
+          let id = this.detailPanels.push({
+            style: {
+              title: 'Details ' + e.node[0].id,
+              display: true,
+              icon: 'info',
+              css: 'width: 450px; height: 650px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
+            },
+            type: 'detail',
+            element: e.element,
+            id: e.node[0].id,
+          });
+          id--;
+          if (e.position.clientY === -1 && e.position.clientX === -1) {
+            this.detailPanels[id].style.css = 'width: 450px; height: 650px; top: ' + (Math.random() * (400 - 600) + 400) + 'px; left : ' + (Math.random() * (400 - 600) + 400) + 'px;';
+          }
+          this.detailPanels[id].panel_id = id;
+          this.addDetailPanel('detailPanels[' + id + ']');
+        }
       break;
       case 'neighbour':
         let idSigma = this.sigmaPanels.push({

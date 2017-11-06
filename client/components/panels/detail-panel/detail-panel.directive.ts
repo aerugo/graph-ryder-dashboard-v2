@@ -52,8 +52,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                         }
                         scope.suggestValue(scope.realLabel, p);
                       });
-                      scope.node['create'] = [];
-                      scope.node['delete'] = [];
+                      scope.node.create = [];
+                      scope.node.delete = [];
                     });
                     loaded = true;
                   }
@@ -130,7 +130,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.update = function() {
           $http.put('/api/data/set/' + scope.settings.id, scope.node).then(response => {
             // todo check the response
-            scope.settings.style.display = false; //todo delete the panel instead
+            scope.close();
           });
         };
 
@@ -138,7 +138,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.delete = function() {
           $http.delete('/api/data/' + scope.settings.id).then(response => {
             // todo check the response
-            scope.settings.style.display = false; //todo delete the panel instead
+            scope.close();
             if (scope.labels.indexOf('Link')  === -1) {
               scope.handler({e: {
                 type: 'deleteNode',
@@ -159,7 +159,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.create = function() {
           scope.node.labels = scope.labels;
           $http.post('/api/data/createNode/', scope.node).then(response => {
-            scope.settings.style.display = false; //todo delete the panel instead
+            scope.close();
             if (scope.settings.type === 'createNode') {
               scope.handler({e: {
                 type: 'addNodeGo',
@@ -196,7 +196,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             type: 'detail',
             element: scope.settings.element,
             node: [{id: id.toString(), label: label}],
-            position: {clientY: 100, clientX: 100}
+            position: {clientY: -1, clientX: -1}
           }});
         };
 
@@ -247,7 +247,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                 scope.node[e.key][target].attrs = [];
               }
               scope.node[e.key][target].attrs.push(e.aid);
-              scope.node['create'].push({pid: e.pid, aid: e.aid});
+              scope.node.create.push({pid: e.pid, aid: e.aid});
               break;
             case 'detach':
               let target_p = false;
@@ -257,7 +257,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                 }
               });
               scope.node[e.key][target_p].attrs.pop(e.aid);
-              scope.node['delete'].push({pid: e.pid, aid: e.aid});
+              scope.node.delete.push({pid: e.pid, aid: e.aid});
               break;
             case 'remove':
               let t = false;
@@ -267,7 +267,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                 }
               });
               scope.node[e.key].splice(t, 1);
-              scope.node['delete'].push({pid: e.pid});
+              scope.node.delete.push({pid: e.pid});
               if (!scope.node[e.key].length) {
                 delete scope.node[e.key];
               }
@@ -300,6 +300,10 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         };
 
         scope.close = function() {
+          scope.handler({e: {
+            type: 'close',
+            element: scope.settings.id
+          }});
           element.remove();
         };
 
