@@ -34,12 +34,16 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.node = {};
         scope.attributs = {};
         scope.menu = [];
+        scope.newPid = -1;
 
         scope.load = function(){
           /***** Load properties *******/
           if (!loaded && scope.settings.id) {
             $http.get('/api/data/getLabels/' + scope.settings.id).then(labels => {
               scope.labels = labels.data;
+              if (scope.labels.indexOf('Link') !== -1) {
+                scope.isEdge = true;
+              }
               angular.forEach(scope.labels, function(label) {
                 $http.get('/api/model/label/' + label).then(model => {
                   if (model.data.color) { //todo add additional info like Require and order
@@ -52,9 +56,10 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                         }
                         scope.suggestValue(scope.realLabel, p);
                       });
-                      scope.node.create = [];
-                      scope.node.delete = [];
                     });
+                    scope.node.create = [];
+                    scope.node.delete = [];
+                    scope.node.reverse = false;
                     loaded = true;
                   }
                 });
@@ -84,14 +89,16 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             scope.parents = {};
             $http.get('/api/model/').then(model => {
               angular.forEach(model.data, function(label) {
-                if (scope.settings.type === 'createNode' && label.children.length === 0  && label.parents.indexOf('Link') === -1 && label.parents.indexOf('Time') === -1 && label.parents.indexOf('Geo') === -1 && label.label !== 'TimeTreeRoot' && label.label !== 'Link') {
+                if (scope.settings.type === 'createNode' && label.children.length === 0  && label.parents.indexOf('Link') === -1 && label.parents.indexOf('Property') === -1 && label.parents.indexOf('Time') === -1 && label.parents.indexOf('Geo') === -1 && label.label !== 'TimeTreeRoot') {
                   scope.labelsList.push(label);
                   scope.isEdge = false;
-                } else if (scope.settings.type === 'createEdge' && label.children.length === 0  && label.parents.indexOf('Link') !== -1) {
+                } else if (scope.settings.type === 'createEdge' && label.children.length === 0  && label.parents.indexOf('Link') !== -1 && label.label !== 'Prop' && label.label !== 'Attr') {
                   scope.labelsList.push(label);
                   scope.isEdge = true;
                 }
               });
+              scope.node.create = [];
+              scope.node.delete = [];
               loaded = true;
             });
           }
@@ -118,8 +125,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         };
         scope.addNewKey = function (key) {
           if ( key !== '') {
-            scope.node[key] = [''];
-            scope.newkey = '';
+            scope.node[key] = [{value: '', pid: scope.newPid, attrs: []}];
+            scope.newPid--;
             scope.getProperties(scope.realLabel);
             scope.suggestValue(scope.realLabel, key);
             // angular.element("#" + key).focus(); // todo does not work
@@ -166,7 +173,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                 position: scope.settings.position,
                 element: scope.settings.element,
                 id: response.data,
-                label: scope.node[scope.realLabel.labeling],
+                label: scope.node[scope.realLabel.labeling][0].value,
                 labels: scope.node.labels,
                 color: scope.realLabel.color
               }});
@@ -181,8 +188,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                     label: scope.node[scope.realLabel.labeling],
                     labels: scope.node.labels,
                     color: scope.realLabel.color,
-                    source: scope.settings.node[0].id,
-                    target: scope.settings.node[1].id
+                    source: scope.settings.nodes[0].id,
+                    target: scope.settings.nodes[1].id
                   }
                 });
               });
@@ -204,6 +211,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           let tmp = scope.settings.node[0];
           scope.settings.node[0] = scope.settings.node[1];
           scope.settings.node[1] = tmp;
+          scope.node.reverse = !scope.node.reverse;
         };
 
         scope.addContextPanel = function() {
@@ -217,10 +225,10 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         };
 
         scope.eventHandler = function(e) {
-          console.log(e);
           switch (e.type) {
             case 'add':
-              scope.node[e.key].push({value: ''});
+              scope.node[e.key].push({pid: scope.newPid, value: '', attrs: []});
+              scope.newPid--;
               break;
             case 'attach':
               angular.element('#contextMenu').remove();
@@ -246,8 +254,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               if (!scope.node[e.key][target].attrs) {
                 scope.node[e.key][target].attrs = [];
               }
-              scope.node[e.key][target].attrs.push(e.aid);
-              scope.node.create.push({pid: e.pid, aid: e.aid});
+              scope.node[e.key][target].attrs.push(e.aid); // Visual
+              scope.node.create.push({pid: e.pid, aid: e.aid}); // For the Api
               break;
             case 'detach':
               let target_p = false;

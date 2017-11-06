@@ -136,7 +136,7 @@ export class GraphViewComponent {
               { label: 'Hide', action: 'deleteNode'}
             ],
             position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
-            node: [{id: e.data.node.id, id: e.data.node.id, label: e.data.node.label}],
+            node: [{id: e.data.node.id, label: e.data.node.label}],
             element: e.element
           };
           this.addContextPanel('contextMenu');
@@ -167,6 +167,17 @@ export class GraphViewComponent {
         }
         break;
       case 'rightClickEdge':
+        let labelSource = '';
+        let labelTarget = '';
+        angular.forEach(e.data.renderer.graph.nodes(), function(n){
+          if (n.id === e.data.edge.source) {
+            labelSource = n.label;
+          }
+          if (n.id === e.data.edge.target) {
+            labelTarget = n.label;
+          }
+        });
+        console.log(e.data.renderer.graph.nodes());
         if (this.sigmaPanels[e.element].graph.selection.length === 1 || this.sigmaPanels[e.element].graph.selection.indexOf(e.data.edge) === -1) {
           this.removeContextMenu();
           let title = 'Edge ' + e.data.edge.id;
@@ -187,6 +198,7 @@ export class GraphViewComponent {
             ],
             position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
             node: [{id: e.data.edge.id, label: e.data.edge.label}],
+            nodes: [{id: e.data.edge.source, label: labelSource}, {id: e.data.edge.target, label: labelTarget}],
             element: e.element
           };
           this.addContextPanel('contextMenu');
@@ -316,7 +328,7 @@ export class GraphViewComponent {
           position: {y: e.position.y, x: e.position.x}
         });
         id--;
-        this.detailPanels[id].id = id;
+        this.detailPanels[id].panel_id = id;
         this.addDetailPanel('detailPanels[' + id + ']');
       break;
       case 'addEdge':
@@ -333,7 +345,7 @@ export class GraphViewComponent {
           position: {y: e.position.y, x: e.position.x}
         });
         id--;
-        this.detailPanels[id].id = id;
+        this.detailPanels[id].panel_id = id;
         this.addDetailPanel('detailPanels[' + id + ']');
       break;
       case 'addNodeGo':
@@ -406,6 +418,7 @@ export class GraphViewComponent {
             type: 'detail',
             element: e.element,
             id: e.node[0].id,
+            node: e.nodes
           });
           id--;
           if (e.position.clientY === -1 && e.position.clientX === -1) {

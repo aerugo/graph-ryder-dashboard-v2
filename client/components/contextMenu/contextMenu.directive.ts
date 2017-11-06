@@ -24,6 +24,7 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
             aid: option.aid,
             element: scope.settings.element,
             node: scope.settings.node,
+            nodes: scope.settings.nodes,
             position: scope.settings.position,
             optionLabel: option.label
           }});
