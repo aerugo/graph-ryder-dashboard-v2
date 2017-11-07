@@ -387,10 +387,16 @@ export class GraphViewComponent {
             targets: e.node
         };
       break;
+      case 'reverseEdge':
+        this.sigmaPanels[e.element].graph.action = {
+          type: 'reverseEdge',
+          target: e.id
+        };
+        break;
       case 'close':
         let found = -1;
         angular.forEach(this.detailPanels, function(panel, index) {
-          if (panel.id === e.element) {
+          if (panel.id === e.id) {
             found = index;
           }
         });

@@ -60,6 +60,10 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                     scope.node.create = [];
                     scope.node.delete = [];
                     scope.node.reverse = false;
+                    if (scope.settings.node) {
+                      scope.node.source = scope.settings.node[0].id;
+                      scope.node.target = scope.settings.node[1].id;
+                    }
                     loaded = true;
                   }
                 });
@@ -136,6 +140,14 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         /****** Update the element *****/
         scope.update = function() {
           $http.put('/api/data/set/' + scope.settings.id, scope.node).then(response => {
+            if (scope.node.reverse) {
+              scope.handler({e: {
+                type: 'reverseEdge',
+                position: scope.settings.position,
+                element: scope.settings.element,
+                id: scope.settings.id,
+              }});
+            }
             // todo check the response
             scope.close();
           });
@@ -310,7 +322,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.close = function() {
           scope.handler({e: {
             type: 'close',
-            element: scope.settings.id
+            id: scope.settings.id
           }});
           element.remove();
         };
