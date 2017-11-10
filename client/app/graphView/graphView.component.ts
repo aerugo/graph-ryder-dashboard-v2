@@ -409,7 +409,7 @@ export class GraphViewComponent {
         let found = false;
         angular.forEach(this.detailPanels, function(panel, index) {
           if (panel.id === e.node[0].id) {
-            panel.style.css = 'width: 450px; height: 650px; top: ' + (Math.random() * (400 - 600) + 400) + 'px; left : ' + (Math.random() * (400 - 600) + 400) + 'px;';
+            panel.style.css = 'width: 450px; height: 650px; top: ' + (Math.random() * (200 - 400) + 200) + 'px; left : ' + (Math.random() * (200 - 400) + 200) + 'px;';
             found = true;
           }
         });
@@ -419,7 +419,8 @@ export class GraphViewComponent {
               title: 'Details ' + e.node[0].id,
               display: true,
               icon: 'info',
-              css: 'width: 450px; height: 650px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
+              //css: 'width: 450px; height: 650px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
+              css: 'width: 450px; height: 650px; top: ' + (Math.random() * (200 - 400) + 200) + 'px; left : ' + (Math.random() * (200 - 400) + 200) + 'px;'
             },
             type: 'detail',
             element: e.element,
@@ -428,7 +429,7 @@ export class GraphViewComponent {
           });
           id--;
           if (e.position.clientY === -1 && e.position.clientX === -1) {
-            this.detailPanels[id].style.css = 'width: 450px; height: 650px; top: ' + (Math.random() * (400 - 600) + 400) + 'px; left : ' + (Math.random() * (400 - 600) + 400) + 'px;';
+            this.detailPanels[id].style.css = 'width: 450px; height: 650px; top: ' + (Math.random() * (200 - 400) + 200) + 'px; left : ' + (Math.random() * (200 - 400) + 200) + 'px;';
           }
           this.detailPanels[id].panel_id = id;
           this.addDetailPanel('detailPanels[' + id + ']');

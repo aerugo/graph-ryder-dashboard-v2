@@ -34,7 +34,9 @@ export class ModelComponent {
     let analyse = function(parents, key, labels, model, property) {
       /*** Exit ****/
       if (!Object.keys(labels).length) {
-        getProperty(key, property);
+        if (parents.indexOf('Property') === -1) {
+          getProperty(key, property);
+        }
         let element = {label: key, labeling: '', color: '', parents: []};
         angular.forEach(parents, function (p) {
           element.parents.push(p);
@@ -119,7 +121,9 @@ export class ModelComponent {
     let updateChildren = function(e, property) {
       if (!e.children) {
         e.prop = property[e.label];
-        e.prop.sort();
+        if (e.prop) {
+          e.prop.sort();
+        }
         promises.push(http.post('/api/model', e));
       } else {
         angular.forEach(e.children, function(child) {

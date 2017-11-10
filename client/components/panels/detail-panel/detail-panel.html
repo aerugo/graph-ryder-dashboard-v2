@@ -63,7 +63,7 @@
             <label class="control-label col-xs-4">{{label}}</label>
             <div class="col-xs-8">
               <span ng-repeat="a in attr">
-                <a ng-if="a.value" ng-click="detail(a.id, a.value)">{{a.value}}</a>
+                <a ng-if="a.value" ng-click="detail(a.id, a.value)">{{a.value[0].value}}</a>
                 <a ng-if="!a.value" ng-click="detail(a.id, a.value)">?</a>
               </span>
             </div>
