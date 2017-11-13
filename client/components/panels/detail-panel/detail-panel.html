@@ -17,10 +17,10 @@
 
             </div>
           </div>
-          <div class="form-group" ng-repeat="(key, v) in node" ng-if="(key !== 'delete') && (key !== 'create') && (key !== 'reverse') && (key !== 'source') && (key !== 'target')">
+          <div class="form-group" ng-repeat="key in keys | orderBy:key  " ng-if="(key !== 'delete') && (key !== 'create') && (key !== 'reverse') && (key !== 'source') && (key !== 'target')">
             <label class="control-label col-xs-4" >{{key}}</label>
             <div class="col-xs-8">
-              <p class="input-group" ng-repeat="value in v track by $index">
+              <p class="input-group" ng-repeat="value in node[key] track by $index">
                 <input type="text" class="form-control" ng-model="node[key][$index].value" uib-typeahead="value for value in values[key] | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
                 <span class="input-group-btn">
                   <button ng-repeat="a in value.attrs" type="button" class="btn btn-default" ng-click="detail(a)"  title="{{a}}" ><i class="fa fa-info" ></i></button>

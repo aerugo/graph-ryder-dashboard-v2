@@ -17,7 +17,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         handler: '&'
       },
       link: function(scope, element) {
-        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
+        element.draggable({handle: '.panel-heading', containment: '#main-view', scroll: false, stack: '.panel',
           start: function() {
             if (element.css('z-index') > 100) {
               element.css('z-index', 10);
@@ -54,6 +54,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                         if (p !== 'id') {
                           scope.node[p] = response.data[p];
                         }
+                        scope.keys = Object.keys(scope.node);
                         scope.suggestValue(scope.realLabel, p);
                       });
                     });

@@ -13,7 +13,7 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
       },
       link: function(scope, element, attrs) {
         if (scope.settings.style.draggable) {
-          element.draggable({handle: '.menu-title', containment: 'body', scroll: false, stack: '.panel' });
+          element.draggable({handle: '.menu-title', containment: '#main-view', scroll: false, stack: '.panel' });
         }
         scope.choice = function(option) {
           element.remove();

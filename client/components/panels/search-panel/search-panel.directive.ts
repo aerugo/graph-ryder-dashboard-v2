@@ -12,7 +12,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
         handler: '&'
       },
       link: function(scope, element, attrs) {
-        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
+        element.draggable({handle: '.panel-heading', containment: '#main-view', scroll: false, stack: '.panel',
           start: function() {
             if (element.css('z-index') > 100) {
               element.css('z-index', 10);
