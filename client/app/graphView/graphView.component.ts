@@ -545,7 +545,6 @@ export class GraphViewComponent {
         this.sigmaPanels[0].url = {
           type: 'getQueryGraph',
           query: e.search,
-          directed: e.directed,
           done: false
         };
         break;

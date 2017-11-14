@@ -125,4 +125,12 @@ export function getPropertyValue(req, res) {
   });
 }
 
+export function getPropertyValueAndId(req, res) {
+  request(config.tulipApi + '/getPropertyValueAndId/' + req.param('label') + '/' + req.param('key'), function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
 

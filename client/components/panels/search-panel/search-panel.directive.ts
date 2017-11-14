@@ -34,7 +34,6 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           scope.parameters.key = [];
           scope.parameters.property = [];
           scope.parameters.value = [];
-          scope.directed = true;
           if (scope.lastRequest) {
             $http.get('/api/model/').then(labels => {
               angular.forEach(scope.lastRequest.split('/')  , function (e) {
@@ -45,20 +44,28 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
                       color = label.color;
                     }
                   });
+                  let props = [];
+                  let p = e.split('->');
+                  p.shift();
+                  angular.forEach(p, function (prop) {
+                    props.push({key: prop.split('=')[0], value: prop.split('=')[1]});
+                  });
+                  let element = e.split('->')[0];
                   scope.searchParams.push({
-                    name: e,
-                    label: e,
-                    color: color
+                    key: element,
+                    name: element,
+                    label: element,
+                    color: color,
+                    property: props
                   });
                 }
               });
-            scope.lastRequest = false;
-            scope.handler({ e: {
-              type: 'searchQuery',
-              element: scope.settings.element,
-              search: scope.searchParams,
-              directed: scope.directed
-            }});
+              scope.lastRequest = false;
+              scope.handler({ e: {
+                type: 'searchQuery',
+                element: scope.settings.element,
+                search: scope.searchParams
+              }});
             });
           }
           if (scope.step === 0) {
@@ -77,22 +84,23 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
                   scope.parameters.all.push({key: k, name: label.label, placeholder: label.label, color: label.color});
                 }
               });
-              scope.parameters.key.push({ key: 'AND', name: 'AND', placeholder: 'AND', color: 'rgb(127,183,51)' });
-              scope.parameters.key.push({ key: 'OR', name: 'OR', placeholder: 'OR', color: 'rgb(127,183,51)' });
-              scope.parameters.key.push({ key: 'NOT', name: 'NOT', placeholder: 'NOT', color: 'rgb(127,183,51)' });
-            });
-          } else if (scope.step === 1) {
-            if (!scope.searchParams[scope.target].property.length) {
-              scope.step = 2;
-              scope.init();
-              scope.step = 2;
-            } else {
-              scope.parameters.actual = scope.searchParams[scope.target].property;
-              scope.parameters.key.push({ key: 'AND', name: 'AND', placeholder: 'AND', color: 'rgb(127,183,51)' });
+              //scope.parameters.key.push({ key: 'AND', name: 'AND', placeholder: 'AND', color: 'rgb(127,183,51)' });
               scope.parameters.key.push({ key: 'OR', name: 'OR', placeholder: 'OR', color: 'rgb(127,183,51)' });
               //scope.parameters.key.push({ key: 'NOT', name: 'NOT', placeholder: 'NOT', color: 'rgb(127,183,51)' });
-            }
-          } else if (scope.step === 2) {
+            });
+          // } else if (scope.step === 1) {
+            // if (!scope.searchParams[scope.target].property.length) {
+            //   scope.step = 2;
+            //   scope.init();
+            //   scope.step = 2;
+            // } else {
+            //   scope.parameters.actual = scope.searchParams[scope.target].property;
+              // scope.parameters.key.push({ key: 'AND', name: 'AND', placeholder: 'AND', color: 'rgb(127,183,51)' });
+              // scope.parameters.key.push({ key: 'OR', name: 'OR', placeholder: 'OR', color: 'rgb(127,183,51)' });
+              //scope.parameters.key.push({ key: 'NOT', name: 'NOT', placeholder: 'NOT', color: 'rgb(127,183,51)' });
+            // }
+          } else if (scope.step === 1 ||  scope.step === 2) {
+            scope.step = 2;
             scope.parameters.actual = scope.searchParams[scope.target].property;
             console.log(scope.parameters.actual);
             $http.get('/api/data/getPropertiesByLabel/' + scope.label).then(properties => {

@@ -1,5 +1,33 @@
 <div class="vertical-menu" style="{{settings.style.css}}" ng-show="settings.style.display">
   <a href="#" class="active menu-title">{{settings.style.title}}<button type="button" class="pull-right close" ng-click="close()" aria-label="Close"><span aria-hidden="true">&times;</span></button></a>
   <a href="#" ng-repeat="option in settings.options" ng-click="choice(option)">{{option.label}}</a>
-  <a href="#" ng-repeat="field in settings.fields" >{{field.label}}<input size="10" type="text"  ng-model="field.aid" /><button ng-click="choice(field)" class="btn btn-primary" >Go</button></a>
+  <a href="#" ng-if="types.length" >Select a type:
+    <input
+      size="15"
+      type="text"
+      ng-model="type"
+      uib-typeahead="parameter as parameter.name for parameter in types | filter:{name:$viewValue} | limitTo:10"
+      typeahead-on-select="typeSelected($item, $model, $label)"
+      typeahead-min-length="0"/>
+  </a>
+  <a href="#" ng-if="props.length" >Select a filter:
+    <input
+      size="15"
+      type="text"
+      ng-model="prop"
+      uib-typeahead="parameter as parameter.name for parameter in props | filter:{name:$viewValue} | limitTo:10"
+      typeahead-on-select="propSelected($item, $model, $label)"
+      typeahead-min-length="0"
+      ng-change="resetValues()"/>
+  </a>
+  <a href="#" ng-if="values.length" >Select a value:
+    <input
+      size="15"
+      type="text"
+      ng-model="value"
+      uib-typeahead="parameter as parameter.name for parameter in values | filter:{name:$viewValue} | limitTo:10"
+      typeahead-on-select="valueSelected($item, $model, $label)"
+      typeahead-min-length="0"/>
+  </a>
+  <!--<a href="#" ng-repeat="field in settings.fields" >{{field.label}}<input size="10" type="text"  ng-model="field.aid" /><button ng-click="choice(field)" class="btn btn-primary" >Go</button></a>-->
 </div>

@@ -90,8 +90,8 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
                 angular.forEach(scope.graph.action.node, function (node) {
                   node.size = 4;
                   s.graph.addNode(node);
-                  activeState.dropNodes();
-                  activeState.addNodes([node.id]);
+                  //activeState.dropNodes();
+                  //activeState.addNodes([node.id]);
                 });
                 break;
               case 'addEdge':

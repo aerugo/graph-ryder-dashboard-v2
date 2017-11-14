@@ -35,6 +35,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.attributs = {};
         scope.menu = [];
         scope.newPid = -1;
+        scope.keys = [];
 
         scope.load = function(){
           /***** Load properties *******/
@@ -60,6 +61,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                     });
                     scope.node.create = [];
                     scope.node.delete = [];
+                    scope.node.addAttrs = [];
                     scope.node.reverse = false;
                     if (scope.settings.node) {
                       scope.node.source = scope.settings.node[0].id;
@@ -131,6 +133,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.addNewKey = function (key) {
           if ( key !== '') {
             scope.node[key] = [{value: '', pid: scope.newPid, attrs: []}];
+            scope.keys.push(key);
             scope.newPid--;
             scope.getProperties(scope.realLabel);
             scope.suggestValue(scope.realLabel, key);
@@ -192,18 +195,19 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               }});
             } else if (scope.settings.type === 'createEdge') {
               let edge = {id: response.data, source: scope.settings.node[0].id, target: scope.settings.node[1].id}; // todo clean
+              let event = {
+                type: 'addEdgeGo',
+                element: scope.settings.element,
+                id: response.data,
+                label: scope.node[scope.realLabel.labeling],
+                labels: scope.node.labels,
+                color: scope.realLabel.color,
+                source: scope.settings.node[0].id,
+                target: scope.settings.node[1].id
+              };
               $http.post('/api/data/createEdge/', edge).then(response2 => {
                 scope.handler({
-                  e: {
-                    type: 'addEdgeGo',
-                    element: scope.settings.element,
-                    id: response.data,
-                    label: scope.node[scope.realLabel.labeling],
-                    labels: scope.node.labels,
-                    color: scope.realLabel.color,
-                    source: scope.settings.nodes[0].id,
-                    target: scope.settings.nodes[1].id
-                  }
+                  e: event
                 });
               });
             }
@@ -251,9 +255,23 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                   display: true,
                   draggable: false,
                   //icon: 'cog',
-                  css: 'top: 300px; left : 150px;'
+                  css: 'top: 300px; left : 150px; height: 300px'
                 },
                 fields: [{ label: 'Attr id: ', key: e.key, pid: e.pid, aid: '', action: 'attachGo'}]
+              };
+              scope.addContextPanel();
+              break;
+            case 'addAttr':
+              angular.element('#contextMenu').remove();
+              scope.contextMenu = {
+                style: {
+                  title: 'Add attr',
+                  display: true,
+                  draggable: false,
+                  //icon: 'cog',
+                  css: 'top: 300px; left : 150px; height: 300px;'
+                },
+                fields: [{ label: 'Attr id: ', aid: '', action: 'addAttrGo'}]
               };
               scope.addContextPanel();
               break;
@@ -269,6 +287,13 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               }
               scope.node[e.key][target].attrs.push(e.aid); // Visual
               scope.node.create.push({pid: e.pid, aid: e.aid}); // For the Api
+              break;
+            case 'addAttrGo':
+              scope.node.addAttrs.push(e.aid);
+              if (Object.keys(scope.attributs).indexOf(e.key) === -1) {
+                scope.attributs[e.key] = [];
+              }
+              scope.attributs[e.key].push({id: e.aid, value: [{pid: '', value: e.optionLabel}]});
               break;
             case 'detach':
               let target_p = false;
