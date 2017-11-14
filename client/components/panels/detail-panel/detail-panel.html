@@ -16,7 +16,7 @@
               {{settings.node[0].label}} <i class="fa fa-long-arrow-right" aria-hidden="true"></i> {{settings.node[1].label}} <button class="btn" ng-click="reverse()" ><i class="fa fa-retweet" aria-hidden="true"></i></button>
             </div>
           </div>
-          <div class="form-group" ng-repeat="key in keys | orderBy:key  " ng-if="(key !== 'delete') && (key !== 'create') && (key !== 'reverse') && (key !== 'source') && (key !== 'target') && (key !== 'addAttrs')">
+          <div class="form-group" ng-repeat="key in keys | orderBy:key  " ng-if="(key !== 'delete') && (key !== 'create') && (key !== 'reverse') && (key !== 'source') && (key !== 'target') && (key !== 'addAttrs') && (key !== 'delAttrs')">
             <label class="control-label col-xs-4" >{{key}}</label>
             <div class="col-xs-8">
               <p class="input-group" ng-repeat="value in node[key] track by $index">
@@ -64,6 +64,9 @@
               <span ng-repeat="a in attr">
                 <a ng-if="a.value" ng-click="detail(a.id, a.value)">{{a.value[0].value}}</a>
                 <a ng-if="!a.value" ng-click="detail(a.id, a.value)">?</a>
+                <a ng-href="" ng-click="detachAttr(a.id, label)" role="button">
+                  <span class="remove glyphicon glyphicon-remove-circle"></span>
+                </a>
               </span>
             </div>
           </div>

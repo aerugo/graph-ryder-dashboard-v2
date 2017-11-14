@@ -62,6 +62,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                     scope.node.create = [];
                     scope.node.delete = [];
                     scope.node.addAttrs = [];
+                    scope.node.delAttrs = [];
                     scope.node.reverse = false;
                     if (scope.settings.node) {
                       scope.node.source = scope.settings.node[0].id;
@@ -106,6 +107,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               });
               scope.node.create = [];
               scope.node.delete = [];
+              scope.node.addAttrs = [];
+              scope.node.delAttrs = [];
               loaded = true;
             });
           }
@@ -297,12 +300,18 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               break;
             case 'detach':
               let target_p = false;
+              let target_a = false;
               angular.forEach(scope.node[e.key], function (p, i) {
                 if (p.pid === e.pid) {
                   target_p = i;
+                  angular.forEach(scope.node[e.key][target_p].attrs, function (a, index) {
+                    if (e.aid === a) {
+                      target_a = index;
+                    }
+                  });
                 }
               });
-              scope.node[e.key][target_p].attrs.pop(e.aid);
+              scope.node[e.key][target_p].attrs.splice(target_a, 1);
               scope.node.delete.push({pid: e.pid, aid: e.aid});
               break;
             case 'remove':
@@ -351,6 +360,17 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             id: scope.settings.id
           }});
           element.remove();
+        };
+
+        scope.detachAttr = function (id, label) {
+          scope.node.delAttrs.push(id);
+          let found = false;
+          angular.forEach(scope.attributs[label], function (attr, index) {
+            if (attr.id === id) {
+              found = index;
+            }
+          });
+          scope.attributs[label].splice(found, 1);
         };
 
         /****** Load when ready *****/
