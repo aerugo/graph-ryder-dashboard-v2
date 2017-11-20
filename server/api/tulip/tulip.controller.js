@@ -49,6 +49,8 @@ export function getQueryGraph(req, res) {
   request({url: config.tulipApi + '/' + req.param('url'), qs: queryString}, function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
+    } else {
+      return res.send('error');
     }
   });
 }

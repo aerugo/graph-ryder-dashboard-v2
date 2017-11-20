@@ -186,13 +186,17 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           scope.node.labels = scope.labels;
           $http.post('/api/data/createNode/', scope.node).then(response => {
             scope.close();
+            let label = response.data;
+            if (Object.keys(scope.node).indexOf(scope.realLabel.labeling) !== -1) {
+              label = scope.node[scope.realLabel.labeling];
+            }
             if (scope.settings.type === 'createNode') {
               scope.handler({e: {
                 type: 'addNodeGo',
                 position: scope.settings.position,
                 element: scope.settings.element,
                 id: response.data,
-                label: scope.node[scope.realLabel.labeling][0].value,
+                label: label,
                 labels: scope.node.labels,
                 color: scope.realLabel.color
               }});
