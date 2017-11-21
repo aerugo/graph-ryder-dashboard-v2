@@ -86,6 +86,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
               });
               //scope.parameters.key.push({ key: 'AND', name: 'AND', placeholder: 'AND', color: 'rgb(127,183,51)' });
               scope.parameters.key.push({ key: 'OR', name: 'OR', placeholder: 'OR', color: 'rgb(127,183,51)' });
+              scope.parameters.all.push({ key: 'OR', name: 'OR', placeholder: 'OR', color: 'rgb(127,183,51)' });
               //scope.parameters.key.push({ key: 'NOT', name: 'NOT', placeholder: 'NOT', color: 'rgb(127,183,51)' });
             });
           // } else if (scope.step === 1) {

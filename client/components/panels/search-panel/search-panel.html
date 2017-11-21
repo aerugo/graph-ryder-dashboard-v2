@@ -1,7 +1,11 @@
 <div class="panel panel-primary my-panel setting-panel" style="{{settings.style.css}}" ng-show="settings.style.display">
   <div class="panel-heading">
     <span>
-    <i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>
+    <i class="fa fa-{{settings.style.icon}}"></i> {{settings.style.title}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <!--<span><span class="label label-success">Done</span>&nbsp;</span>-->
+    <!--<span><span class="label label-info">Loading...</span>&nbsp;</span>-->
+    <!--<span><span class="label label-warning">Empty response.</span>&nbsp;</span>-->
+    <!--<span><span class="label label-danger">Request Fail !</span>&nbsp;</span>-->
     <button type="button" class="pull-right close" ng-click="settings.style.display = false" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </div>
   <div class="panel-body">
@@ -37,52 +41,57 @@
           </a>
         </span>
         <br>
-        Node:
-        <span class="search-parameter" ng-repeat="param in parameters.node | orderBy: 'name'"
+        <span class="search-parameter" ng-repeat="param in parameters.all | orderBy: 'name'"
               data-key="{{param.key}}"
               ng-mousedown="searchQueryTypeaheadOnSelect(param)"
               style="background-color: {{param.color}}" >
               {{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>
             </span>
         <br>
-        Link:
-        <span class="search-parameter" ng-repeat="param in parameters.link | orderBy: 'name'"
-              data-key="{{param.key}}"
-              ng-mousedown="searchQueryTypeaheadOnSelect(param)"
-              style="background-color: {{param.color}}" >
-              {{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>
-            </span>
-        <br>
-        Key:
-        <span class="search-parameter" ng-repeat="param in parameters.key | orderBy: 'name'"
-              data-key="{{param.key}}"
-              ng-mousedown="searchQueryTypeaheadOnSelect(param)"
-              style="background-color: {{param.color}}" >
-              {{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>
-            </span>
-        <br>
-        Property:
-        <span class="search-parameter" ng-repeat="param in parameters.property | orderBy: 'name'"
-              data-key="{{param.key}}"
-              ng-mousedown="searchQueryTypeaheadOnSelect(param)"
-              style="background-color: {{param.color}}" >
-              {{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>
-            </span>
-        <br>
-        Value:
-        <span class="search-parameter" ng-repeat="param in parameters.value | orderBy: 'name'"
-              data-key="{{param.key}}"
-              ng-mousedown="searchQueryTypeaheadOnSelect(param)"
-              style="background-color: {{param.color}}" >
-              {{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>
-            </span>
+        <!--Node:-->
+        <!--<span class="search-parameter" ng-repeat="param in parameters.node | orderBy: 'name'"-->
+              <!--data-key="{{param.key}}"-->
+              <!--ng-mousedown="searchQueryTypeaheadOnSelect(param)"-->
+              <!--style="background-color: {{param.color}}" >-->
+              <!--{{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>-->
+            <!--</span>-->
+        <!--<br>-->
+        <!--Link:-->
+        <!--<span class="search-parameter" ng-repeat="param in parameters.link | orderBy: 'name'"-->
+              <!--data-key="{{param.key}}"-->
+              <!--ng-mousedown="searchQueryTypeaheadOnSelect(param)"-->
+              <!--style="background-color: {{param.color}}" >-->
+              <!--{{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>-->
+            <!--</span>-->
+        <!--<br>-->
+        <!--Key:-->
+        <!--<span class="search-parameter" ng-repeat="param in parameters.key | orderBy: 'name'"-->
+              <!--data-key="{{param.key}}"-->
+              <!--ng-mousedown="searchQueryTypeaheadOnSelect(param)"-->
+              <!--style="background-color: {{param.color}}" >-->
+              <!--{{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>-->
+            <!--</span>-->
+        <!--<br>-->
+        <!--Property:-->
+        <!--<span class="search-parameter" ng-repeat="param in parameters.property | orderBy: 'name'"-->
+              <!--data-key="{{param.key}}"-->
+              <!--ng-mousedown="searchQueryTypeaheadOnSelect(param)"-->
+              <!--style="background-color: {{param.color}}" >-->
+              <!--{{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>-->
+            <!--</span>-->
+        <!--<br>-->
+        <!--Value:-->
+        <!--<span class="search-parameter" ng-repeat="param in parameters.value | orderBy: 'name'"-->
+              <!--data-key="{{param.key}}"-->
+              <!--ng-mousedown="searchQueryTypeaheadOnSelect(param)"-->
+              <!--style="background-color: {{param.color}}" >-->
+              <!--{{param.name}} <i ng-class="{'glyphicon glyphicon-plus': param.allowMultiple}"></i>-->
+            <!--</span>-->
       </div>
       <span class="input-group-btn">
         <button class="btn btn-default" type="button" ng-click="action()">Go!</button>
         <button class="btn btn-default" type="button" ng-click="detach()">Detach !</button>
       </span>
     </div>
-    {{searchParams}}
-    {{step}}
   </div>
 </div>

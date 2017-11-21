@@ -29,7 +29,6 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
 
         /***** Action *****/
         scope.action = function() {
-          console.log("action");
           u = Object.assign({}, scope.settings.sigma.url);
           let params = {
             url: '',
@@ -58,12 +57,14 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           }
           params.layout = u.layout;
           if (ready) {
+            scope.handler({e: {type: 'info', label: 'Info',  labeling: '', text: 'Loading...', color: 'rgb(240, 173, 78)'}});
             $http.get('/api/tulip/' + u.type, {params: params}).then(response => {
               if (response.data === 'error') {
-                console.log('Error with the request'); // todo send warning to the user
+                scope.handler({e: {type: 'info', label: 'Error', labeling: '', text: 'Check request syntax please.', color: 'red'}});
                 scope.settings.sigma.graph = [];
               } else {
                 scope.settings.sigma.graph = response.data;
+                scope.handler({e: {type: 'info', label: 'Info',  labeling: '', text: 'Request done !', color: 'rgb(92, 184, 92)'}});
                 if (response.data.nodes.length && u.type === 'getQueryGraph' && scope.settings.sigma.sigmaSettings.element === 0) {
                   scope.handler({e: {type: 'lastRequest', request: params.query}}); // todo correct last request
                 }

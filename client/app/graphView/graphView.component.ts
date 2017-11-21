@@ -589,6 +589,15 @@ export class GraphViewComponent {
             console.log('Fail to update the request');
           });
         break;
+      case 'info':
+        let footer = {text: e.text, labels: []};
+        footer.labels.push({
+          label: e.label,
+          color: e.color,
+          labeling: e.labeling
+        });
+        this.footer = footer;
+        break;
     }
   }
 }
