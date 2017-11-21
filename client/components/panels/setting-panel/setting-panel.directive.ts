@@ -67,6 +67,8 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
                 scope.handler({e: {type: 'info', label: 'Info',  labeling: '', text: 'Request done !', color: 'rgb(92, 184, 92)'}});
                 if (response.data.nodes.length && u.type === 'getQueryGraph' && scope.settings.sigma.sigmaSettings.element === 0) {
                   scope.handler({e: {type: 'lastRequest', request: params.query}}); // todo correct last request
+                } else {
+                  scope.handler({e: {type: 'info', label: 'Info',  labeling: '', text: 'Request result is empty.', color: 'red'}});
                 }
               }
               scope.settings.sigma.graph.action = '';

@@ -188,7 +188,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             scope.close();
             let label = response.data;
             if (Object.keys(scope.node).indexOf(scope.realLabel.labeling) !== -1) {
-              label = scope.node[scope.realLabel.labeling];
+              label = scope.node[scope.realLabel.labeling][0].value;
             }
             if (scope.settings.type === 'createNode') {
               scope.handler({e: {

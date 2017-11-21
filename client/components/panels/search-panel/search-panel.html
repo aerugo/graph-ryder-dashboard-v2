@@ -33,7 +33,6 @@
       </div>
       <div class="search-parameter-suggestions" ng-show="parameters">
         <!--<span class="title">{{parametersLabel}}:</span>-->
-        Actual:
         <span class="search-parameter" ng-repeat="param in parameters.actual">
               {{param.key}} = {{param.value}}
           <a ng-href="" ng-click="removeProp($index)" role="button">
