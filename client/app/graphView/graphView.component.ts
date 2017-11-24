@@ -537,7 +537,7 @@ export class GraphViewComponent {
         break;
       case 'layoutGo':
         this.sigmaPanels[e.element].url.layout = e.optionLabel;
-        this.sigmaPanels[e.element].url.done = false;
+        this.sigmaPanels[e.element].url.done = "redraw";
       break;
 
       /***** Search bar ******/

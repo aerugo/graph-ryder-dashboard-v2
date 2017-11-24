@@ -78,6 +78,13 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           }
         };
 
+        scope.redraw = function (layout) {
+          $http.post('/api/tulip/drawGraph/' + layout, scope.settings.sigma.graph).then(response => {
+            scope.settings.sigma.graph = response.data;
+            scope.settings.sigma.url.done = true;
+          });
+        };
+
         scope.actionDetach = function () {
           let e = {type: 'detach', url: Object.assign({}, scope.settings.sigma.url)};
           scope.settings.sigma.url = Object.assign({}, u);
@@ -101,6 +108,8 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
         scope.$watch('settings.sigma.url.done', function(newVal) {
           if (newVal === false) {
             scope.action();
+          } else if (newVal === 'redraw') {
+            scope.redraw(scope.settings.sigma.url.layout);
           }
         });
       }

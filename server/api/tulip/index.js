@@ -12,4 +12,6 @@ router.get('/getGraph/', auth.isAuthenticated(), controller.getGraph);
 router.get('/getQueryGraph/', auth.isAuthenticated(), controller.getQueryGraph);
 router.get('/getGraphNeighboursById/', auth.isAuthenticated(), controller.getNeighboursGraph);
 
+router.post('/drawGraph/:layout', auth.isAuthenticated(), controller.drawGraph);
+
 module.exports = router;

@@ -68,3 +68,11 @@ export function getNeighboursGraph(req, res) {
     }
   });
 }
+
+export function drawGraph(req, res) {
+  request.post({url: config.tulipApi + '/drawGraph/' + req.param('layout'), body: JSON.stringify(req.body)}, function(error, response, body) { // todo repair
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}

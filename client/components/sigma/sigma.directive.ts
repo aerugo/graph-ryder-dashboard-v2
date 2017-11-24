@@ -40,7 +40,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           nodeActiveOuterBorderSize: 3,
           defaultNodeActiveBorderColor: '#fff',
           defaultNodeActiveOuterBorderColor: 'rgb(236, 81, 72)',
-          nodeHaloColor: 'rgba(236, 81, 72, 0.2)',
+          nodeHaloColor: 'rgba(236, 81, 72, 0.4)',
           nodeHaloSize: 25,
           autoCurveSortByDirection: true,
           autoRescale: false
@@ -90,6 +90,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
                 angular.forEach(scope.graph.action.node, function (node) {
                   node.size = 4;
                   s.graph.addNode(node);
+                  scope.graph.nodes.append(node);
                   //activeState.dropNodes();
                   //activeState.addNodes([node.id]);
                 });
@@ -97,6 +98,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
               case 'addEdge':
                 angular.forEach(scope.graph.action.edge, function (edge) {
                   s.graph.addEdge(edge);
+                  scope.graph.edges.append(edge);
                 });
                 break;
               case 'selection':
@@ -115,11 +117,21 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
               case 'deleteNode':
                 angular.forEach(scope.graph.action.targets, function (target) {
                   s.graph.dropNode(target.id);
+                  angular.forEach(scope.graph.nodes, function(n, index) {
+                    if (n.id.toString() === target.id.toString()) {
+                      scope.graph.nodes.splice(index, 1); // todo remove also edges
+                    }
+                  });
                 });
                 break;
               case 'deleteEdge':
                 angular.forEach(scope.graph.action.targets, function (target) {
                   s.graph.dropEdge(target.id);
+                  angular.forEach(scope.graph.edges, function(e, index) {
+                    if (e.id.toString() === target.id.toString()) {
+                      scope.graph.edges.splice(index, 1);
+                    }
+                  });
                 });
                 break;
               case 'reverseEdge':
@@ -144,7 +156,7 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
           'strokeStyle': 'rgb(236, 81, 72)',
           'lineWidth': 2,
           'fillWhileDrawing': true,
-          'fillStyle': 'rgba(236, 81, 72, 0.2)',
+          'fillStyle': 'rgba(236, 81, 72, 0.4)',
           'cursor': 'crosshair'
         });
         sigma.layouts.fruchtermanReingold.configure(s, {
