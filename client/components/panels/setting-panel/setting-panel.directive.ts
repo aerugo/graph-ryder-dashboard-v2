@@ -50,7 +50,7 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
                 angular.forEach(e.property, function (prop, i) {
                   params.query += '->' + prop.key + '=' + prop.value;
                 };
-                params.query += '/';
+                params.query += '\\';
               });
               ready = true;
               break;
