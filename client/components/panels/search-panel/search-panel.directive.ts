@@ -36,7 +36,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           scope.parameters.value = [];
           if (scope.lastRequest) {
             $http.get('/api/model/').then(labels => {
-              angular.forEach(scope.lastRequest.split('/')  , function (e) {
+              angular.forEach(scope.lastRequest.split('\\')  , function (e) {
                 if (e) {
                   let color = '';
                   angular.forEach(labels.data, function (label) {
