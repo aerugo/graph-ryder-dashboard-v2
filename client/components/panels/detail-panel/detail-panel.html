@@ -20,9 +20,9 @@
             <label class="control-label col-xs-4" >{{key}}</label>
             <div class="col-xs-8">
               <p class="input-group" ng-repeat="value in node[key] track by $index">
-                <input type="text" class="form-control" ng-model="node[key][$index].value" uib-typeahead="value for value in values[key] | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
+                <input type="text" class="form-control" id="{{key}}" ng-model="node[key][$index].value" uib-typeahead="value for value in values[key] | filter:$viewValue | limitTo: 10" typeahead-min-length="0">
                 <span class="input-group-btn">
-                  <button ng-repeat="a in value.attrs" type="button" class="btn btn-default" ng-click="detail(a)"  title="{{a}}" ><i class="fa fa-info" ></i></button>
+                  <button ng-repeat="a in value.attrs" type="button" class="btn btn-default" ng-click="detail(a.aid)"  title="{{a.type}}" ><i class="fa fa-info" ></i></button>
                   <button type="button" class="btn btn-default" ng-click="openMenu($event, key, value.pid, value.attrs)" ><i class="fa fa-cog"></i></button>
                 </span>
               </p>
@@ -37,16 +37,17 @@
             </div>
           </fieldset>
         </form>
-        <form class="form-group" ng-if="realLabel">
+        <form class="form-group" ng-if="realLabel && labels.indexOf('Time') === -1">
           <fieldset>
             <label for="newkey" class="control-label col-xs-4"><i class="fa fa-plus" aria-hidden="true"  ></i> Add a property</label>
             <div class="col-xs-8" style="padding-left: 20px;">
-              <input type="text" class="form-control" id="newkey" ng-model="newkey" placeholder="new key" uib-typeahead="property for property in properties | filter:$viewValue" typeahead-min-length="0" typeahead-on-select="addNewKey(newkey)" >
+              <input type="text" class="form-control" id="newkey" ng-model="newkey" placeholder="new key" uib-typeahead="property for property in properties | filter:$viewValue" typeahead-min-length="0" typeahead-on-select="addNewKey(newkey); newkey= '';" >
+              <!--todo repair key='' and focus -->
               <button class="btn btn-primary" type="submit" ng-click="addNewKey(newkey)">Add</button>
             </div>
           </fieldset>
         </form>
-        <div class="form-group">
+        <div class="form-group" ng-if="labels.indexOf('Time') === -1">
           <div class="col-xs-offset-2 col-xs-8" style="padding-bottom: 20px;">
             <button ng-if="settings.id" class="btn btn-primary" style="background-color: {{realLabel.color}}; border-color: {{ realLabel.color}};" ng-click="update()">Update</button>
             <button ng-if="settings.id" class="btn btn-danger" ng-click="delete()">Delete</button>
@@ -55,7 +56,7 @@
         </div>
 
       </uib-tab>
-      <uib-tab index="1" heading="Attributes" >
+      <uib-tab index="1" heading="Attributes" ng-if="labels.indexOf('Time') === -1" >
         <br>
         <form class="form-horizontal">
           <div class="form-group" ng-repeat="(label, attr) in attributs">

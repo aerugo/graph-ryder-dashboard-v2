@@ -1,13 +1,23 @@
 <div class="vertical-menu" style="{{settings.style.css}}" ng-show="settings.style.display">
   <a href="#" class="active menu-title">{{settings.style.title}}<button type="button" class="pull-right close" ng-click="close()" aria-label="Close"><span aria-hidden="true">&times;</span></button></a>
   <a href="#" ng-repeat="option in settings.options" ng-click="choice(option)">{{option.label}}</a>
-  <a href="#" ng-if="types.length" >Select a type:
+  <a href="#" ng-if="types.length" >Select/create a type:
     <input
       size="15"
       type="text"
       ng-model="type"
       uib-typeahead="parameter as parameter.name for parameter in types | filter:{name:$viewValue} | limitTo:10"
       typeahead-on-select="typeSelected($item, $model, $label)"
+      typeahead-min-length="0"/>
+    <button class="btn btn-primary" ng-click="typeSelected(null, null, type)()">Add</button>
+  </a>
+  <a href="#" ng-if="labels.length" >Select a label:
+    <input
+      size="15"
+      type="text"
+      ng-model="label"
+      uib-typeahead="parameter as parameter.name for parameter in labels | filter:{name:$viewValue} | limitTo:10"
+      typeahead-on-select="labelSelected($item, $model, $label)"
       typeahead-min-length="0"/>
   </a>
   <a href="#" ng-if="props.length" >Select a filter:

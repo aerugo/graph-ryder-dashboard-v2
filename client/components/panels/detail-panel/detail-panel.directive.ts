@@ -38,7 +38,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.keys = [];
 
         scope.load = function(){
-          /***** Load properties *******/
+          /***** Load properties & attributes *******/
           if (!loaded && scope.settings.id) {
             $http.get('/api/data/getLabels/' + scope.settings.id).then(labels => {
               scope.labels = labels.data;
@@ -76,13 +76,36 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             $http.get('/api/data/getAttributes/' + scope.settings.id).then(response => {
               angular.forEach(response.data, function(attrs, key) {
                 if (key !== 'Node' && key !== 'id') {
-                  $http.get('/api/model/label/' + key).then(m => {
+                  // if (key.substring(0, 4) === 'Geo:') {
+                  //   if (!Object.keys(scope.attributs).includes(key)) {
+                  //     scope.attributs[key.split(':').slice(-1).pop()] = [];
+                  //   }
+                  //   $http.get('/api/model/label/' + key.split(':')[1]).then(m => {
+                  //     angular.forEach(attrs, function(attr) {
+                  //       $http.get('/api/data/getProperties/' + attr).then(r => {
+                  //         scope.attributs[key.split(':').slice(-1).pop()].push({id: attr, value:  r.data[m.data.labeling]});
+                  //       });
+                  //     });
+                  //   });
+                  // } else if (key.substring(0, 5) === 'Time:') {
+                  //   if (!Object.keys(scope.attributs).includes(key)) {
+                  //     scope.attributs[key.split(':').slice(-1).pop()] = [];
+                  //   }
+                  //   $http.get('/api/model/label/' + key.split(':')[1]).then(m => {
+                  //     angular.forEach(attrs, function(attr) {
+                  //       $http.get('/api/data/getProperties/' + attr).then(r => {
+                  //         scope.attributs[key.split(':').slice(-1).pop()].push({id: attr, value: r.data[m.data.labeling]});
+                  //       });
+                  //     });
+                  //   });
+                  // } else {
+                  if (!Object.keys(scope.attributs).includes(key)) {
+                    scope.attributs[key.split(':').slice(-1).pop()] = [];
+                  }
+                  $http.get('/api/model/label/' + key.split(':')[0]).then(m => {
                     angular.forEach(attrs, function(attr) {
                       $http.get('/api/data/getProperties/' + attr).then(r => {
-                        if (!Object.keys(scope.attributs).includes(key)) {
-                          scope.attributs[key] = [];
-                        }
-                        scope.attributs[key].push({id: attr, value: r.data[m.data.labeling]});
+                        scope.attributs[key.split(':').slice(-1).pop()].push({id: attr, value: r.data[m.data.labeling]});
                       });
                     });
                   });
@@ -97,7 +120,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
             scope.parents = {};
             $http.get('/api/model/').then(model => {
               angular.forEach(model.data, function(label) {
-                if (scope.settings.type === 'createNode' && label.children.length === 0  && label.parents.indexOf('Link') === -1 && label.parents.indexOf('Property') === -1 && label.parents.indexOf('Time') === -1 && label.parents.indexOf('Geo') === -1 && label.label !== 'TimeTreeRoot') {
+                if (scope.settings.type === 'createNode' && label.children.length === 0  && label.parents.indexOf('Link') === -1 && label.parents.indexOf('Property') === -1 && label.parents.indexOf('Time') === -1 && label.label !== 'TimeTreeRoot') {
                   scope.labelsList.push(label);
                   scope.isEdge = false;
                 } else if (scope.settings.type === 'createEdge' && label.children.length === 0  && label.parents.indexOf('Link') !== -1 && label.label !== 'Prop' && label.label !== 'Attr') {
@@ -262,7 +285,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                   display: true,
                   draggable: false,
                   //icon: 'cog',
-                  css: 'top: 300px; left : 150px; height: 300px'
+                  css: 'top: 100px; left : 150px; height: 500px;'
                 },
                 fields: [{ label: 'Attr id: ', key: e.key, pid: e.pid, aid: '', action: 'attachGo'}]
               };
@@ -276,7 +299,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                   display: true,
                   draggable: false,
                   //icon: 'cog',
-                  css: 'top: 300px; left : 150px; height: 300px;'
+                  css: 'top: 100px; left : 150px; height: 500px;'
                 },
                 fields: [{ label: 'Attr id: ', aid: '', action: 'addAttrGo'}]
               };
@@ -292,15 +315,15 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               if (!scope.node[e.key][target].attrs) {
                 scope.node[e.key][target].attrs = [];
               }
-              scope.node[e.key][target].attrs.push(e.aid); // Visual
-              scope.node.create.push({pid: e.pid, aid: e.aid}); // For the Api
+              scope.node[e.key][target].attrs.push({aid: e.aid, type: e.element}); // Visual
+              scope.node.create.push({pid: e.pid, aid: e.aid, type: e.element}); // For the Api
               break;
             case 'addAttrGo':
-              scope.node.addAttrs.push(e.aid);
+              scope.node.addAttrs.push({aid: e.aid, type: e.element});
               if (Object.keys(scope.attributs).indexOf(e.key) === -1) {
-                scope.attributs[e.key] = [];
+                scope.attributs[e.element] = [];
               }
-              scope.attributs[e.key].push({id: e.aid, value: [{pid: '', value: e.optionLabel}]});
+              scope.attributs[e.element].push({id: e.aid, value: [{pid: '', value: e.optionLabel}]});
               break;
             case 'detach':
               let target_p = false;
@@ -341,7 +364,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
           ];
           if (attrs && attrs.length) {
             angular.forEach(attrs, function(a) {
-              opt.push({ label: 'Detach ' + a, action: 'detach', key: key, pid: pid, aid: a});
+              opt.push({ label: 'Detach ' + a.type + ' ' + a.aid, action: 'detach', key: key, pid: pid, aid: a.aid});
             });
           }
           opt.push({ label: 'Remove property', action: 'remove', key: key, pid: pid});

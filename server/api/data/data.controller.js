@@ -29,6 +29,14 @@ export function getAttributes(req, res) {
   });
 }
 
+export function getAttributesTypes(req, res) {
+  request(config.tulipApi + '/getAttributesTypes/', function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
 export function createNode(req, res) {
   request({url: config.tulipApi + '/createNode/', method: 'POST', json: req.body}, function(error, response, body) {
     console.log(response.statusCode);

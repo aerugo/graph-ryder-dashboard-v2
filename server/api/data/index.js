@@ -7,6 +7,7 @@ import * as auth from '../../auth/auth.service';
 
 router.get('/getProperties/:id', auth.isAuthenticated(), controller.getProperties);
 router.get('/getAttributes/:id', auth.isAuthenticated(), controller.getAttributes);
+router.get('/getAttributesTypes/', auth.isAuthenticated(), controller.getAttributesTypes);
 router.get('/getLabels/', auth.isAuthenticated(), controller.getLabels);
 router.get('/countLabel/:label', auth.isAuthenticated(), controller.countLabel);
 router.get('/countLabels/', auth.isAuthenticated(), controller.countLabels);

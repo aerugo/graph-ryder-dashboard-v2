@@ -18,21 +18,33 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
         if (scope.settings.fields) {
           scope.types = [];
           scope.type = '';
+          scope.labels = [];
+          scope.label = '';
           scope.props = [];
           scope.prop = '';
           scope.values = [];
 
-          $http.get('/api/model/').then(labels => {
-            angular.forEach(labels.data  , function (label, key) {
-              if (label.parents.indexOf('Attribute') !== -1) {
-                scope.types.push({key: key, name: label.label});
-              }
+          $http.get('/api/data/getAttributesTypes/').then(types => {
+            angular.forEach(types.data  , function (type) {
+              scope.types.push({key: type, name: type});
             });
           });
         }
 
         scope.typeSelected = function (item, model, label) {
           scope.type = label;
+          scope.settings.element = label; // todo remove this dirty pass
+          $http.get('/api/model/').then(labels => {
+            angular.forEach(labels.data  , function (l, key) {
+              if (l.parents.indexOf('Attribute') !== -1) {
+                scope.labels.push({key: key, name: l.label});
+              }
+            });
+          });
+        };
+
+        scope.labelSelected = function (item, model, label) {
+          scope.label = label;
           $http.get('/api/data/getPropertiesByLabel/' + label).then(properties => {
             angular.forEach(properties.data, function (property, key) {
               scope.props.push({key: key, name: property});
@@ -42,7 +54,7 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
 
         scope.propSelected = function (item, model, label) {
           scope.prop = label;
-          $http.get('/api/data/getPropertyValueAndId/' + scope.type + '/' + scope.prop).then(values => {
+          $http.get('/api/data/getPropertyValueAndId/' + scope.label + '/' + scope.prop).then(values => {
             angular.forEach(values.data, function (value) {
               scope.values.push({key: value.id, name: value.value});
             });
@@ -55,7 +67,7 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
 
         scope.valueSelected = function (item, model, label) {
           if (scope.settings.fields[0].action === 'addAttrGo') {
-            scope.settings.fields[0].key = scope.type;
+            scope.settings.fields[0].key = scope.label;
             scope.settings.fields[0].label = label;
           }
           scope.settings.fields[0].aid = item.key;
