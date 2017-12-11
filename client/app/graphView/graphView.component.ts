@@ -416,7 +416,7 @@ export class GraphViewComponent {
         if (!found) {
           let id = this.detailPanels.push({
             style: {
-              title: 'Details ' + e.node[0].id,
+              title: e.node[0].label + ' (' + e.node[0].id + ')',
               display: true,
               icon: 'info',
               css: 'width: 450px; height: 650px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'

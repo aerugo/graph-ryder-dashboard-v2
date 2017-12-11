@@ -45,6 +45,9 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               if (scope.labels.indexOf('Link') !== -1) {
                 scope.isEdge = true;
               }
+              if (scope.labels.indexOf('Time') !== -1) {
+                scope.settings.style.css = 'width: 450px; height: 200px; top: ' + (Math.random() * (10 - 20) + 20) + 'vh; left : ' + (Math.random() * (30 - 40) + 30) + 'vh;';
+              }
               angular.forEach(scope.labels, function(label) {
                 $http.get('/api/model/label/' + label).then(model => {
                   if (model.data.color) { //todo add additional info like Require and order

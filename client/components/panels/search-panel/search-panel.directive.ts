@@ -70,6 +70,10 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
           }
           if (scope.step === 0) {
             $http.get('/api/model/').then(labels => {
+              scope.parameters.node.push({ key: 'Node', name: 'Node', placeholder: 'Node'});
+              scope.parameters.all.push({ key: 'Node', name: 'Node', placeholder: 'Node'});
+              scope.parameters.node.push({ key: 'Link', name: 'Link', placeholder: 'Link'});
+              scope.parameters.all.push({ key: 'Link', name: 'Link', placeholder: 'Link'});
               angular.forEach(labels.data  , function (label, key) {
                 let k = '';
                 angular.forEach(label.parents  , function (p) {

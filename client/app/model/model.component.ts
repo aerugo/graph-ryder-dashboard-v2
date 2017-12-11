@@ -169,6 +169,22 @@ export class ModelComponent {
     });
   };
 
+  addNewLabel(label, father) {
+    console.log(label);
+    console.log(father);
+    angular.forEach(this.$scope.hierarchy, function(key){
+      if (key.label === father) {
+        key.children.push({label: label, labeling: '', color: 'rgb(51,122,183)', parents: [key.label]});
+      } else {
+        angular.forEach(key.children, function (children) {
+          if (children.label === father) {
+            children.children.push({label: label, labeling: '', color: 'rgb(51,122,183)', parents: [key.label, children.label]});
+          }
+        });
+      }
+    });
+  };
+
   reset() {
     let http = this.$http;
     http.delete('/api/model/all/').then(response => {
