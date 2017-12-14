@@ -39,7 +39,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
 
         scope.load = function(){
           /***** Load properties & attributes *******/
-          if (!loaded && scope.settings.id) {
+          if (!loaded && scope.settings.id && scope.settings.id.indexOf('Time') === -1) {
             $http.get('/api/data/getLabels/' + scope.settings.id).then(labels => {
               scope.labels = labels.data;
               if (scope.labels.indexOf('Link') !== -1) {

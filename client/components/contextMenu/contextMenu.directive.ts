@@ -23,6 +23,7 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
           scope.props = [];
           scope.prop = '';
           scope.values = [];
+          scope.timePicker = false;
 
           $http.get('/api/data/getAttributesTypes/').then(types => {
             angular.forEach(types.data  , function (type) {
@@ -36,7 +37,7 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
           scope.settings.element = label; // todo remove this dirty pass
           $http.get('/api/model/').then(labels => {
             angular.forEach(labels.data  , function (l, key) {
-              if (l.parents.indexOf('Attribute') !== -1) {
+              if (l.parents.indexOf('Attribute') !== -1 && l.label !== 'Geo' && l.label !== 'Time') {
                 scope.labels.push({key: key, name: l.label});
               }
             });
@@ -45,11 +46,26 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
 
         scope.labelSelected = function (item, model, label) {
           scope.label = label;
-          $http.get('/api/data/getPropertiesByLabel/' + label).then(properties => {
-            angular.forEach(properties.data, function (property, key) {
-              scope.props.push({key: key, name: property});
+          if (label === 'Year' || label === 'Month' || label === 'Day') {
+            scope.props = [];
+            switch(label) {
+              case 'Year':
+                scope.timePicker = 'Year (2012)';
+                break;
+              case 'Month':
+                scope.timePicker = 'Month/Year (05/2012)';
+                break;
+              case 'Day':
+                scope.timePicker = 'Day/Month/Year (13/05/2012)';
+                break;
+            }
+          } else {
+            $http.get('/api/data/getPropertiesByLabel/' + label).then(properties => {
+              angular.forEach(properties.data, function (property, key) {
+                scope.props.push({key: key, name: property});
+              });
             });
-          });
+          }
         };
 
         scope.propSelected = function (item, model, label) {
@@ -59,6 +75,15 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
               scope.values.push({key: value.id, name: value.value});
             });
           });
+        };
+
+        scope.dateSelected = function (date) {
+          if (scope.settings.fields[0].action === 'addAttrGo') {
+            scope.settings.fields[0].key = scope.label;
+            scope.settings.fields[0].label = date;
+          }
+          scope.settings.fields[0].aid = 'Time:' + date;
+          scope.choice(scope.settings.fields[0]);
         };
 
         scope.resetValues = function () {

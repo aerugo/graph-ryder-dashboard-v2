@@ -30,6 +30,10 @@
       typeahead-min-length="0"
       ng-change="resetValues()"/>
   </a>
+  <a href="#" ng-if="timePicker" >Enter a {{timePicker}}:
+    <input size="15" type="text" ng-model="date" ng-enter="dateSelected(date)()"/>
+    <button class="btn btn-primary" ng-click="dateSelected(date)()">Go</button>
+  </a>
   <a href="#" ng-if="values.length" >Select a value:
     <input
       size="15"
