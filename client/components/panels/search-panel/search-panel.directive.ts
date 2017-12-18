@@ -74,6 +74,7 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
               scope.parameters.all.push({ key: 'Node', name: 'Node', placeholder: 'Node'});
               scope.parameters.node.push({ key: 'Node:Attribute', name: 'Attribute', placeholder: 'Attribute'});
               scope.parameters.all.push({ key: 'Node:Attribute', name: 'Attribute', placeholder: 'Attribute'});
+              //scope.parameters.all.push({ key: 'Property', name: 'Property', placeholder: 'Property'});
               scope.parameters.node.push({ key: 'Link', name: 'Link', placeholder: 'Link'});
               scope.parameters.all.push({ key: 'Link', name: 'Link', placeholder: 'Link'});
               angular.forEach(labels.data  , function (label, key) {
@@ -82,10 +83,10 @@ export default angular.module('graphRyderDashboardApp.searchPanel', [])
                   k += p + ':';
                 });
                 k += label.label;
-                if (label.parents.indexOf('Entity') !== -1 ||  label.parents.indexOf('Attribute') !== -1) {
+                if (label.parents.indexOf('Entity') !== -1 || label.parents.indexOf('Attribute') !== -1) {
                   scope.parameters.node.push({ key: k, name: label.label, placeholder: label.label, color: label.color });
                   scope.parameters.all.push({ key: k, name: label.label, placeholder: label.label, color: label.color });
-                } else if (label.parents.indexOf('Link') !== -1) {
+                } else if (label.parents.indexOf('Link') !== -1 && label.label !== 'Prop') {
                   scope.parameters.link.push({key: k, name: label.label, placeholder: label.label, color: label.color});
                   scope.parameters.all.push({key: k, name: label.label, placeholder: label.label, color: label.color});
                 }

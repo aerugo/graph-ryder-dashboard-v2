@@ -107,8 +107,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
                   }
                   $http.get('/api/model/label/' + key.split(':')[0]).then(m => {
                     angular.forEach(attrs, function(attr) {
-                      $http.get('/api/data/getProperties/' + attr).then(r => {
-                        scope.attributs[key.split(':').slice(-1).pop()].push({id: attr, value: r.data[m.data.labeling]});
+                      $http.get('/api/data/getProperties/' + attr.id).then(r => {
+                        scope.attributs[key.split(':').slice(-1).pop()].push({id: attr.id, value: r.data[m.data.labeling], laid: attr.laid});
                       });
                     });
                   });
