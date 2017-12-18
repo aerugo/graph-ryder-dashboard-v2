@@ -90,8 +90,8 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
                 angular.forEach(scope.graph.action.node, function (node) {
                   node.size = 4;
                   s.graph.addNode(node);
-                  activeState.dropNodes();
-                  activeState.addNodes([node.id]);
+                  //activeState.dropNodes();
+                  //activeState.addNodes([node.id]);
                 });
                 break;
               case 'addEdge':
@@ -119,9 +119,16 @@ export default angular.module('graphRyderDashboardApp.sigma', [])
                 break;
               case 'deleteEdge':
                 angular.forEach(scope.graph.action.targets, function (target) {
-                  console.log(target);
                   s.graph.dropEdge(target.id);
                 });
+                break;
+              case 'reverseEdge':
+                let edge = s.graph.edges(scope.graph.action.target);
+                s.graph.dropEdge(scope.graph.action.target);
+                let tmp = edge.target;
+                edge.target = edge.source;
+                edge.source = tmp;
+                s.graph.addEdge(edge);
                 break;
             }
             sigma.canvas.edges.autoCurve(s);

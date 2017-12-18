@@ -17,7 +17,7 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
         handler: '&'
       },
       link: function(scope, element) {
-        element.draggable({handle: '.panel-heading', containment: 'body', scroll: false, stack: '.panel',
+        element.draggable({handle: '.panel-heading', containment: '#main-view', scroll: false, stack: '.panel',
           start: function() {
             if (element.css('z-index') > 100) {
               element.css('z-index', 10);
@@ -42,6 +42,10 @@ export default angular.module('graphRyderDashboardApp.sigmaPanel', [])
         scope.eventHandler = function(e) {
           e.element = scope.settings.element;
           scope.handler({e: e});
+        };
+
+        scope.close = function() {
+          element.remove();
         };
 
         $timeout(function () {

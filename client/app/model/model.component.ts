@@ -34,7 +34,9 @@ export class ModelComponent {
     let analyse = function(parents, key, labels, model, property) {
       /*** Exit ****/
       if (!Object.keys(labels).length) {
-        getProperty(key, property);
+        if (parents.indexOf('Property') === -1) {
+          getProperty(key, property);
+        }
         let element = {label: key, labeling: '', color: '', parents: []};
         angular.forEach(parents, function (p) {
           element.parents.push(p);
@@ -119,7 +121,9 @@ export class ModelComponent {
     let updateChildren = function(e, property) {
       if (!e.children) {
         e.prop = property[e.label];
-        e.prop.sort();
+        if (e.prop) {
+          e.prop.sort();
+        }
         promises.push(http.post('/api/model', e));
       } else {
         angular.forEach(e.children, function(child) {
@@ -160,6 +164,22 @@ export class ModelComponent {
         key.children.splice(key.children.indexOf(key.choice), 1);
         angular.forEach(key.children, function (children) {
           children.parents = [key.choice.label];
+        });
+      }
+    });
+  };
+
+  addNewLabel(label, father) {
+    console.log(label);
+    console.log(father);
+    angular.forEach(this.$scope.hierarchy, function(key){
+      if (key.label === father) {
+        key.children.push({label: label, labeling: '', color: 'rgb(51,122,183)', parents: [key.label]});
+      } else {
+        angular.forEach(key.children, function (children) {
+          if (children.label === father) {
+            children.children.push({label: label, labeling: '', color: 'rgb(51,122,183)', parents: [key.label, children.label]});
+          }
         });
       }
     });

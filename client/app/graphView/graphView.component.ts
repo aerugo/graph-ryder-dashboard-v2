@@ -126,6 +126,7 @@ export class GraphViewComponent {
             style: {
               title: title,
               display: true,
+              draggable: true,
               //icon: 'info',
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
@@ -135,7 +136,7 @@ export class GraphViewComponent {
               { label: 'Hide', action: 'deleteNode'}
             ],
             position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
-            node: [{id: e.data.node.id, id: e.data.node.id, label: e.data.node.label}],
+            node: [{id: e.data.node.id, label: e.data.node.label}],
             element: e.element
           };
           this.addContextPanel('contextMenu');
@@ -153,6 +154,7 @@ export class GraphViewComponent {
             style: {
               title: title,
               display: true,
+              draggable: true,
               //icon: 'info',
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
@@ -165,6 +167,17 @@ export class GraphViewComponent {
         }
         break;
       case 'rightClickEdge':
+        let labelSource = '';
+        let labelTarget = '';
+        angular.forEach(e.data.renderer.graph.nodes(), function(n){
+          if (n.id === e.data.edge.source) {
+            labelSource = n.label;
+          }
+          if (n.id === e.data.edge.target) {
+            labelTarget = n.label;
+          }
+        });
+        console.log(e.data.renderer.graph.nodes());
         if (this.sigmaPanels[e.element].graph.selection.length === 1 || this.sigmaPanels[e.element].graph.selection.indexOf(e.data.edge) === -1) {
           this.removeContextMenu();
           let title = 'Edge ' + e.data.edge.id;
@@ -175,6 +188,7 @@ export class GraphViewComponent {
             style: {
               title: title,
               display: true,
+              draggable: true,
               //icon: 'info',
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
@@ -184,6 +198,7 @@ export class GraphViewComponent {
             ],
             position: {clientY: e.data.captor.clientY, clientX: e.data.captor.clientX},
             node: [{id: e.data.edge.id, label: e.data.edge.label}],
+            nodes: [{id: e.data.edge.source, label: labelSource}, {id: e.data.edge.target, label: labelTarget}],
             element: e.element
           };
           this.addContextPanel('contextMenu');
@@ -195,6 +210,7 @@ export class GraphViewComponent {
             style: {
               title: title,
               display: true,
+              draggable: true,
               //icon: 'info',
               css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
             },
@@ -216,6 +232,7 @@ export class GraphViewComponent {
           style: {
             title: 'Menu graph',
             display: true,
+            draggable: true,
             //icon: 'info',
             css: 'top: ' + (e.data.captor.clientY - 25) + 'px; left : ' + (e.data.captor.clientX - 25) + 'px;'
           },
@@ -311,6 +328,7 @@ export class GraphViewComponent {
           position: {y: e.position.y, x: e.position.x}
         });
         id--;
+        this.detailPanels[id].panel_id = id;
         this.addDetailPanel('detailPanels[' + id + ']');
       break;
       case 'addEdge':
@@ -327,6 +345,7 @@ export class GraphViewComponent {
           position: {y: e.position.y, x: e.position.x}
         });
         id--;
+        this.detailPanels[id].panel_id = id;
         this.addDetailPanel('detailPanels[' + id + ']');
       break;
       case 'addNodeGo':
@@ -368,23 +387,53 @@ export class GraphViewComponent {
             targets: e.node
         };
       break;
+      case 'reverseEdge':
+        this.sigmaPanels[e.element].graph.action = {
+          type: 'reverseEdge',
+          target: e.id
+        };
+        break;
+      case 'close':
+        let found = -1;
+        angular.forEach(this.detailPanels, function(panel, index) {
+          if (panel.id === e.id) {
+            found = index;
+          }
+        });
+        delete this.detailPanels[found];
+        break;
       case 'detail':
         if (e.node[0].id.charAt(0) === 'd') {
           e.node[0].id = e.node[0].id.substring(3);
         }
-        let id = this.detailPanels.push({
-          style: {
-            title: 'Details ' + e.node[0].id,
-            display: true,
-            icon: 'info',
-            css: 'width: 450px; height: 650px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
-          },
-          type: 'detail',
-          element: e.element,
-          id: e.node[0].id,
+        let found = false;
+        angular.forEach(this.detailPanels, function(panel, index) {
+          if (panel.id === e.node[0].id) {
+            panel.style.css = 'width: 450px; height: 650px; top: ' + (Math.random() * (10 - 20) + 20) + 'vh; left : ' + (Math.random() * (30 - 40) + 30) + 'vh;';
+            found = true;
+          }
         });
-        id--;
-        this.addDetailPanel('detailPanels[' + id + ']');
+        if (!found) {
+          let id = this.detailPanels.push({
+            style: {
+              title: e.node[0].label + ' (' + e.node[0].id + ')',
+              display: true,
+              icon: 'info',
+              css: 'width: 450px; height: 650px; top: ' + (e.position.clientY - 25) + 'px; left : ' + (e.position.clientX - 25) + 'px;'
+              //css: 'width: 450px; height: 650px; top: ' + (Math.random() * (200 - 400) + 200) + 'px; left : ' + (Math.random() * (200 - 400) + 200) + 'px;'
+            },
+            type: 'detail',
+            element: e.element,
+            id: e.node[0].id,
+            node: e.nodes
+          });
+          id--;
+          if (e.position.clientY === -1 && e.position.clientX === -1) {
+            this.detailPanels[id].style.css = 'width: 450px; height: 650px; top: ' + (Math.random() * (10 - 20) + 20) + 'vh; left : ' + (Math.random() * (30 - 40) + 30) + 'vh;';
+          }
+          this.detailPanels[id].panel_id = id;
+          this.addDetailPanel('detailPanels[' + id + ']');
+        }
       break;
       case 'neighbour':
         let idSigma = this.sigmaPanels.push({
@@ -496,7 +545,6 @@ export class GraphViewComponent {
         this.sigmaPanels[0].url = {
           type: 'getQueryGraph',
           query: e.search,
-          directed: e.directed,
           done: false
         };
         break;
@@ -540,6 +588,15 @@ export class GraphViewComponent {
           .catch(() => {
             console.log('Fail to update the request');
           });
+        break;
+      case 'info':
+        let footer = {text: e.text, labels: []};
+        footer.labels.push({
+          label: e.label,
+          color: e.color,
+          labeling: e.labeling
+        });
+        this.footer = footer;
         break;
     }
   }

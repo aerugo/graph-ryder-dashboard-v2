@@ -29,6 +29,14 @@ export function getAttributes(req, res) {
   });
 }
 
+export function getAttributesTypes(req, res) {
+  request(config.tulipApi + '/getAttributesTypes/', function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
 export function createNode(req, res) {
   request({url: config.tulipApi + '/createNode/', method: 'POST', json: req.body}, function(error, response, body) {
     console.log(response.statusCode);
@@ -119,6 +127,14 @@ export function getPropertiesByLabel(req, res) {
 
 export function getPropertyValue(req, res) {
   request(config.tulipApi + '/getPropertyValue/' + req.param('label') + '/' + req.param('key'), function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      return res.send(body);
+    }
+  });
+}
+
+export function getPropertyValueAndId(req, res) {
+  request(config.tulipApi + '/getPropertyValueAndId/' + req.param('label') + '/' + req.param('key'), function(error, response, body) {
     if(!error && response.statusCode == 200) {
       return res.send(body);
     }

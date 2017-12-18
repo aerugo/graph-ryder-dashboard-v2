@@ -33,17 +33,10 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
           let params = {
             url: '',
             layout: '',
-            query: '',
-            directed: ''
+            query: ''
           };
           let ready = false;
           switch (u.type) {
-            case 'getGraph':
-              params.url = u.type + '/' +  u.leftLabel + '/' + u.edgeLabel + '/' + u.rightLabel;
-              if (u.leftLabel && u.edgeLabel && u.rightLabel) {
-                ready = true;
-              }
-              break;
             case 'getGraphNeighboursById':
               params.url = u.type + '/' +  u.nodeId + '/' + u.edgeLabel + '/' + u.rightLabel;
               if (u.nodeId && u.edgeLabel && u.rightLabel) {
@@ -52,19 +45,31 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
               break;
             case 'getQueryGraph':
               params.url = u.type;
-              params.directed = u.directed;
-              angular.forEach(u.query, function (q, index) {
-                params.query += q.name + '/';
+              angular.forEach(u.query, function (e, index) {
+                params.query += e.label;
+                angular.forEach(e.property, function (prop, i) {
+                  params.query += '->' + prop.key + '=' + prop.value;
+                };
+                params.query += '\\';
               });
               ready = true;
               break;
           }
           params.layout = u.layout;
           if (ready) {
+            scope.handler({e: {type: 'info', label: 'Info',  labeling: '', text: 'Loading...', color: 'rgb(240, 173, 78)'}});
             $http.get('/api/tulip/' + u.type, {params: params}).then(response => {
-              scope.settings.sigma.graph = response.data;
-              if (response.data.nodes.length && u.type === 'getQueryGraph' && scope.settings.sigma.sigmaSettings.element === 0) {
-                scope.handler({e: {type: 'lastRequest', request: params.query}});
+              if (response.data === 'error') {
+                scope.handler({e: {type: 'info', label: 'Error', labeling: '', text: 'Check request syntax please.', color: 'red'}});
+                scope.settings.sigma.graph = [];
+              } else {
+                scope.settings.sigma.graph = response.data;
+                scope.handler({e: {type: 'info', label: 'Info',  labeling: '', text: 'Request done !', color: 'rgb(92, 184, 92)'}});
+                if (response.data.nodes.length && u.type === 'getQueryGraph' && scope.settings.sigma.sigmaSettings.element === 0) {
+                  scope.handler({e: {type: 'lastRequest', request: params.query}}); // todo correct last request
+                } else {
+                  scope.handler({e: {type: 'info', label: 'Info',  labeling: '', text: 'Request result is empty.', color: 'red'}});
+                }
               }
               scope.settings.sigma.graph.action = '';
               scope.settings.sigma.graph.selection = [];

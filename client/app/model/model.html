@@ -9,6 +9,11 @@
       <ul class="list-group">
         <li ng-repeat="key in key.children" ng-include="'modelTree'" class="list-group-item" >
         </li>
+        <li class="list-group-item" ng-if="key.label != 'Time' && key.label != 'Node' && key.label != 'Link' && key.label != 'Geo'">
+          <i class="fa fa-plus" aria-hidden="true"  ></i> "{{key.label}}" label :
+          <input type="text" id="addNewLabel" ng-model="addNewLabel" />
+          <button class="btn btn-primary" type="submit" ng-click="modelCtrl.addNewLabel(addNewLabel, key.label)">Add</button>
+        </li>
       </ul>
     </div>
     <div ng-if="!key.children" class="div-list-group" >
@@ -19,7 +24,7 @@
     </div>
   </script>
   <ul class="list-group">
-    <li ng-repeat="key in hierarchy" ng-include="'modelTree'" class="list-group-item" ng-class="{'list-group-item-danger': key.label.substring(0,11) == 'ungroupable'}"></li>
+    <li ng-repeat="key in hierarchy" ng-include="'modelTree'" class="list-group-item" ng-class="{'list-group-item-danger': key.label.substring(0,11) == 'ungroupable'}" ng-if="key.label !== 'Property'"></li>
   </ul>
   <div class="form-group" id="model-button" >
     <button type="submit" class="btn btn-primary" ng-click="modelCtrl.reset()">Reset</button>&nbsp;&nbsp;
