@@ -36,6 +36,7 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
         scope.menu = [];
         scope.newPid = -1;
         scope.keys = [];
+        scope.updateCount = 0;
 
         scope.load = function(){
           /***** Load properties & attributes *******/
@@ -182,7 +183,8 @@ export default angular.module('graphRyderDashboardApp.detailPanel', [])
               }});
             }
             // todo check the response
-            scope.close();
+            //scope.close();
+            scope.updateCount++;
           });
         };
 
