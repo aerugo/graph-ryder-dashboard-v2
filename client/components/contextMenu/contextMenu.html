@@ -9,7 +9,7 @@
       uib-typeahead="parameter as parameter.name for parameter in types | filter:{name:$viewValue} | limitTo:10"
       typeahead-on-select="typeSelected($item, $model, $label)"
       typeahead-min-length="0"/>
-    <button class="btn btn-primary" ng-click="typeSelected(null, null, type)()">Add</button>
+    <button class="btn btn-primary" ng-disabled="!type || !newType" ng-click="typeSelected(null, null, type)()">Add</button>
   </a>
   <a href="#" ng-if="labels.length" >Select a label:
     <input

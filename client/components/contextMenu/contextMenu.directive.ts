@@ -18,6 +18,7 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
         if (scope.settings.fields) {
           scope.types = [];
           scope.type = '';
+          scope.newType = true;
           scope.labels = [];
           scope.label = '';
           scope.props = [];
@@ -34,6 +35,7 @@ export default angular.module('graphRyderDashboardApp.contextMenu', [])
 
         scope.typeSelected = function (item, model, label) {
           scope.type = label;
+          scope.newType = false;
           scope.settings.element = label; // todo remove this dirty pass
           $http.get('/api/model/').then(labels => {
             angular.forEach(labels.data  , function (l, key) {

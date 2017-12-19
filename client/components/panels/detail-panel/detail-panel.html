@@ -65,7 +65,7 @@
               <span ng-repeat="a in attr">
                 <a ng-if="a.value" ng-click="detail(a.id, label)">{{a.value[0].value}}</a>
                 <a ng-if="!a.value" ng-click="detail(a.id, label)">?</a>
-                <a ng-href="" ng-click="detail(a.laid, label)" role="button">
+                <a ng-href="" ng-if="a.laid" ng-click="detail(a.laid, label)" role="button">
                   <span class="remove glyphicon glyphicon-link"></span>
                 </a>
                 <!--<a ng-href="" ng-click="detachAttr(a.id, label)" role="button">
