@@ -1,4 +1,4 @@
-# graph-ryder-dashboard 2.0
+# avres-dashboard
 
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 4.2.2.
 
@@ -18,7 +18,7 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 
 2. Run `mongod` in a separate shell to keep an instance of the MongoDB Daemon running
 
-3. Run `graph-ryder-api` in a separate shell to keep an instance running
+3. Run `avres-api` in a separate shell to keep an instance running
 
 4. Run `gulp serve` to start the development server. It should automatically open the client in your browser when ready.
 
@@ -30,9 +30,9 @@ Run `gulp build` for building and `gulp serve` for preview.
 
 ## Launch Graph-ryder full plateform
 
-1. git clone https://github.com/norbertFeron/private-graph-ryder-dashboard.git
+1. git clone https://github.com/norbertFeron/avres-dashboard.git
 
-2. git clone https://github.com/norbertFeron/private-graph-ryder-api.git
+2. git clone https://github.com/norbertFeron/avres-api.git
 
 3. mv YOUR_NEO4J_WITH_PLUGINS neo4j
 
@@ -43,4 +43,4 @@ Run `gulp build` for building and `gulp serve` for preview.
    - nano config.ini 
    - set your neo4j password
    
-5. docker-compose up ( in private-graph-ryder-dashboard )
+5. docker-compose up ( in avres-dashboard )
