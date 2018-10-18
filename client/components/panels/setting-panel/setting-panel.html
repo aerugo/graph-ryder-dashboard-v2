@@ -42,9 +42,8 @@
   </div>
   <!-- Query -->
   <div class="panel-body" ng-if="settings.sigma.url.type == 'getQueryGraph'">
-    <span>Query request:</span>
-    <div class="input-group">
-      {{settings.sigma.url.query}}
-    </div>
+    Rightclick and "save as" with extension ".csv"<br><br>
+    <a ng-href="{{settings.nodesurl}}" target="_blank"><i class="fa fa-file"></i> Nodes Csv</a><br>
+    <a ng-href="{{settings.edgesurl}}" target="_blank"><i class="fa fa-file"></i> Edges Csv</a>
   </div>
 </div>

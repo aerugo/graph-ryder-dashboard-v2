@@ -74,6 +74,8 @@ export default angular.module('graphRyderDashboardApp.settingPanel', [])
               scope.settings.sigma.graph.action = '';
               scope.settings.sigma.graph.selection = [];
               scope.settings.sigma.url.done = true;
+              scope.settings.nodesurl = 'http://localhost:3000/api/tulip/getQueryGraph?query=' + params.query + '&url=getQueryGraph&format=csv&target=nodes';
+              scope.settings.edgesurl = 'http://localhost:3000/api/tulip/getQueryGraph?query=' + params.query + '&url=getQueryGraph&format=csv&target=edges';
             });
           }
         };
